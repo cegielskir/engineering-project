@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: discovery-service
+  cloud:
+    config:
+      uri: https://github.com/cegielskir/en-config-server
