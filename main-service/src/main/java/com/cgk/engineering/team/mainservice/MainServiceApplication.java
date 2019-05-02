@@ -26,10 +26,10 @@ public class MainServiceApplication {
 	public Docket swaggerApi() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.select()
-				.apis(RequestHandlerSelectors.basePackage("com.cgk.engineering.team.coreservice.controller"))
+				.apis(RequestHandlerSelectors.basePackage("com.cgk.engineering.team.mainservice.controller"))
 				.paths(PathSelectors.any())
 				.build()
-				.apiInfo(new ApiInfoBuilder().version("1.0").title("Core API").description("Documentation Employee API v1.0").build());
+				.apiInfo(new ApiInfoBuilder().version("1.0").title("Core API").description("Documentation Core API v1.0").build());
 	}
 
 }
