@@ -17,7 +17,7 @@
 
 	<modules>
 		<module>config-service</module>
-		<module>core-service</module>
+		<module>main-service</module>
 		<module>discovery-service</module>
 		<module>gateway-service</module>
 	</modules>
