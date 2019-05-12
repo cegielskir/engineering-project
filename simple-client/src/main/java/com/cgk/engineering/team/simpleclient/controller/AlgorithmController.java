@@ -1,0 +1,44 @@
+package com.cgk.engineering.team.simpleclient.controller;
+
+import com.cgk.engineering.team.simpleclient.client.CoreClient;
+import com.cgk.engineering.team.simpleclient.model.Article;
+import com.cgk.engineering.team.simpleclient.model.Comparison;
+import com.cgk.engineering.team.simpleclient.repository.ArticleRepository;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping(value = "/algorithm")
+public class AlgorithmController {
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private CoreClient coreClient;
+
+    @GetMapping
+    public Comparison getComparison(@RequestParam(name = "id_1") ObjectId id1, @RequestParam(name = "id_2") ObjectId id2){
+        Article article1 = articleRepository.findBy_id(id1);
+        if(article1 == null){
+            System.out.println("No article with id = " + id1 + " in the database");
+            article1 = coreClient.getArticle(id1);
+            articleRepository.save(article1);
+        }
+
+        Article article2 = articleRepository.findBy_id(id2);
+        if(article2 == null){
+            System.out.println("No article with id = " + id2 + " in the database");
+            article2 = coreClient.getArticle(id2);
+            articleRepository.save(article2);
+        }
+
+        return new Comparison(200);
+    }
+
+
+}
