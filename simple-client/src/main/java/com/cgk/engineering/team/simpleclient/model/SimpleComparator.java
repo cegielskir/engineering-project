@@ -1,5 +1,7 @@
 package com.cgk.engineering.team.simpleclient.model;
 
+import com.cgk.engineering.team.simpleclient.algorithms.NormalizedLevenshtein;
+
 public class SimpleComparator implements IComparator {
 
     private Article article1, article2;
@@ -17,7 +19,10 @@ public class SimpleComparator implements IComparator {
     @Override
     public Comparison compareArticles() {
         Comparison comparison = new Comparison(17);
-        comparison.setPercentage(compareTitle() + compareContentEquality());
+
+        NormalizedLevenshtein normalizedLevenshtein = new NormalizedLevenshtein();
+
+        comparison.setPercentage((int) (100*normalizedLevenshtein.similarity(article1.getContent(), article2.getContent())));
         return comparison;
     }
 
