@@ -7,6 +7,7 @@ public class Comparison {
     //include comparator type
 
     private int percentage;
+    private int[] theSameWords;
 
     public Comparison(int id) {
         this.id = id;
@@ -27,5 +28,13 @@ public class Comparison {
         if(percentage<=100 && percentage>=0)
         this.percentage = percentage;
         else throw new IllegalArgumentException();
+    }
+
+    public int[] getTheSameWords() {
+        return theSameWords;
+    }
+
+    public void setTheSameWords(int[] theSameWords) {
+        this.theSameWords = theSameWords;
     }
 }

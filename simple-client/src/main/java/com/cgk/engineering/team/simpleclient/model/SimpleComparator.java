@@ -23,8 +23,12 @@ public class SimpleComparator implements IComparator {
         NormalizedLevenshtein normalizedLevenshtein = new NormalizedLevenshtein();
 
         comparison.setPercentage((int) (100*normalizedLevenshtein.similarity(article1.getContent(), article2.getContent())));
+        //comparison.setPercentage(compareTitle() + compareContentEquality());
+        comparison.setTheSameWords(naiveWordsMarkup());
+
         return comparison;
     }
+
 
     private int compareTitle(){
         if(article1.getTitle().equals(article2.getTitle())) return TITLEMAXSCORE;
@@ -34,16 +38,31 @@ public class SimpleComparator implements IComparator {
     private int compareContentEquality() {
         String[] content1 = article1.getContent().split(" ");
         String[] content2 = article2.getContent().split(" ");
-        int sameWords=0;
+
+        double sameWords=0;
         int minWords = Math.min(content1.length, content2.length);
         int maxWords = Math.max(content1.length, content2.length);
         for(int i=0;i<minWords;i++){
             if(content1[i].equals(content2[i])) sameWords++;
         }
         double sameWordsPart = sameWords/maxWords;
+
         return (int)Math.floor(sameWordsPart*CONTENTEQUALITYMAXSCORE);
     }
 
+    private int[] naiveWordsMarkup() {
+        String[] content1 = article1.getContent().split(" ");
+        String[] content2 = article2.getContent().split(" ");
 
+        int minWords = Math.min(content1.length, content2.length);
+        int maxWords = Math.max(content1.length, content2.length);
+
+        int[] sameWords = new int[minWords];
+        for(int i=0;i<minWords;i++){
+            if(content1[i].equals(content2[i])) sameWords[i]++;
+        }
+
+        return sameWords;
+    }
 
 }
