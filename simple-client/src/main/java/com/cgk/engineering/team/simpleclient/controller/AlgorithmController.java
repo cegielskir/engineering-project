@@ -3,6 +3,7 @@ package com.cgk.engineering.team.simpleclient.controller;
 import com.cgk.engineering.team.simpleclient.client.CoreClient;
 import com.cgk.engineering.team.simpleclient.model.Article;
 import com.cgk.engineering.team.simpleclient.model.Comparison;
+import com.cgk.engineering.team.simpleclient.model.SimpleComparator;
 import com.cgk.engineering.team.simpleclient.repository.ArticleRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,9 @@ public class AlgorithmController {
             articleRepository.save(article2);
         }
 
-        return new Comparison(200);
+        SimpleComparator simpleComparator = new SimpleComparator(article1, article2);
+
+        return simpleComparator.compareArticles();
     }
 
 
