@@ -3,7 +3,8 @@ package com.cgk.engineering.team.simpleclient.controller;
 import com.cgk.engineering.team.simpleclient.client.CoreClient;
 import com.cgk.engineering.team.simpleclient.model.Article;
 import com.cgk.engineering.team.simpleclient.model.Comparison;
-import com.cgk.engineering.team.simpleclient.model.SimpleComparator;
+import com.cgk.engineering.team.simpleclient.model.LCPComparator;
+import com.cgk.engineering.team.simpleclient.model.LevenshteinComparator;
 import com.cgk.engineering.team.simpleclient.repository.ArticleRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,11 @@ public class AlgorithmController {
             articleRepository.save(article2);
         }
 
-        SimpleComparator simpleComparator = new SimpleComparator(article1, article2);
+        //LevenshteinComparator levenshteinComparator = new LevenshteinComparator(article1, article2);
 
-        return simpleComparator.compareArticles();
+        //return levenshteinComparator.compareArticles();
+        LCPComparator lcpc = new LCPComparator(article1, article2);
+        return lcpc.compareArticles();
     }
 
 

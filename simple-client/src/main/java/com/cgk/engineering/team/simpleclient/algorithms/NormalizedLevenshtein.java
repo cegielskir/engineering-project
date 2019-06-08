@@ -17,7 +17,6 @@ public class NormalizedLevenshtein implements
         if (s2 == null) {
             throw new NullPointerException("s2 must not be null");
         }
-
         if (s1.equals(s2)) {
             return 0;
         }
