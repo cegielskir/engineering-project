@@ -11,6 +11,8 @@ public class Comparison {
     private int[] suspiciousWords1;
     private int[] suspiciousWords2;
 
+    public Comparison() {}
+
     public Comparison(int id) {
         this.id = id;
 

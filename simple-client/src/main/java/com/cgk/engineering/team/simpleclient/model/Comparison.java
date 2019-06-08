@@ -16,6 +16,8 @@ public class Comparison {
 
     }
 
+    public Comparison() {}
+
     public int getId() {
         return id;
     }
