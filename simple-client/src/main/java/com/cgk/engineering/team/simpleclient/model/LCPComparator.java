@@ -25,7 +25,7 @@ public class LCPComparator implements  IComparator {
     private int[] markSuspiciousWords(int to, int length, String articleContent){
         String [] splitted = articleContent.split(" ");
         int[] suspWords = new int[splitted.length];
-        for(int i=to-length+1;i<to;i++){
+        for(int i=to-length+1;i<=to;i++){
             suspWords[i]++;
         }
         return suspWords;
