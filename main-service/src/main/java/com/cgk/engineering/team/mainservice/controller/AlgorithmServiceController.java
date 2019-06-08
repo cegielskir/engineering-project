@@ -33,8 +33,10 @@ public class AlgorithmServiceController {
         Article article = articleRepository.findBy_id(articleId);
         articles.remove(article);
         List<Comparison> comparisons = new ArrayList<>();
-        for(Article theArticle : articles){
-            comparisons.add(algorithmClient.getComparison(articleId, new ObjectId(theArticle.get_id())));
+        if(!articles.isEmpty()) {
+            for (Article theArticle : articles) {
+                comparisons.add(algorithmClient.getComparison(articleId, new ObjectId(theArticle.get_id())));
+            }
         }
         return comparisons;
     }

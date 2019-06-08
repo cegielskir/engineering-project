@@ -20,7 +20,6 @@ public class LevenshteinComparator implements IComparator {
         NormalizedLevenshtein normalizedLevenshtein = new NormalizedLevenshtein();
 
         comparison.setPercentage((int) (100*normalizedLevenshtein.similarity(article1.getContent(), article2.getContent())));
-        comparison.setTheSameWords(naiveWordsMarkup());
 
         return comparison;
     }

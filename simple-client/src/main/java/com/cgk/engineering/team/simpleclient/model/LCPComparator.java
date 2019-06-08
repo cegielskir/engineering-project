@@ -1,6 +1,9 @@
 package com.cgk.engineering.team.simpleclient.model;
 
 import com.cgk.engineering.team.simpleclient.algorithms.NormalizedLongestCommonPhrase;
+import org.bson.types.ObjectId;
+
+import java.util.Random;
 
 public class LCPComparator implements  IComparator {
     private Article article1, article2;
@@ -12,8 +15,9 @@ public class LCPComparator implements  IComparator {
 
     @Override
     public Comparison compareArticles(){
-
-        Comparison c = new Comparison(18);
+        Random random = new Random();
+        Comparison c = new Comparison(random.nextInt(100000));
+        c.setArticleIDs( article1.get_id(),  article2.get_id());
         NormalizedLongestCommonPhrase nlcp = new NormalizedLongestCommonPhrase();
         double percentage = 100* nlcp.similarity(article1.getContent(), article2.getContent());
         c.setPercentage((int) (percentage));
