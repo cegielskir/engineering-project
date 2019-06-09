@@ -8,11 +8,11 @@ import com.cgk.engineering.team.mainservice.repository.ArticleRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -31,7 +31,7 @@ public class AlgorithmServiceController {
     public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId){
         List<Article> articles = articleRepository.findAll();
         Article article = articleRepository.findBy_id(articleId);
-        articles.remove(article);
+        articles = articles.stream().filter(a -> !(a.get_id().equals(articleId.toString()))).collect(Collectors.toList());
         List<Comparison> comparisons = new ArrayList<>();
         if(!articles.isEmpty()) {
             for (Article theArticle : articles) {
