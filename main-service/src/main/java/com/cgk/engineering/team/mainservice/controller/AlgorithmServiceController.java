@@ -8,14 +8,17 @@ import com.cgk.engineering.team.mainservice.model.Comparison;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/compare")
+@EnableFeignClients
 public class AlgorithmServiceController {
 
 

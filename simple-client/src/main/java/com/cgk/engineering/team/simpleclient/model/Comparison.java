@@ -1,6 +1,7 @@
-package com.cgk.engineering.team.mainservice.model;
+package com.cgk.engineering.team.simpleclient.model;
 
 import org.bson.types.ObjectId;
+import org.omg.CORBA.Object;
 
 public class Comparison {
 
@@ -14,12 +15,11 @@ public class Comparison {
     private String firstArticleID;
     private String secondArticleID;
 
-    public Comparison() {}
-
     public Comparison(int id) {
         this.id = id;
-
     }
+
+    public Comparison() {}
 
     public int getId() {
         return id;
@@ -41,7 +41,6 @@ public class Comparison {
         this.suspiciousWords1=suspiciousWords1;
         this.suspiciousWords2=suspiciousWords2;
     }
-
 
     public int[] getSuspiciousWords2() {
         return suspiciousWords2;
