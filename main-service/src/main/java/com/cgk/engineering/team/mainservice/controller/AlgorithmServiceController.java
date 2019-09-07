@@ -1,10 +1,10 @@
 package com.cgk.engineering.team.mainservice.controller;
 
 
+import com.cgk.engineering.team.dbservice.model.Article;
 import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
-import com.cgk.engineering.team.mainservice.model.Article;
+import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Comparison;
-import com.cgk.engineering.team.mainservice.repository.ArticleRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,19 +19,19 @@ public class AlgorithmServiceController {
 
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private DatabaseServiceClient dbClient;
 
     @Autowired
     private AlgorithmClient algorithmClient;
 
     @GetMapping(value = "/{articleId}")
     public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId){
-        List<Article> articles = articleRepository.findAll();
-        Article article = articleRepository.findBy_id(articleId);
+        List<Article> articles = dbClient.getArticles();
+        Article article = dbClient.getArticle(articleId);
         articles.remove(article);
         List<Comparison> comparisons = new ArrayList<>();
         for(Article theArticle : articles){
-            comparisons.add(algorithmClient.getComparison(articleId, new ObjectId(theArticle.get_id())));
+            comparisons.add(algorithmClient.getComparison(article, theArticle));
         }
         return comparisons;
     }

@@ -1,4 +1,4 @@
-package com.cgk.engineering.team.simpleclient.algorithms;
+package com.cgk.engineering.team.simpleclient.algorithm;
 
 public class LongestCommonPhrase {
 
