@@ -28,6 +28,7 @@ public class ArticleController {
 
     @PostMapping
     public Article addArticle(@RequestBody Article article){
+        article.set_id(ObjectId.get());
         dbClient.addArticle(article);
         return article;
     }

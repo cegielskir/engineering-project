@@ -5,6 +5,7 @@ import com.cgk.engineering.team.dbservice.model.Article;
 import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Comparison;
+import com.cgk.engineering.team.mainservice.model.ComparisonData;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class AlgorithmServiceController {
         articles.remove(article);
         List<Comparison> comparisons = new ArrayList<>();
         for(Article theArticle : articles){
-            comparisons.add(algorithmClient.getComparison(article, theArticle));
+            comparisons.add(algorithmClient.getComparison(new ComparisonData(article, theArticle)));
         }
         return comparisons;
     }
