@@ -83,7 +83,8 @@ public class ExcelHelper {
             workbook = new XSSFWorkbook(fis);
             XSSFSheet sheet = workbook.getSheetAt(0);
 
-            for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
+            // without 1st row - there are descriptions of columns
+            for (int i = sheet.getFirstRowNum() + 1; i <= sheet.getLastRowNum(); i++) {
                 XSSFRow row = sheet.getRow(i);
                 if (row != null) {
                     try {
