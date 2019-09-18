@@ -1,6 +1,6 @@
-package com.cgk.engineering.team.simpleclient.algorithms;
+package com.cgk.engineering.team.simpleclient.algorithm;
 
-import com.cgk.engineering.team.simpleclient.algorithms.interfaces.NormalizedStringSimilarity;
+import com.cgk.engineering.team.simpleclient.algorithm.interfaces.NormalizedStringSimilarity;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 public class NormalizedLongestCommonPhrase implements NormalizedStringSimilarity {

@@ -1,7 +1,8 @@
 package com.cgk.engineering.team.simpleclient.model;
 
-import com.cgk.engineering.team.simpleclient.algorithms.NormalizedLongestCommonPhrase;
-import org.bson.types.ObjectId;
+import com.cgk.engineering.team.dbservice.model.Article;
+import com.cgk.engineering.team.mainservice.model.Comparison;
+import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLongestCommonPhrase;
 
 import java.util.Random;
 

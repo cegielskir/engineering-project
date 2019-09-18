@@ -1,7 +1,7 @@
-package com.cgk.engineering.team.simpleclient.algorithms;
+package com.cgk.engineering.team.simpleclient.algorithm;
 
-import com.cgk.engineering.team.simpleclient.algorithms.interfaces.NormalizedStringDistance;
-import com.cgk.engineering.team.simpleclient.algorithms.interfaces.NormalizedStringSimilarity;
+import com.cgk.engineering.team.simpleclient.algorithm.interfaces.NormalizedStringDistance;
+import com.cgk.engineering.team.simpleclient.algorithm.interfaces.NormalizedStringSimilarity;
 
 public class NormalizedLevenshtein implements
         NormalizedStringDistance, NormalizedStringSimilarity {

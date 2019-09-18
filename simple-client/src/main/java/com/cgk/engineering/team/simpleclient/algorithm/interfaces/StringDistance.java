@@ -1,4 +1,4 @@
-package com.cgk.engineering.team.simpleclient.algorithms.interfaces;
+package com.cgk.engineering.team.simpleclient.algorithm.interfaces;
 
 import java.io.Serializable;
 

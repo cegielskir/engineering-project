@@ -1,6 +1,6 @@
-package com.cgk.engineering.team.simpleclient.algorithms;
+package com.cgk.engineering.team.simpleclient.algorithm;
 
-import com.cgk.engineering.team.simpleclient.algorithms.interfaces.MetricStringDistance;
+import com.cgk.engineering.team.simpleclient.algorithm.interfaces.MetricStringDistance;
 
 public class Levenshtein implements MetricStringDistance {
 

@@ -1,10 +1,11 @@
 package com.cgk.engineering.team.mainservice.controller;
 
 
+import com.cgk.engineering.team.dbservice.model.Article;
 import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
-import com.cgk.engineering.team.mainservice.model.Article;
+import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Comparison;
-import com.cgk.engineering.team.mainservice.repository.ArticleRepository;
+import com.cgk.engineering.team.mainservice.model.ComparisonData;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -22,21 +23,19 @@ public class AlgorithmServiceController {
 
 
     @Autowired
-    private ArticleRepository articleRepository;
+    private DatabaseServiceClient dbClient;
 
     @Autowired
     private AlgorithmClient algorithmClient;
 
     @GetMapping(value = "/{articleId}")
     public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId){
-        List<Article> articles = articleRepository.findAll();
-        Article article = articleRepository.findBy_id(articleId);
-        articles = articles.stream().filter(a -> !(a.get_id().equals(articleId.toString()))).collect(Collectors.toList());
+        List<Article> articles = dbClient.getArticles();
+        Article article = dbClient.getArticle(articleId);
+        articles.remove(article);
         List<Comparison> comparisons = new ArrayList<>();
-        if(!articles.isEmpty()) {
-            for (Article theArticle : articles) {
-                comparisons.add(algorithmClient.getComparison(articleId, new ObjectId(theArticle.get_id())));
-            }
+        for(Article theArticle : articles){
+            comparisons.add(algorithmClient.getComparison(new ComparisonData(article, theArticle)));
         }
         return comparisons;
     }

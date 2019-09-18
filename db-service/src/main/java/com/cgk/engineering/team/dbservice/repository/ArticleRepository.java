@@ -1,6 +1,6 @@
-package com.cgk.engineering.team.simpleclient.repository;
+package com.cgk.engineering.team.dbservice.repository;
 
-import com.cgk.engineering.team.simpleclient.model.Article;
+import com.cgk.engineering.team.dbservice.model.Article;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

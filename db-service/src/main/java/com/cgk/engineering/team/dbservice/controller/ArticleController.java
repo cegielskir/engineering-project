@@ -1,7 +1,7 @@
-package com.cgk.engineering.team.mainservice.controller;
+package com.cgk.engineering.team.dbservice.controller;
 
 import com.cgk.engineering.team.dbservice.model.Article;
-import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
+import com.cgk.engineering.team.dbservice.repository.ArticleRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,22 +14,21 @@ import java.util.List;
 public class ArticleController {
 
     @Autowired
-    DatabaseServiceClient dbClient;
+    ArticleRepository articleRepository;
 
     @GetMapping(value = "/{articleId}")
     public Article getArticle(@PathVariable("articleId") ObjectId articleId){
-        return dbClient.getArticle(articleId);
+        return articleRepository.findBy_id(articleId);
     }
 
     @GetMapping
     public List<Article> getArticles(){
-        return dbClient.getArticles();
+        return articleRepository.findAll();
     }
 
     @PostMapping
     public Article addArticle(@RequestBody Article article){
-        article.set_id(ObjectId.get());
-        dbClient.addArticle(article);
+        articleRepository.save(article);
         return article;
     }
 
