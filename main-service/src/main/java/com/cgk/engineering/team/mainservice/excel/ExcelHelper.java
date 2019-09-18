@@ -5,34 +5,36 @@ import com.cgk.engineering.team.dbservice.model.Article;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
 import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class ExcelHelper {
 
-    public List<Article> readExcel(String fileLocation) throws IOException {
+    public List<Article> getArticlesFromExcelFile(InputStream inputStream) throws IOException {
 
-        List<Article> data = new ArrayList<>();
-        FileInputStream fileInputStream = new FileInputStream(new File(fileLocation));
+        List<Article> articles;
 
-        if (fileLocation.endsWith(".xls")) {
-            data = readHSSFWorkbook(fileInputStream);
-        } else if (fileLocation.endsWith(".xlsx")) {
-            data = readXSSFWorkbook(fileInputStream);
-        }
+//        if (fileLocation.endsWith(".xls")) {
+//            data = readHSSFWorkbook(fileInputStream);
+//        } else if (fileLocation.endsWith(".xlsx")) {
+            articles = readXSSFWorkbook(inputStream);
+        //}
 
-        return data;
+        return articles;
     }
 
     private List<Article> readHSSFWorkbook(FileInputStream fis) throws IOException {
@@ -62,18 +64,18 @@ public class ExcelHelper {
 
     private Article createArticleFromExcelRow(Row row){
         Article article = new Article();
-        article.setUrl(row.getCell(0).getStringCellValue());
-        article.setNumberOfViews(row.getCell(1).getStringCellValue());
-        article.setAuthor(row.getCell(2).getStringCellValue());
-        article.setDate(row.getCell(3).getStringCellValue());
-        article.setDescription(row.getCell(4).getStringCellValue());
-        article.setContent(row.getCell(5).getStringCellValue());
-        article.setTitle(row.getCell(6).getStringCellValue());
-        article.setDownloadTime(row.getCell(7).getStringCellValue());
+        article.setUrl(readCellContent(row.getCell(0)));
+        article.setNumberOfViews(readCellContent(row.getCell(1)));
+        article.setAuthor(readCellContent(row.getCell(2)));
+        article.setDate(readCellContent(row.getCell(3)));
+        article.setDescription(readCellContent(row.getCell(4)));
+        article.setContent(readCellContent(row.getCell(5)));
+        article.setTitle(readCellContent(row.getCell(6)));
+        article.setDownloadTime(readCellContent(row.getCell(7)));
         return article;
     }
 
-    private List<Article> readXSSFWorkbook(FileInputStream fis) throws IOException {
+    private List<Article> readXSSFWorkbook(InputStream fis) throws IOException {
         XSSFWorkbook workbook = null;
         List<Article> articles = new ArrayList<>();
         try {
@@ -91,12 +93,34 @@ public class ExcelHelper {
                     }
                 }
             }
-        } finally {
-            if (workbook != null) {
-                workbook.close();
-            }
+        } catch (Exception ex){
+            ex.printStackTrace();
         }
         return articles;
     }
 
+    private String readCellContent(Cell cell) {
+        String content;
+        switch (cell.getCellType()) {
+            case STRING:
+                content = cell.getStringCellValue();
+                break;
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    content = cell.getDateCellValue() + "";
+                } else {
+                    content = cell.getNumericCellValue() + "";
+                }
+                break;
+            case BOOLEAN:
+                content = cell.getBooleanCellValue() + "";
+                break;
+            case FORMULA:
+                content = cell.getCellFormula() + "";
+                break;
+            default:
+                content = "";
+        }
+        return content;
+    }
 }

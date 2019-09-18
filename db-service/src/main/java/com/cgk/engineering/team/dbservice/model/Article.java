@@ -17,7 +17,9 @@ public class Article {
     private String numberOfViews;
     private String downloadTime;
 
-    public Article() {}
+    public Article() {
+        set_id(ObjectId.get());
+    }
 
     public Article(ObjectId _id, String title, String author, String description, String content) {
         this._id = _id;
