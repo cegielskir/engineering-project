@@ -6,6 +6,7 @@ import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Comparison;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
+import com.cgk.engineering.team.mainservice.websocket.ComparisonWebSocketController;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -28,14 +28,19 @@ public class AlgorithmServiceController {
     @Autowired
     private AlgorithmClient algorithmClient;
 
+    @Autowired
+    private ComparisonWebSocketController webSockController;
+
     @GetMapping(value = "/{articleId}")
-    public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId){
+    public List<Comparison> getComparisons(@PathVariable("articleId") ObjectId articleId){
         List<Article> articles = dbClient.getArticles();
         Article article = dbClient.getArticle(articleId);
         articles.remove(article);
         List<Comparison> comparisons = new ArrayList<>();
         for(Article theArticle : articles){
-            comparisons.add(algorithmClient.getComparison(new ComparisonData(article, theArticle)));
+            Comparison comparison = algorithmClient.getComparison(new ComparisonData(article, theArticle));
+            comparisons.add(comparison);
+            webSockController.sendComparison(comparison);
         }
         return comparisons;
     }
