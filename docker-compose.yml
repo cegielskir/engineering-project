@@ -1,0 +1,53 @@
+version: '3'
+
+services:
+  config-service:
+    build:
+      context: ./config-service/
+      dockerfile: ../Dockerfile
+    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.configservice.ConfigServiceApplication
+    expose:
+      - "8888"
+  discovery-service:
+    build:
+      context: ./discovery-service/
+      dockerfile: ../Dockerfile
+    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.discoveryservice.DiscoveryServiceApplication
+    expose:
+      - "8061"
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+  db-service:
+    build:
+      context: ./db-service/
+      dockerfile: ../Dockerfile
+    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.dbservice.DbServiceApplication
+    expose:
+      - "9092"
+
+  gateway-service:
+    build:
+      context: ./gateway-service/
+      dockerfile: ../Dockerfile
+    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.gatewayservice.GatewayServiceApplication
+    expose:
+      - "8060"
+  main-service:
+    build:
+      context: ./main-service/
+      dockerfile: ../Dockerfile
+    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.mainservice.model.MainServiceApplication
+    expose:
+      - "9090"
+  simple-client:
+    build:
+      context: ./simple-client/
+      dockerfile: ../Dockerfile
+    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.simpleclient.model.SimpleClientApplication
+    ports:
+      - "9091:9091"
+
