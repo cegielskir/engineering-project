@@ -4,17 +4,11 @@ services:
   config-service:
     build:
       context: ./config-service/
-      dockerfile: ../Dockerfile
-    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.configservice.ConfigServiceApplication
-    expose:
-      - "8888"
+      dockerfile: Dockerfile
   discovery-service:
     build:
       context: ./discovery-service/
-      dockerfile: ../Dockerfile
-    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.discoveryservice.DiscoveryServiceApplication
-    expose:
-      - "8061"
+      dockerfile: Dockerfile
   mongo:
     image: mongo
     restart: always
@@ -24,30 +18,19 @@ services:
   db-service:
     build:
       context: ./db-service/
-      dockerfile: ../Dockerfile
-    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.dbservice.DbServiceApplication
-    expose:
-      - "9092"
-
+      dockerfile: Dockerfile
   gateway-service:
     build:
       context: ./gateway-service/
-      dockerfile: ../Dockerfile
-    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.gatewayservice.GatewayServiceApplication
-    expose:
-      - "8060"
+      dockerfile: Dockerfile
   main-service:
     build:
       context: ./main-service/
-      dockerfile: ../Dockerfile
-    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.mainservice.model.MainServiceApplication
-    expose:
-      - "9090"
+      dockerfile: Dockerfile
   simple-client:
     build:
       context: ./simple-client/
-      dockerfile: ../Dockerfile
-    entrypoint: java -cp app:app/lib/* com.cgk.engineering.team.simpleclient.model.SimpleClientApplication
+      dockerfile: Dockerfile
     ports:
       - "9091:9091"
 
