@@ -5,10 +5,33 @@ services:
     build:
       context: .
       dockerfile: config-service/Dockerfile
+    networks:
+      - backend
+    ports:
+      - "8888:8888"
   discovery-service:
     build:
       context: .
       dockerfile: discovery-service/Dockerfile
+    depends_on:
+      - config-service
+    command: 'sleep 60'
+    networks:
+      - backend
+    ports:
+      - "8061:8061"
+  gateway-service:
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
+    depends_on:
+      - config-service
+      - discovery-service
+    command: 'sleep 20'
+    networks:
+      - backend
+    ports:
+      - "8060:8060"
   mongo:
     image: mongo
     restart: always
@@ -19,20 +42,57 @@ services:
     build:
       context: .
       dockerfile: db-service/Dockerfile
-  gateway-service:
-    build:
-      context: .
-      dockerfile: gateway-service/Dockerfile
+    depends_on:
+      - config-service
+      - discovery-service
+      - gateway-service
+    command: 'sleep 20'
+    networks:
+      - backend
+    ports:
+      - "9092:9092"
   main-service:
     build:
       context: .
       dockerfile: main-service/Dockerfile
-    volumes:
-      - C:\Users\admin\.m2:/app
+    depends_on:
+      - config-service
+      - discovery-service
+      - gateway-service
+    command: 'sleep 20'
+    networks:
+      - frontend
+      - backend
+    ports:
+      - "9090:9090"
   simple-client:
     build:
       context: .
       dockerfile: simple-client/Dockerfile
+    depends_on:
+      - config-service
+      - discovery-service
+      - gateway-service
+    command: 'sleep 20'
     ports:
       - "9091:9091"
+    networks:
+      - backend
+  app-client:
+    build:
+      context: api-client # Use an image built from the specified dockerfile in the `polling-app-client` directory.
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_BASE_URL: http://127.0.0.1:5000
+    ports:
+      - "3000:3000" # Map the exposed port 3000 on the container to port 3000 on the host machine
+    restart: always
+    depends_on:
+      - main-service
+    networks:
+      - frontend
+    
+networks:
+  backend:
+  frontend:
 
