@@ -2,11 +2,11 @@ FROM openjdk:8-jdk-alpine as build
 
 VOLUME /tmp
 
-COPY simple-service/mvnw wip/
-COPY simple-service/.mvn wip/.mvn
-COPY simple-service/pom.xml wip/
-COPY simple-service/src wip/src
-COPY simple-service/Dockerfile wip/Dockerfile
+COPY simple-client/mvnw wip/
+COPY simple-client/.mvn wip/.mvn
+COPY simple-client/pom.xml wip/
+COPY simple-client/src wip/src
+COPY simple-client/Dockerfile wip/Dockerfile
 COPY pom.xml .
 
 WORKDIR "/wip"
