@@ -3,12 +3,12 @@ version: '3'
 services:
   config-service:
     build:
-      context: ./config-service/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: config-service/Dockerfile
   discovery-service:
     build:
-      context: ./discovery-service/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: discovery-service/Dockerfile
   mongo:
     image: mongo
     restart: always
@@ -17,20 +17,22 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: example
   db-service:
     build:
-      context: ./db-service/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: db-service/Dockerfile
   gateway-service:
     build:
-      context: ./gateway-service/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: gateway-service/Dockerfile
   main-service:
     build:
-      context: ./main-service/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: main-service/Dockerfile
+    volumes:
+      - C:\Users\admin\.m2:/app
   simple-client:
     build:
-      context: ./simple-client/
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: simple-client/Dockerfile
     ports:
       - "9091:9091"
 
