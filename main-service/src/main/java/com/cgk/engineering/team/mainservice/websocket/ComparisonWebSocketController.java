@@ -5,6 +5,7 @@ import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Comparison;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
+import com.cgk.engineering.team.mainservice.model.FastComparison;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -38,14 +39,14 @@ public class ComparisonWebSocketController {
             Article article = dbClient.getArticle(articleID);
             articles.remove(article);
             for(Article theArticle : articles){
-                sendComparison(algorithmClient.getComparison(new ComparisonData(article, theArticle)));
+                sendComparison(algorithmClient.getFastComparison(new ComparisonData(article, theArticle)));
             }
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    public void sendComparison(Comparison comparison) {
+    public void sendComparison(FastComparison comparison) {
         this.template.convertAndSend("/comparison", comparison);
     }
 

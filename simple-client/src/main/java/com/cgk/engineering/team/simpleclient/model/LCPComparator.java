@@ -3,6 +3,7 @@ package com.cgk.engineering.team.simpleclient.model;
 import com.cgk.engineering.team.dbservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.Comparison;
 import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLongestCommonPhrase;
+import org.bson.types.ObjectId;
 
 import java.util.Random;
 
@@ -12,6 +13,23 @@ public class LCPComparator implements  IComparator {
     public LCPComparator(Article article1, Article article2){
         this.article1=article1;
         this.article2=article2;
+    }
+
+    public FastComparison fastCompareArticles(){
+        Random random = new Random();
+        Comparison c = new Comparison(random.nextInt(100000));
+        c.setArticleIDs( article1.get_id(),  article2.get_id());
+        NormalizedLongestCommonPhrase nlcp = new NormalizedLongestCommonPhrase();
+        double percentage = 100* nlcp.similarity(article1.getContent(), article2.getContent());
+
+        FastComparison fastComparison = new FastComparison();
+        fastComparison.setId1(new ObjectId(article1.get_id()));
+        fastComparison.setId2(new ObjectId(article2.get_id()));
+        fastComparison.setPartOfContent1(article1.getContent().substring(0, 100));
+        fastComparison.setPartOfContent2(article2.getContent().substring(0, 100));
+        fastComparison.setSimilarityPercentage(percentage);
+
+        return fastComparison;
     }
 
     @Override
