@@ -31,17 +31,4 @@ public class AlgorithmServiceController {
     @Autowired
     private ComparisonWebSocketController webSockController;
 
-    @GetMapping(value = "/{articleId}")
-    public List<Comparison> getComparisons(@PathVariable("articleId") ObjectId articleId){
-        List<Article> articles = dbClient.getArticles();
-        Article article = dbClient.getArticle(articleId);
-        articles.remove(article);
-        List<Comparison> comparisons = new ArrayList<>();
-        for(Article theArticle : articles){
-            Comparison comparison = algorithmClient.getComparison(new ComparisonData(article, theArticle));
-            comparisons.add(comparison);
-            webSockController.sendComparison(comparison);
-        }
-        return comparisons;
-    }
 }
