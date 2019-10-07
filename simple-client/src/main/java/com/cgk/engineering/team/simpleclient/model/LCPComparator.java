@@ -1,7 +1,6 @@
 package com.cgk.engineering.team.simpleclient.model;
 
 import com.cgk.engineering.team.dbservice.model.Article;
-import com.cgk.engineering.team.mainservice.model.Comparison;
 import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLongestCommonPhrase;
 
 import java.util.Random;
@@ -24,6 +23,8 @@ public class LCPComparator implements  IComparator {
         c.setPercentage((int) (percentage));
         c.setSuspiciousWords(markSuspiciousWords(nlcp.getIndexTo1(), nlcp.getSameWordsNum(), article1.getContent())
                 , markSuspiciousWords(nlcp.getIndexTo2(), nlcp.getSameWordsNum(), article2.getContent()));
+        c.setFirstArticleShortContent(article1.getContent().length() < 120 ? article1.getContent() : article1.getContent().substring(0, 120));
+        c.setSecondArticleShortContent(article2.getContent().length() < 120 ? article2.getContent() : article2.getContent().substring(0, 120));
         return c;
     }
 

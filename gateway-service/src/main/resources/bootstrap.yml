@@ -4,3 +4,11 @@ spring:
   cloud:
     config:
       uri: http://localhost:8888
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000
