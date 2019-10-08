@@ -15,4 +15,6 @@ public interface AlgorithmClient {
 
     @PostMapping("/algorithm")
     Comparison getComparison(@RequestBody ComparisonData comparisonData);
+    @PostMapping("/algorithm")
+    Comparison getComparisonWithChosenMetric(@RequestBody ComparisonData comparisonData);
 }
