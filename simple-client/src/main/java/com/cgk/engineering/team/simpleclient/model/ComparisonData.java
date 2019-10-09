@@ -1,8 +1,5 @@
 package com.cgk.engineering.team.simpleclient.model;
 
-
-import com.cgk.engineering.team.mainservice.model.Article;
-
 public class ComparisonData {
 
 
