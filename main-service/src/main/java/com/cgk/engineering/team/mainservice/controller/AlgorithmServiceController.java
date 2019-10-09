@@ -30,10 +30,9 @@ public class AlgorithmServiceController {
 
     @GetMapping(value = "/{articleId}")
     public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId, @RequestParam("metric") String metric){
-        List<Article> articles = dbClient.getArticles();
+        List<Article> articles = dbClient.getArticles().stream().filter(a -> !new ObjectId(a.get_id()).equals(articleId)).collect(Collectors.toList());
         Article article = dbClient.getArticle(articleId);
         if(article != null) {
-            articles.remove(article);
             List<Comparison> comparisons = new ArrayList<>();
             for (Article theArticle : articles) {
                 ComparisonData cd = new ComparisonData(article,theArticle);

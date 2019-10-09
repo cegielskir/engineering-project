@@ -23,8 +23,8 @@ public class LCPComparator implements  IComparator {
         c.setPercentage((int) (percentage));
         c.setSuspiciousWords(markSuspiciousWords(nlcp.getIndexTo1(), nlcp.getSameWordsNum(), article1.getContent())
                 , markSuspiciousWords(nlcp.getIndexTo2(), nlcp.getSameWordsNum(), article2.getContent()));
-        c.setFirstArticleShortContent(article1.getContent().length() < 120 ? article1.getContent() : article1.getContent().substring(0, 120));
-        c.setSecondArticleShortContent(article2.getContent().length() < 120 ? article2.getContent() : article2.getContent().substring(0, 120));
+        c.setFirstArticleShortContent(article1.getContent());
+        c.setSecondArticleShortContent(article2.getContent());
         return c;
     }
 
