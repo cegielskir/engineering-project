@@ -1,4 +1,4 @@
-package com.cgk.engineering.team.mainservice.model;
+package com.cgk.engineering.team.simpleclient.model;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
