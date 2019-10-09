@@ -1,4 +1,4 @@
-package com.cgk.engineering.team.mainservice.controller;
+package com.cgk.engineering.team.mainservice.rest;
 
 
 import com.cgk.engineering.team.dbservice.model.Article;

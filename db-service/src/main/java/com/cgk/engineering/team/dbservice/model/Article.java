@@ -12,8 +12,14 @@ public class Article {
     private String author;
     private String description;
     private String content;
+    private String date;
+    private String url;
+    private String numberOfViews;
+    private String downloadTime;
 
-    public Article() {}
+    public Article() {
+        set_id(ObjectId.get());
+    }
 
     public Article(ObjectId _id, String title, String author, String description, String content) {
         this._id = _id;
@@ -63,6 +69,38 @@ public class Article {
         this.content = content;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getNumberOfViews() {
+        return numberOfViews;
+    }
+
+    public void setNumberOfViews(String numberOfViews) {
+        this.numberOfViews = numberOfViews;
+    }
+
+    public String getDownloadTime() {
+        return downloadTime;
+    }
+
+    public void setDownloadTime(String downloadTime) {
+        this.downloadTime = downloadTime;
+    }
+
     @Override
     public String toString() {
         return "Article{" +
@@ -71,6 +109,9 @@ public class Article {
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +
                 ", content='" + content + '\'' +
+                ", date='" + date + '\'' +
+                ", url='" + url + '\'' +
+                ", numberOfViews=" + numberOfViews +
                 '}';
     }
 }
