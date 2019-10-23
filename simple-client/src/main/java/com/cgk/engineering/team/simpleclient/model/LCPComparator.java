@@ -16,15 +16,12 @@ public class LCPComparator implements  IComparator {
     @Override
     public Comparison compareArticles(){
         Random random = new Random();
-        Comparison c = new Comparison(random.nextInt(100000));
+        Comparison c = new Comparison();
         c.setArticleIDs( article1.get_id(),  article2.get_id());
         NormalizedLongestCommonPhrase nlcp = new NormalizedLongestCommonPhrase();
         double percentage = 100* nlcp.similarity(article1.getContent(), article2.getContent());
         c.setPercentage((int) (percentage));
-        c.setSuspiciousWords(markSuspiciousWords(nlcp.getIndexTo1(), nlcp.getSameWordsNum(), article1.getContent())
-                , markSuspiciousWords(nlcp.getIndexTo2(), nlcp.getSameWordsNum(), article2.getContent()));
-        c.setFirstArticleShortContent(article1.getContent());
-        c.setSecondArticleShortContent(article2.getContent());
+
         return c;
     }
 

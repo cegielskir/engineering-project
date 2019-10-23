@@ -42,20 +42,13 @@ public class SimmetricsComparator implements IComparator {
         float result = stringMetric.compare(article1.getContent(), article2.getContent());
         double percentage = 100*result;
         c.setPercentage((int)percentage);
-        c.setFirstArticleShortContent(article1.getContent());
-        c.setSecondArticleShortContent(article2.getContent());
-        NormalizedLongestCommonPhrase nlcp = new NormalizedLongestCommonPhrase();
-        c.setSuspiciousWords(markSuspiciousWords(nlcp.getIndexTo1(), nlcp.getSameWordsNum(), article1.getContent())
-                , markSuspiciousWords(nlcp.getIndexTo2(), nlcp.getSameWordsNum(), article2.getContent()));
-        return c;
-    }
+        c.setFirstArticleShortContent(article1.getContent().length() > 300
+                ? article1.getContent().substring(0, 300) + "..."
+                : article1.getContent());
+        c.setSecondArticleShortContent(article2.getContent().length() > 300
+                ? article2.getContent().substring(0, 300) + "..."
+                : article2.getContent());
 
-    private int[] markSuspiciousWords(int to, int length, String articleContent){
-        String [] splitted = articleContent.split(" ");
-        int[] suspWords = new int[splitted.length];
-        for(int i=to-length+1;i<=to;i++){
-            suspWords[i]++;
-        }
-        return suspWords;
+        return c;
     }
 }
