@@ -30,7 +30,9 @@ public class AlgorithmServiceController {
     private AlgorithmClient algorithmClient;
 
     @GetMapping(value = "/{articleId}")
-    public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId, @RequestParam("metric") String metric){
+    public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId,
+                                          @RequestParam("threshold") int threshold,
+                                          @RequestParam("metric") String metric){
         List<Article> articles = dbClient.getArticles().stream().filter(a -> !new ObjectId(a.get_id()).equals(articleId)).collect(Collectors.toList());
         Article article = dbClient.getArticle(articleId);
         if(article != null) {
@@ -39,10 +41,11 @@ public class AlgorithmServiceController {
                 ComparisonData comparisonData = new ComparisonData(article, theArticle);
                 comparisonData.setMetric(metric);
                 Comparison comparison = algorithmClient.getComparisonWithChosenMetric(comparisonData);
-                //if(comparison.getPercentage() > 10) {
+                if(comparison.getPercentage() > threshold) {
                     comparisons.add(comparison);
-                //}
+                }
             }
+
             return comparisons;
         }
         return null;

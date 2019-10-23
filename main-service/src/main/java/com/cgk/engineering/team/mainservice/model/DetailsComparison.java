@@ -10,11 +10,9 @@ public class DetailsComparison {
     private String secondArticleContent;
     private List<SuspiciousFragments> suspiciousWords;
 
-    public DetailsComparison() {
-    }
-
-    public DetailsComparison(int id, String firstArticleContent, String secondArticleContent) {
+    public DetailsComparison(int id, int percentage, String firstArticleContent, String secondArticleContent) {
         this.id = id;
+        this.percentage = percentage;
         this.firstArticleContent = firstArticleContent;
         this.secondArticleContent = secondArticleContent;
     }

@@ -1,7 +1,6 @@
 package com.cgk.engineering.team.simpleclient.model;
 
 import com.cgk.engineering.team.dbservice.model.Article;
-import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLongestCommonPhrase;
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.StringMetrics;
 

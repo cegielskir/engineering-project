@@ -5,12 +5,14 @@ import java.util.List;
 public class DetailsComparison implements IComparison {
     private int id;
 
+    private int percentage;
     private String firstArticleContent;
     private String secondArticleContent;
     private List<SuspiciousFragments> suspiciousWords;
 
-    public DetailsComparison(int id, String firstArticleContent, String secondArticleContent) {
+    public DetailsComparison(int id, int percentage, String firstArticleContent, String secondArticleContent) {
         this.id = id;
+        this.percentage = percentage;
         this.firstArticleContent = firstArticleContent;
         this.secondArticleContent = secondArticleContent;
     }
@@ -47,5 +49,13 @@ public class DetailsComparison implements IComparison {
 
     public void setSuspiciousWords(List<SuspiciousFragments> suspiciousWords) {
         this.suspiciousWords = suspiciousWords;
+    }
+
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public void setPercentage(int percentage) {
+        this.percentage = percentage;
     }
 }

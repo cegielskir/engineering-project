@@ -21,13 +21,9 @@ public class NormalizedLongestCommonSubstring {
             SuspiciousFragments suspiciousFragments =
                     new SuspiciousFragments(start1, end1, start2, end2);
             similarityList.add(suspiciousFragments);
-//            System.out.println(s1.length() + " " + s2.length());
-//            System.out.println(length + " " + start1 + " " + start2 + " " + end1 + " " + end2);
-//            System.out.println(s1.substring(start1, end1));
-//            System.out.println(s2.substring(start2, end2));
 
-            s1 = s1.replace(s1.substring(start1, end1), "");
-            s2 = s2.replace(s2.substring(start2, end2), "");
+            s1 = s1.replace(s1.substring(start1, end1), "$".repeat(end1-start1));
+            s2 = s2.replace(s2.substring(start2, end2), "$".repeat(end1-start1));
 
         } while(length > 10 && s1.length() > 10 && s2.length() > 10);
         return similarityList;
