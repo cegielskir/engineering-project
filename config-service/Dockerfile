@@ -11,12 +11,14 @@ COPY pom.xml .
 
 WORKDIR "/wip"
 
-RUN ./mvnw dependency:go-offline -B
-
 RUN ./mvnw package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 FROM openjdk:8-jdk-alpine
+
+RUN apk --no-cache add curl 
+
+EXPOSE 8888
 
 ARG DEPENDENCY=/wip/target/dependency
 

@@ -1,6 +1,5 @@
 package com.cgk.engineering.team.mainservice.model;
 
-import com.cgk.engineering.team.dbservice.model.Article;
 
 public class ComparisonData {
 

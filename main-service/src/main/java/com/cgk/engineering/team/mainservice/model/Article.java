@@ -1,4 +1,4 @@
-package com.cgk.engineering.team.dbservice.model;
+package com.cgk.engineering.team.mainservice.model;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
