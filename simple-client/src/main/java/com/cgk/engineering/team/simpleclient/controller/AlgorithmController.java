@@ -1,12 +1,8 @@
 package com.cgk.engineering.team.simpleclient.controller;
 
-import com.cgk.engineering.team.dbservice.model.Article;
-import com.cgk.engineering.team.mainservice.model.Comparison;
-import com.cgk.engineering.team.mainservice.model.ComparisonData;
-import com.cgk.engineering.team.simpleclient.client.MainServiceClient;
+import com.cgk.engineering.team.simpleclient.model.Comparison;
+import com.cgk.engineering.team.simpleclient.model.ComparisonData;
 import com.cgk.engineering.team.simpleclient.model.LCPComparator;
-import org.bson.types.ObjectId;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/algorithm")
 public class AlgorithmController {
 
-    @GetMapping
+    @PostMapping
     public Comparison getComparison(@RequestBody ComparisonData comparisonData){
 
 

@@ -1,7 +1,6 @@
 package com.cgk.engineering.team.simpleclient.model;
 
 import org.bson.types.ObjectId;
-import org.omg.CORBA.Object;
 
 public class Comparison {
 
@@ -14,6 +13,8 @@ public class Comparison {
     private int[] suspiciousWords2;
     private String firstArticleID;
     private String secondArticleID;
+    private String firstArticleShortContent;
+    private String secondArticleShortContent;
 
     public Comparison(int id) {
         this.id = id;
@@ -33,7 +34,7 @@ public class Comparison {
 
     public void setPercentage(int percentage) {
         if(percentage<=100 && percentage>=0)
-        this.percentage = percentage;
+            this.percentage = percentage;
         else throw new IllegalArgumentException();
     }
 
@@ -69,5 +70,21 @@ public class Comparison {
 
     public void setSecondArticleID(String secondArticleID) {
         this.secondArticleID = secondArticleID;
+    }
+
+    public String getFirstArticleShortContent() {
+        return firstArticleShortContent;
+    }
+
+    public void setFirstArticleShortContent(String firstArticleShortContent) {
+        this.firstArticleShortContent = firstArticleShortContent;
+    }
+
+    public String getSecondArticleShortContent() {
+        return secondArticleShortContent;
+    }
+
+    public void setSecondArticleShortContent(String secondArticleShortContent) {
+        this.secondArticleShortContent = secondArticleShortContent;
     }
 }
