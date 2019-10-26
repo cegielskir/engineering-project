@@ -5,6 +5,7 @@ import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.Comparison;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
+import com.cgk.engineering.team.mainservice.websocket.ComparisonWebSocketController;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -24,6 +25,9 @@ public class AlgorithmServiceController {
 
     @Autowired
     private AlgorithmClient algorithmClient;
+
+    @Autowired
+    private ComparisonWebSocketController webSockController;
 
     @GetMapping(value = "/{articleId}")
     public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId){
