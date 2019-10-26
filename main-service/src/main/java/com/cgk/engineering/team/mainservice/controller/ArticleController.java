@@ -1,7 +1,7 @@
 package com.cgk.engineering.team.mainservice.controller;
 
-import com.cgk.engineering.team.dbservice.model.Article;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
+import com.cgk.engineering.team.mainservice.model.Article;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

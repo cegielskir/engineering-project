@@ -1,6 +1,5 @@
 package com.cgk.engineering.team.simpleclient.model;
 
-import com.cgk.engineering.team.dbservice.model.Article;
 import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLevenshtein;
 
 public class LevenshteinComparator implements IComparator {

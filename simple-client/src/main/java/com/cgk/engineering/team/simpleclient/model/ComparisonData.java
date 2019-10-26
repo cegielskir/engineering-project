@@ -1,5 +1,4 @@
-package com.cgk.engineering.team.mainservice.model;
-
+package com.cgk.engineering.team.simpleclient.model;
 
 public class ComparisonData {
 

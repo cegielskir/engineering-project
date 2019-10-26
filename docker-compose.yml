@@ -1,0 +1,154 @@
+version: '2.3'
+
+services:
+  config-service:
+    build:
+      context: .
+      dockerfile: config-service/Dockerfile
+    networks:
+      - backend
+    ports:
+      - "8888:8888"
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:8888/config-service/test"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+  
+  discovery-service:
+    build:
+      context: .
+      dockerfile: discovery-service/Dockerfile
+    networks:
+      - backend
+    ports:
+      - "8061:8061"
+    environment:
+    - CONFIG_URL=config-service
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:8061"]  
+      timeout: 10s
+      interval: 60s
+      retries: 30
+    depends_on:
+      config-service:
+        condition: service_healthy
+    restart: always
+      
+  gateway-service:
+    build:
+      context: .
+      dockerfile: gateway-service/Dockerfile
+    depends_on:
+      config-service:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+    command: 'sleep 20'
+    networks:
+      - backend
+      - frontend
+      
+    ports:
+      - "8060:8060"
+    healthcheck:
+      test: ["CMD-SHELL","curl http://localhost:8060/actuator/info"]  
+      timeout: 10s
+      interval: 60s
+      retries: 10
+    environment:
+    - EUREKA_URL=discovery-service
+    - CONFIG_URL=config-service
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+    - MONGO_DATA_DIR=/data/db
+    - MONGO_LOG_DIR=/dev/null
+    ports:
+    - "27017:27017"
+    command: mongod
+    networks:
+      - backend
+  db-service:
+    build:
+      context: .
+      dockerfile: db-service/Dockerfile
+    depends_on:
+      config-service:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+      gateway-service:
+        condition: service_healthy
+      mongo:
+        condition: service_started
+    networks:
+      - backend
+    ports:
+      - "9092:9092"
+    environment:
+    - EUREKA_URL=discovery-service
+    - CONFIG_URL=config-service
+    - DB_URL=mongo
+
+  main-service:
+    build:
+      context: .
+      dockerfile: main-service/Dockerfile
+    depends_on:
+      config-service:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+      gateway-service:
+        condition: service_healthy
+    command: 'sleep 20'
+    networks:
+      - backend
+    ports:
+      - "9090:9090"
+    environment:
+    - EUREKA_URL=discovery-service
+    - CONFIG_URL=config-service
+
+  simple-client:
+    build:
+      context: .
+      dockerfile: simple-client/Dockerfile
+    depends_on:
+      config-service:
+        condition: service_healthy
+      discovery-service:
+        condition: service_healthy
+      gateway-service:
+        condition: service_healthy
+    command: 'sleep 20'
+    ports:
+      - "9091:9091"
+    networks:
+      - backend
+    environment:
+    - EUREKA_URL=discovery-service
+    - CONFIG_URL=config-service
+
+  app-client:
+    build:
+      context: api-client # Use an image built from the specified dockerfile in the `polling-app-client` directory.
+      dockerfile: Dockerfile      
+    ports:
+      - "3000:3000" # Map the exposed port 3000 on the container to port 3000 on the host machine
+    restart: always
+    depends_on:
+      main-service:
+        condition: service_started
+    networks:
+      - frontend
+    environment:
+      - "API_BASE_URL=http://main-service:8060"
+    
+networks:
+  backend:
+  frontend:
+
