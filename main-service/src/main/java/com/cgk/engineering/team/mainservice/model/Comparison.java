@@ -1,7 +1,6 @@
 package com.cgk.engineering.team.mainservice.model;
 
 import org.bson.types.ObjectId;
-
 public class Comparison {
 
     private int id;
@@ -13,13 +12,14 @@ public class Comparison {
     private int[] suspiciousWords2;
     private String firstArticleID;
     private String secondArticleID;
-
-    public Comparison() {}
+    private String firstArticleShortContent;
+    private String secondArticleShortContent;
 
     public Comparison(int id) {
         this.id = id;
-
     }
+
+    public Comparison() {}
 
     public int getId() {
         return id;
@@ -33,7 +33,7 @@ public class Comparison {
 
     public void setPercentage(int percentage) {
         if(percentage<=100 && percentage>=0)
-        this.percentage = percentage;
+            this.percentage = percentage;
         else throw new IllegalArgumentException();
     }
 
@@ -41,7 +41,6 @@ public class Comparison {
         this.suspiciousWords1=suspiciousWords1;
         this.suspiciousWords2=suspiciousWords2;
     }
-
 
     public int[] getSuspiciousWords2() {
         return suspiciousWords2;
@@ -70,5 +69,21 @@ public class Comparison {
 
     public void setSecondArticleID(String secondArticleID) {
         this.secondArticleID = secondArticleID;
+    }
+
+    public String getFirstArticleShortContent() {
+        return firstArticleShortContent;
+    }
+
+    public void setFirstArticleShortContent(String firstArticleShortContent) {
+        this.firstArticleShortContent = firstArticleShortContent;
+    }
+
+    public String getSecondArticleShortContent() {
+        return secondArticleShortContent;
+    }
+
+    public void setSecondArticleShortContent(String secondArticleShortContent) {
+        this.secondArticleShortContent = secondArticleShortContent;
     }
 }

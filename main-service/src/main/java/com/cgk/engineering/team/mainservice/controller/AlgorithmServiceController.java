@@ -29,11 +29,26 @@ public class AlgorithmServiceController {
     public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId){
         List<Article> articles = dbClient.getArticles();
         Article article = dbClient.getArticle(articleId);
-        articles.remove(article);
-        List<Comparison> comparisons = new ArrayList<>();
-        for(Article theArticle : articles){
-            comparisons.add(algorithmClient.getComparison(new ComparisonData(article, theArticle)));
+        if(article != null) {
+            articles.remove(article);
+            List<Comparison> comparisons = new ArrayList<>();
+            for (Article theArticle : articles) {
+                comparisons.add(algorithmClient.getComparison(new ComparisonData(article, theArticle)));
+            }
+            return comparisons;
+
         }
-        return comparisons;
+        return null;
+    }
+
+    @GetMapping(value="/two")
+    public Comparison getComparison(@RequestParam("articleId1") ObjectId articleId1,
+                                          @RequestParam("articleId2") ObjectId articleId2){
+        Article article1 = dbClient.getArticle(articleId1);
+        Article article2 = dbClient.getArticle(articleId2);
+        if(article1 != null && article2 != null) {
+            return algorithmClient.getComparison(new ComparisonData(article1, article2));
+        }
+        return null;
     }
 }

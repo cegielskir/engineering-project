@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/algorithm")
 public class AlgorithmController {
 
-    @GetMapping
+    @PostMapping
     public Comparison getComparison(@RequestBody ComparisonData comparisonData){
 
 
