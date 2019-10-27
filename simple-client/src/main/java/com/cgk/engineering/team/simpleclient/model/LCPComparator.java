@@ -23,8 +23,8 @@ public class LCPComparator implements  IComparator {
         FastComparison fastComparison = new FastComparison();
         fastComparison.setId1(new ObjectId(article1.get_id()));
         fastComparison.setId2(new ObjectId(article2.get_id()));
-        fastComparison.setPartOfContent1(article1.getContent().substring(0, 100));
-        fastComparison.setPartOfContent2(article2.getContent().substring(0, 100));
+        fastComparison.setPartOfContent1(article1.getContent());
+        fastComparison.setPartOfContent2(article2.getContent());
         fastComparison.setSimilarityPercentage(percentage);
 
         return fastComparison;
@@ -40,8 +40,8 @@ public class LCPComparator implements  IComparator {
         c.setPercentage((int) (percentage));
         c.setSuspiciousWords(markSuspiciousWords(nlcp.getIndexTo1(), nlcp.getSameWordsNum(), article1.getContent())
                 , markSuspiciousWords(nlcp.getIndexTo2(), nlcp.getSameWordsNum(), article2.getContent()));
-        c.setFirstArticleShortContent(article1.getContent().length() < 120 ? article1.getContent() : article1.getContent().substring(0, 120));
-        c.setSecondArticleShortContent(article2.getContent().length() < 120 ? article2.getContent() : article2.getContent().substring(0, 120));
+        c.setFirstArticleShortContent(article1.getContent());
+        c.setSecondArticleShortContent(article2.getContent());
         return c;
     }
 

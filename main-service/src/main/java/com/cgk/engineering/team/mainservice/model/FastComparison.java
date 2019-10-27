@@ -12,6 +12,9 @@ public class FastComparison {
 
     private double similarityPercentage;
 
+    public FastComparison() {
+    }
+
     public ObjectId getId1() {
         return id1;
     }

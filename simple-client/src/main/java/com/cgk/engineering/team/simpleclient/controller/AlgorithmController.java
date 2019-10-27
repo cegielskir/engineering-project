@@ -24,11 +24,8 @@ public class AlgorithmController {
 
     @PostMapping(value = "/fast")
     public FastComparison getFastComparison(@RequestBody ComparisonData comparisonData){
-
-
-        //LevenshteinComparator levenshteinComparator = new LevenshteinComparator(article1, article2);
-
-        //return levenshteinComparator.compareArticles();
+//      LevenshteinComparator levenshteinComparator = new LevenshteinComparator(article1, article2);
+//      return levenshteinComparator.compareArticles();
         LCPComparator lcpc = new LCPComparator(comparisonData.getArticle1(), comparisonData.getArticle2());
         return lcpc.fastCompareArticles();
     }

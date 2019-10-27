@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "/ws")
 public class ComparisonWebSocketController {
 
     private SimpMessagingTemplate template;
@@ -47,7 +46,7 @@ public class ComparisonWebSocketController {
     }
 
     public void sendComparison(FastComparison comparison) {
-        this.template.convertAndSend("/comparison", comparison);
+        this.template.convertAndSend("/article/comparison", comparison);
     }
 
 }
