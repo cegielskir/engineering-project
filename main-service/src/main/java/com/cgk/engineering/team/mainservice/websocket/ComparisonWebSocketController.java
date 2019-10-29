@@ -65,7 +65,7 @@ public class ComparisonWebSocketController {
     }
 
     public void sendComparison(FastComparison comparison) {
-        this.template.convertAndSend("/comparison", comparison);
+        this.template.convertAndSend("/article/comparison", comparison);
     }
 
 }
