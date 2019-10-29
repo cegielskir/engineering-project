@@ -1,16 +1,15 @@
 package com.cgk.engineering.team.dbservice.websocket;
 
 import com.cgk.engineering.team.dbservice.model.Article;
+import com.cgk.engineering.team.dbservice.model.ComparisonData;
 import com.cgk.engineering.team.dbservice.repository.ArticleRepository;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 @Controller
 public class ArticleWebSocketController {
@@ -25,14 +24,17 @@ public class ArticleWebSocketController {
         this.template = template;
     }
 
-    @MessageMapping("/article")
-    public void getArticles() throws Exception {
-        articleRepository.getAllStream().parallel().forEach(this::sendArticle);
+    @MessageMapping("/article/{articleID}")
+    public void getArticles(@DestinationVariable ObjectId articleID) throws Exception {
+        Article article = articleRepository.findBy_id(articleID);
+        articleRepository.getAllStream()
+                .filter(art -> !art.get_id().equals(articleID.toString()))
+                .forEach(articleToCompare -> sendArticle(article, articleToCompare));
     }
 
 
-    public void sendArticle(Article article) {
-        this.template.convertAndSend("/article-db", article);
+    public void sendArticle(Article article, Article article2) {
+        this.template.convertAndSend("/article-db", new ComparisonData(article, article2));
     }
 
 }
