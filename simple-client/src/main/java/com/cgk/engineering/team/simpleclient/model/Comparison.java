@@ -1,16 +1,9 @@
 package com.cgk.engineering.team.simpleclient.model;
 
-import org.bson.types.ObjectId;
-
-public class Comparison {
-
+public class Comparison implements IComparison {
     private int id;
 
-    //include comparator type
-
     private int percentage;
-    private int[] suspiciousWords1;
-    private int[] suspiciousWords2;
     private String firstArticleID;
     private String secondArticleID;
     private String firstArticleShortContent;
@@ -36,19 +29,6 @@ public class Comparison {
         if(percentage<=100 && percentage>=0)
             this.percentage = percentage;
         else throw new IllegalArgumentException();
-    }
-
-    public void setSuspiciousWords(int[] suspiciousWords1, int[] suspiciousWords2){
-        this.suspiciousWords1=suspiciousWords1;
-        this.suspiciousWords2=suspiciousWords2;
-    }
-
-    public int[] getSuspiciousWords2() {
-        return suspiciousWords2;
-    }
-
-    public int[] getSuspiciousWords1() {
-        return suspiciousWords1;
     }
 
     public void setArticleIDs(String firstArticleID, String secondArticleID) {

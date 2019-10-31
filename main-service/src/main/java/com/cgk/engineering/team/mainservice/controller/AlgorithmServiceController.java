@@ -1,17 +1,20 @@
 package com.cgk.engineering.team.mainservice.controller;
 
+
+import com.cgk.engineering.team.dbservice.model.Article;
 import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
-import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.Comparison;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
-import com.cgk.engineering.team.mainservice.websocket.ComparisonWebSocketController;
+import com.cgk.engineering.team.mainservice.model.DetailsComparison;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -26,33 +29,38 @@ public class AlgorithmServiceController {
     @Autowired
     private AlgorithmClient algorithmClient;
 
-    @Autowired
-    private ComparisonWebSocketController webSockController;
-
     @GetMapping(value = "/{articleId}")
-    public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId){
-        List<Article> articles = dbClient.getArticles();
+    public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId,
+                                          @RequestParam("threshold") int threshold,
+                                          @RequestParam("metric") String metric){
+        List<Article> articles = dbClient.getArticles().stream().filter(a -> !new ObjectId(a.get_id()).equals(articleId)).collect(Collectors.toList());
         Article article = dbClient.getArticle(articleId);
         if(article != null) {
-            articles.remove(article);
             List<Comparison> comparisons = new ArrayList<>();
             for (Article theArticle : articles) {
-                comparisons.add(algorithmClient.getComparison(new ComparisonData(article, theArticle)));
+                ComparisonData comparisonData = new ComparisonData(article, theArticle);
+                comparisonData.setMetric(metric);
+                Comparison comparison = algorithmClient.getComparisonWithChosenMetric(comparisonData);
+                if(comparison.getPercentage() > threshold) {
+                    comparisons.add(comparison);
+                }
             }
-            return comparisons;
 
+            return comparisons;
         }
         return null;
     }
 
     @GetMapping(value="/two")
-    public Comparison getComparison(@RequestParam("articleId1") ObjectId articleId1,
-                                          @RequestParam("articleId2") ObjectId articleId2){
+    public DetailsComparison getComparison(@RequestParam("articleId1") ObjectId articleId1,
+                                           @RequestParam("articleId2") ObjectId articleId2){
+
         Article article1 = dbClient.getArticle(articleId1);
         Article article2 = dbClient.getArticle(articleId2);
         if(article1 != null && article2 != null) {
             return algorithmClient.getComparison(new ComparisonData(article1, article2));
         }
+
         return null;
     }
 }

@@ -1,0 +1,148 @@
+{
+	"info": {
+		"_postman_id": "4df92bcc-02ee-43fc-b4e7-2f691da72411",
+		"name": "Engineering project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "add_article",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"Single text provided\",\r\n    \"author\": \"guest\",\r\n    \"description\": \"Single text to compare\",\r\n    \"content\": \"text\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8060/core/article",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8060",
+					"path": [
+						"core",
+						"article"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "compare_single_article_with_db",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8060/core/compare/5db094a77613c028243309af?metric=Dice",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8060",
+					"path": [
+						"core",
+						"compare",
+						"5db094a77613c028243309af"
+					],
+					"query": [
+						{
+							"key": "metric",
+							"value": "Dice"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "compare_two_articles",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8060/core/compare/two?articleId1=5da6364203cab63aa0af956a&articleId2=5d9f3b0f33e80051a4f4f6df",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8060",
+					"path": [
+						"core",
+						"compare",
+						"two"
+					],
+					"query": [
+						{
+							"key": "articleId1",
+							"value": "5da6364203cab63aa0af956a"
+						},
+						{
+							"key": "articleId2",
+							"value": "5d9f3b0f33e80051a4f4f6df"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_single_article",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8060/core/article/5d9f3abf33e80051a4f4f6c4",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8060",
+					"path": [
+						"core",
+						"article",
+						"5d9f3abf33e80051a4f4f6c4"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get_all_articles",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8060/core/article/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8060",
+					"path": [
+						"core",
+						"article",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

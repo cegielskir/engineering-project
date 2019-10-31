@@ -1,9 +1,7 @@
 package com.cgk.engineering.team.simpleclient.controller;
 
-import com.cgk.engineering.team.simpleclient.model.Comparison;
-import com.cgk.engineering.team.simpleclient.model.ComparisonData;
-import com.cgk.engineering.team.simpleclient.model.FastComparison;
-import com.cgk.engineering.team.simpleclient.model.LCPComparator;
+import com.cgk.engineering.team.mainservice.model.ComparisonData;
+import com.cgk.engineering.team.simpleclient.model.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -11,24 +9,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/algorithm")
 public class AlgorithmController {
 
-    @PostMapping(value = "/accurate")
-    public Comparison getAccurateComparison(@RequestBody ComparisonData comparisonData){
+    @PostMapping
+    public IComparison getComparison(@RequestBody ComparisonData comparisonData) {
+
 
         //LevenshteinComparator levenshteinComparator = new LevenshteinComparator(article1, article2);
 
         //return levenshteinComparator.compareArticles();
-        LCPComparator lcpc = new LCPComparator(comparisonData.getArticle1(), comparisonData.getArticle2());
-        return lcpc.compareArticles();
+        if (comparisonData.getMetric().equals("")) {
+            LCSComparator lcsc = new LCSComparator(comparisonData.getArticle1(), comparisonData.getArticle2());
+            return lcsc.compareArticles();
+        } else {
+            SimmetricsComparator simmetricsComparator = new SimmetricsComparator(comparisonData.getArticle1(), comparisonData.getArticle2(), comparisonData.getMetric());
+            return simmetricsComparator.compareArticles();
+        }
     }
-
-
-    @PostMapping(value = "/fast")
-    public FastComparison getFastComparison(@RequestBody ComparisonData comparisonData){
-//      LevenshteinComparator levenshteinComparator = new LevenshteinComparator(article1, article2);
-//      return levenshteinComparator.compareArticles();
-        LCPComparator lcpc = new LCPComparator(comparisonData.getArticle1(), comparisonData.getArticle2());
-        return lcpc.fastCompareArticles();
-    }
-
-
 }
