@@ -50,7 +50,7 @@ public class AlgorithmServiceController {
     }
 
     @GetMapping(value="/two")
-    public Comparison getComparison(@RequestParam("articleId1") ObjectId articleId1,
+    public DetailsComparison getComparison(@RequestParam("articleId1") ObjectId articleId1,
                                            @RequestParam("articleId2") ObjectId articleId2){
 
         Article article1 = dbClient.getArticle(articleId1);

@@ -1,6 +1,7 @@
 package com.cgk.engineering.team.mainservice.websocket;
 
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
+import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.BasicComparison;
 import com.cgk.engineering.team.mainservice.model.Comparison;
 import com.cgk.engineering.team.mainservice.model.DetailsComparison;
@@ -17,15 +18,17 @@ import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 @Controller
 public class ComparisonWebSocketController {
 
-    private static final String DB_WEBSOCKET_URL = "ws://localhost:9092/article-db";
+    private static final String DB_WEBSOCKET_URL = "ws://localhost:9092/dupsko";
 
     private SimpMessagingTemplate template;
 
     @Autowired
-    StompSessionHandler sessionHandler;
+    StompSessionHandler stompSessionHandler;
 
     @Autowired
     DatabaseServiceClient dbClient;
@@ -55,9 +58,9 @@ public class ComparisonWebSocketController {
         WebSocketStompClient stompClient = new WebSocketStompClient(client);
 
         stompClient.setMessageConverter(new MappingJackson2MessageConverter());
-        ListenableFuture<StompSession> future = stompClient.connect(DB_WEBSOCKET_URL, sessionHandler);
+        ListenableFuture<StompSession> future = stompClient.connect(DB_WEBSOCKET_URL, stompSessionHandler);
         StompSession session = future.get();
-        sessionHandler.initMessage(articleID, session);
+        stompSessionHandler.initMessage(articleID, session);
     }
 
 

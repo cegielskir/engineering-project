@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface AlgorithmClient {
 
     @PostMapping("/algorithm")
-    Comparison getComparison(@RequestBody ComparisonData comparisonData);
+    DetailsComparison getComparison(@RequestBody ComparisonData comparisonData);
 
     @PostMapping("/algorithm")
     BasicComparison getComparisonWithChosenMetric(@RequestBody ComparisonData comparisonData);
