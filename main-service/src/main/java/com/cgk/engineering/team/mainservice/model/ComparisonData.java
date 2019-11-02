@@ -1,7 +1,5 @@
 package com.cgk.engineering.team.mainservice.model;
 
-import com.cgk.engineering.team.dbservice.model.Article;
-
 public class ComparisonData {
 
 
@@ -9,7 +7,10 @@ public class ComparisonData {
 
     private Article article2;
 
-    private String metric ="";
+    private String metric = "";
+
+    public ComparisonData() {
+    }
 
     public ComparisonData(Article article1, Article article2) {
         this.article1 = article1;

@@ -1,18 +1,14 @@
 package com.cgk.engineering.team.simpleclient.controller;
 
-import com.cgk.engineering.team.mainservice.model.ComparisonData;
 import com.cgk.engineering.team.simpleclient.model.*;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping(value = "/algorithm")
 public class AlgorithmController {
 
     @PostMapping
-    public IComparison getComparison(@RequestBody ComparisonData comparisonData) {
-
-
+    public Comparison getComparison(@RequestBody ComparisonData comparisonData) {
         //LevenshteinComparator levenshteinComparator = new LevenshteinComparator(article1, article2);
 
         //return levenshteinComparator.compareArticles();
@@ -24,4 +20,21 @@ public class AlgorithmController {
             return simmetricsComparator.compareArticles();
         }
     }
+
+//    @PostMapping(value="detailsComparison")
+//    public DetailsComparison getComparison(@RequestBody ComparisonData comparisonData) {
+//        LCSComparator lcsc = new LCSComparator(comparisonData.getArticle1(), comparisonData.getArticle2());
+//        return lcsc.compareArticles();
+//    }
+//
+//    @PostMapping(value = "/basicComparison")
+//    public BasicComparison getComparisonWithChosenMetric(@RequestBody ComparisonData comparisonData) {
+//        SimmetricsComparator simmetricsComparator =
+//                new SimmetricsComparator(comparisonData.getArticle1(),
+//                        comparisonData.getArticle2(),
+//                        comparisonData.getMetric());
+//        return simmetricsComparator.compareArticles();
+//
+//    }
+
 }

@@ -1,10 +1,9 @@
 package com.cgk.engineering.team.mainservice.websocket;
 
-import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
-import com.cgk.engineering.team.mainservice.model.Article;
-import com.cgk.engineering.team.mainservice.model.ComparisonData;
-import com.cgk.engineering.team.mainservice.model.FastComparison;
+import com.cgk.engineering.team.mainservice.model.BasicComparison;
+import com.cgk.engineering.team.mainservice.model.Comparison;
+import com.cgk.engineering.team.mainservice.model.DetailsComparison;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
@@ -14,13 +13,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.socket.client.WebSocketClient;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 @Controller
 public class ComparisonWebSocketController {
@@ -66,7 +61,7 @@ public class ComparisonWebSocketController {
     }
 
 
-    public void sendComparison(FastComparison comparison) {
+    public void sendComparison(BasicComparison comparison) {
         this.template.convertAndSend("/article/comparison", comparison);
     }
 

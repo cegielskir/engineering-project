@@ -1,6 +1,5 @@
 package com.cgk.engineering.team.simpleclient.model;
 
-import com.cgk.engineering.team.dbservice.model.Article;
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.StringMetrics;
 
@@ -17,9 +16,9 @@ public class SimmetricsComparator implements IComparator {
     }
 
     @Override
-    public Comparison compareArticles() {
+    public BasicComparison compareArticles() {
         Random random = new Random();
-        Comparison c = new Comparison(random.nextInt(100000));
+        BasicComparison c = new BasicComparison(random.nextInt(100000));
         StringMetric stringMetric;
         c.setArticleIDs( article1.get_id(),  article2.get_id());
         switch (metric){

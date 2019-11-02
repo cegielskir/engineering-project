@@ -1,23 +1,16 @@
 package com.cgk.engineering.team.mainservice.model;
 
-import org.bson.types.ObjectId;
-public class Comparison {
-
+public abstract class Comparison {
     private int id;
-
-    //include comparator type
-
     private int percentage;
-    private String firstArticleID;
-    private String secondArticleID;
-    private String firstArticleShortContent;
-    private String secondArticleShortContent;
 
-    public Comparison(int id) {
-        this.id = id;
+    public Comparison() {
     }
 
-    public Comparison() {}
+    public Comparison(int id, int percentage) {
+        this.id = id;
+        this.percentage = percentage;
+    }
 
     public int getId() {
         return id;
@@ -27,48 +20,14 @@ public class Comparison {
         this.id = id;
     }
 
-    public int getPercentage() { return percentage; }
+    public int getPercentage() {
+        return percentage;
+    }
 
     public void setPercentage(int percentage) {
         if(percentage<=100 && percentage>=0)
             this.percentage = percentage;
         else throw new IllegalArgumentException();
     }
-
-    public void setArticleIDs(String firstArticleID, String secondArticleID) {
-        this.firstArticleID = firstArticleID;
-        this.secondArticleID = secondArticleID;
-    }
-
-    public String getFirstArticleID() {
-        return firstArticleID;
-    }
-
-    public void setFirstArticleID(String firstArticleID) {
-        this.firstArticleID = firstArticleID;
-    }
-
-    public String getSecondArticleID() {
-        return secondArticleID;
-    }
-
-    public void setSecondArticleID(String secondArticleID) {
-        this.secondArticleID = secondArticleID;
-    }
-
-    public String getFirstArticleShortContent() {
-        return firstArticleShortContent;
-    }
-
-    public void setFirstArticleShortContent(String firstArticleShortContent) {
-        this.firstArticleShortContent = firstArticleShortContent;
-    }
-
-    public String getSecondArticleShortContent() {
-        return secondArticleShortContent;
-    }
-
-    public void setSecondArticleShortContent(String secondArticleShortContent) {
-        this.secondArticleShortContent = secondArticleShortContent;
-    }
 }
+

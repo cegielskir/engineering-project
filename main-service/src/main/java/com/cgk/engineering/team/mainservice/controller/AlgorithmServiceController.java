@@ -1,9 +1,8 @@
 package com.cgk.engineering.team.mainservice.controller;
 
-
-import com.cgk.engineering.team.dbservice.model.Article;
 import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
+import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.Comparison;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
 import com.cgk.engineering.team.mainservice.model.DetailsComparison;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/compare")
 @EnableFeignClients
 public class AlgorithmServiceController {
@@ -31,7 +29,7 @@ public class AlgorithmServiceController {
 
     @GetMapping(value = "/{articleId}")
     public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId,
-                                          @RequestParam("threshold") int threshold,
+                                          @RequestParam(value = "threshold", required = false) int threshold,
                                           @RequestParam("metric") String metric){
         List<Article> articles = dbClient.getArticles().stream().filter(a -> !new ObjectId(a.get_id()).equals(articleId)).collect(Collectors.toList());
         Article article = dbClient.getArticle(articleId);
@@ -52,7 +50,7 @@ public class AlgorithmServiceController {
     }
 
     @GetMapping(value="/two")
-    public DetailsComparison getComparison(@RequestParam("articleId1") ObjectId articleId1,
+    public Comparison getComparison(@RequestParam("articleId1") ObjectId articleId1,
                                            @RequestParam("articleId2") ObjectId articleId2){
 
         Article article1 = dbClient.getArticle(articleId1);

@@ -1,19 +1,15 @@
 package com.cgk.engineering.team.mainservice.websocket;
 
 import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
-import com.cgk.engineering.team.mainservice.model.Article;
+import com.cgk.engineering.team.mainservice.model.BasicComparison;
+import com.cgk.engineering.team.mainservice.model.Comparison;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
-import com.cgk.engineering.team.mainservice.model.FastComparison;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 
@@ -35,7 +31,8 @@ public class StompSessionHandler extends StompSessionHandlerAdapter {
         Runnable runnable =
             () -> {
                 ComparisonData comparisonData = (ComparisonData) payload;
-                comparisonWebSocketController.sendComparison(algorithmClient.getFastComparison(comparisonData));
+                comparisonData.setMetric("Dice"); //USUN TO!
+                comparisonWebSocketController.sendComparison(algorithmClient.getComparisonWithChosenMetric(comparisonData));
             };
         new Thread(runnable).start();
     }

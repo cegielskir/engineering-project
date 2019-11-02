@@ -1,6 +1,6 @@
 package com.cgk.engineering.team.mainservice.client;
 
-import com.cgk.engineering.team.dbservice.model.Article;
+import com.cgk.engineering.team.mainservice.model.BasicComparison;
 import com.cgk.engineering.team.mainservice.model.Comparison;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
 import com.cgk.engineering.team.mainservice.model.DetailsComparison;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface AlgorithmClient {
 
     @PostMapping("/algorithm")
-    DetailsComparison getComparison(@RequestBody ComparisonData comparisonData);
+    Comparison getComparison(@RequestBody ComparisonData comparisonData);
 
     @PostMapping("/algorithm")
-    Comparison getComparisonWithChosenMetric(@RequestBody ComparisonData comparisonData);
+    BasicComparison getComparisonWithChosenMetric(@RequestBody ComparisonData comparisonData);
 }
