@@ -1,6 +1,7 @@
 package com.cgk.engineering.team.simpleclient.algorithm;
 
-import com.cgk.engineering.team.simpleclient.model.SuspiciousFragments;
+
+import com.cgk.engineering.team.mainservice.model.SuspiciousFragments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,7 @@ public class NormalizedLongestCommonSubstring {
                              s1.length(), s2.length());
             int start1 = lcs.getEndIndex1() - length, end1 = lcs.getEndIndex1();
             int start2 = lcs.getEndIndex2() - length, end2 = lcs.getEndIndex2();
-            System.out.println(start1 + " " + start2 + " " + end1 + " " + end2);
-            System.out.println(length);
+
             if(length > 10) {
                 SuspiciousFragments suspiciousFragments =
                         new SuspiciousFragments(start1, end1, start2, end2);

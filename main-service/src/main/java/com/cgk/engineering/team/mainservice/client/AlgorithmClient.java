@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "simpleclient-service")
 public interface AlgorithmClient {
 
-    @PostMapping("/algorithm")
+    @PostMapping("/algorithm/detailed")
     DetailsComparison getComparison(@RequestBody ComparisonData comparisonData);
 
-    @PostMapping("/algorithm")
+    @PostMapping("/algorithm/basic")
     BasicComparison getComparisonWithChosenMetric(@RequestBody ComparisonData comparisonData);
 }

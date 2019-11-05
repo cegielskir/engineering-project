@@ -2,7 +2,7 @@ package com.cgk.engineering.team.mainservice.model;
 
 import java.util.List;
 
-public class DetailsComparison {
+public class DetailsComparison extends Comparison{
     private int id;
 
     private int percentage;

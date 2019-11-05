@@ -9,12 +9,20 @@ public class ComparisonData {
 
     private String metric = "";
 
+    private BasicComparison basicComparison;
+
     public ComparisonData() {
     }
 
     public ComparisonData(Article article1, Article article2) {
         this.article1 = article1;
         this.article2 = article2;
+    }
+
+    public ComparisonData(Article article1, Article article2, BasicComparison basicComparison) {
+        this.article1 = article1;
+        this.article2 = article2;
+        this.basicComparison = basicComparison;
     }
 
     public Article getArticle1() {
@@ -36,4 +44,12 @@ public class ComparisonData {
     public String getMetric() { return metric;}
 
     public void setMetric(String metric) {this.metric = metric;}
+
+    public BasicComparison getBasicComparison() {
+        return basicComparison;
+    }
+
+    public void setBasicComparison(BasicComparison basicComparison) {
+        this.basicComparison = basicComparison;
+    }
 }

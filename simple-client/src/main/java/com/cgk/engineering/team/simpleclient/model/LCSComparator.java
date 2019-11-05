@@ -1,5 +1,7 @@
 package com.cgk.engineering.team.simpleclient.model;
 
+import com.cgk.engineering.team.mainservice.model.Article;
+import com.cgk.engineering.team.mainservice.model.DetailsComparison;
 import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLongestCommonSubstring;
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.StringMetrics;
@@ -15,7 +17,6 @@ public class LCSComparator implements IComparator {
     }
 
     public DetailsComparison compareArticles() {
-        System.out.println("details comparison");
         Random random = new Random();
         StringMetric stringMetric = StringMetrics.cosineSimilarity();
         float result = stringMetric.compare(article1.getContent(), article2.getContent());
