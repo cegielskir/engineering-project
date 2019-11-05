@@ -38,4 +38,12 @@ public class DetailsComparison extends Comparison {
     public void setSuspiciousWords(List<SuspiciousFragments> suspiciousWords) {
         this.suspiciousWords = suspiciousWords;
     }
+
+    public int getSimilarityPercentage() {
+        return similarityPercentage;
+    }
+
+    public void setSimilarityPercentage(int similarityPercentage) {
+        this.similarityPercentage = similarityPercentage;
+    }
 }

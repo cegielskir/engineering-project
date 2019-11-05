@@ -9,9 +9,9 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 
 @Controller
@@ -24,16 +24,19 @@ public class ComparisonWebSocketController {
     @Autowired
     AlgorithmClient algorithmClient;
 
+    private Disposable currentSubscription;
+
+
 
     @Autowired
     public ComparisonWebSocketController(SimpMessagingTemplate template) {
         this.template = template;
     }
 
-    @MessageMapping("/compare/{articleID}")
-    public void compareArticle(@PathVariable("articleID") ObjectId articleID,
-                               @RequestParam(value = "threshold", required = false) int threshold,
-                               @RequestParam(value = "metric", required = false) String metric){
+    @MessageMapping("/compare/{articleID}/{threshold}/{metric}")
+    public void compareArticle(@DestinationVariable("articleID") ObjectId articleID,
+                               @DestinationVariable("threshold") int threshold,
+                               @DestinationVariable("metric") String metric){
 
         WebClient client = WebClient.create("http://localhost:9092");
 
@@ -42,7 +45,7 @@ public class ComparisonWebSocketController {
                 .retrieve()
                 .bodyToFlux(ComparisonData.class);
 
-        comparisonDataFlux.subscribe(comparisonData -> {
+        currentSubscription = comparisonDataFlux.subscribe(comparisonData -> {
             if(comparisonData.getBasicComparison() != null){
                 sendComparison(comparisonData.getBasicComparison(), threshold);
             } else {
@@ -53,6 +56,12 @@ public class ComparisonWebSocketController {
             }
         });
     }
+
+    @MessageMapping("/compare/dispose")
+    public void compareArticle(){
+        this.currentSubscription.dispose();
+    }
+
 
 
     public void sendComparison(BasicComparison comparison, int threshold) {
