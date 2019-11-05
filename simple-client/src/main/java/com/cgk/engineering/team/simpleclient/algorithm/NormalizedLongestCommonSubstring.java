@@ -1,6 +1,7 @@
 package com.cgk.engineering.team.simpleclient.algorithm;
 
-import com.cgk.engineering.team.simpleclient.model.SuspiciousFragments;
+
+import com.cgk.engineering.team.mainservice.model.SuspiciousFragments;
 
 import java.util.ArrayList;
 import java.util.List;

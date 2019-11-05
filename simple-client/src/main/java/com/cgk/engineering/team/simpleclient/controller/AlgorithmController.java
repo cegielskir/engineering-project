@@ -1,5 +1,7 @@
 package com.cgk.engineering.team.simpleclient.controller;
 
+import com.cgk.engineering.team.mainservice.model.Comparison;
+import com.cgk.engineering.team.mainservice.model.ComparisonData;
 import com.cgk.engineering.team.simpleclient.model.*;
 import org.springframework.web.bind.annotation.*;
 
