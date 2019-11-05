@@ -4,3 +4,18 @@ spring:
   cloud:
     config:
       uri: http://${CONFIG_URL:localhost}:8888
+
+  http:
+
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 160000000
+        readTimeout: 160000000
+

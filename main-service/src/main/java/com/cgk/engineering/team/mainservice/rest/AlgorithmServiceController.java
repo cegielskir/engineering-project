@@ -1,4 +1,4 @@
-package com.cgk.engineering.team.mainservice.controller;
+package com.cgk.engineering.team.mainservice.rest;
 
 import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/compare")

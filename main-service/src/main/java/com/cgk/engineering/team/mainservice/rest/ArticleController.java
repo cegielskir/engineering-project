@@ -1,4 +1,4 @@
-package com.cgk.engineering.team.mainservice.controller;
+package com.cgk.engineering.team.mainservice.rest;
 
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Article;
@@ -27,7 +27,6 @@ public class ArticleController {
 
     @PostMapping
     public Article addArticle(@RequestBody Article article){
-        article.set_id(ObjectId.get());
         dbClient.addArticle(article);
         return article;
     }
