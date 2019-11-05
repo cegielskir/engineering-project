@@ -15,6 +15,7 @@ public class LCSComparator implements IComparator {
     }
 
     public DetailsComparison compareArticles() {
+        System.out.println("details comparison");
         Random random = new Random();
         StringMetric stringMetric = StringMetrics.cosineSimilarity();
         float result = stringMetric.compare(article1.getContent(), article2.getContent());

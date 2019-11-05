@@ -1,6 +1,5 @@
 package com.cgk.engineering.team.mainservice.excel;
 
-import com.cgk.engineering.team.dbservice.model.Article;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -13,6 +12,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import org.springframework.stereotype.Component;
+import com.cgk.engineering.team.mainservice.model.Article;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -76,7 +76,7 @@ public class ExcelHelper {
     }
 
     private List<Article> readXSSFWorkbook(InputStream fis) throws IOException {
-        XSSFWorkbook workbook = null;
+        XSSFWorkbook workbook;
         List<Article> articles = new ArrayList<>();
         try {
 

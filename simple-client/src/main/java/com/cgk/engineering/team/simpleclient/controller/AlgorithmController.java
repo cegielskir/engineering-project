@@ -7,34 +7,36 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/algorithm")
 public class AlgorithmController {
 
+    @PostMapping
+    public Comparison getComparison(@RequestBody ComparisonData comparisonData) {
+        //LevenshteinComparator levenshteinComparator = new LevenshteinComparator(article1, article2);
+
+        //return levenshteinComparator.compareArticles();
+        if (comparisonData.getMetric().equals("")) {
+            LCSComparator lcsc = new LCSComparator(comparisonData.getArticle1(), comparisonData.getArticle2());
+            return lcsc.compareArticles();
+        } else {
+            SimmetricsComparator simmetricsComparator = new SimmetricsComparator(comparisonData.getArticle1(), comparisonData.getArticle2(), comparisonData.getMetric());
+            return simmetricsComparator.compareArticles();
+        }
+    }
+
 //    @PostMapping
-//    public Comparison getComparison(@RequestBody ComparisonData comparisonData) {
-//        //LevenshteinComparator levenshteinComparator = new LevenshteinComparator(article1, article2);
-//
-//        //return levenshteinComparator.compareArticles();
-//        if (comparisonData.getMetric().equals("")) {
-//            LCSComparator lcsc = new LCSComparator(comparisonData.getArticle1(), comparisonData.getArticle2());
-//            return lcsc.compareArticles();
-//        } else {
-//            SimmetricsComparator simmetricsComparator = new SimmetricsComparator(comparisonData.getArticle1(), comparisonData.getArticle2(), comparisonData.getMetric());
-//            return simmetricsComparator.compareArticles();
-//        }
+//    public DetailsComparison getComparison(@RequestBody ComparisonData comparisonData) {
+//        LCSComparator lcsc = new LCSComparator(comparisonData.getArticle1(), comparisonData.getArticle2());
+//        System.out.println("comparator");
+//        return lcsc.compareArticles();
 //    }
-
-    @PostMapping
-    public DetailsComparison getComparison(@RequestBody ComparisonData comparisonData) {
-        LCSComparator lcsc = new LCSComparator(comparisonData.getArticle1(), comparisonData.getArticle2());
-        return lcsc.compareArticles();
-    }
-
-    @PostMapping
-    public BasicComparison getComparisonWithChosenMetric(@RequestBody ComparisonData comparisonData) {
-        SimmetricsComparator simmetricsComparator =
-                new SimmetricsComparator(comparisonData.getArticle1(),
-                        comparisonData.getArticle2(),
-                        comparisonData.getMetric());
-        return simmetricsComparator.compareArticles();
-
-    }
+//
+//    @PostMapping
+//    public BasicComparison getComparisonWithChosenMetric(@RequestBody ComparisonData comparisonData) {
+//        System.out.println("comparator2");
+//        SimmetricsComparator simmetricsComparator =
+//                new SimmetricsComparator(comparisonData.getArticle1(),
+//                        comparisonData.getArticle2(),
+//                        comparisonData.getMetric());
+//        return simmetricsComparator.compareArticles();
+//
+//    }
 
 }
