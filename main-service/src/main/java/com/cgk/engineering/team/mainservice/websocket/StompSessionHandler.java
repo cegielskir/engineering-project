@@ -37,10 +37,8 @@ public class StompSessionHandler extends StompSessionHandlerAdapter {
     @Override
     public void handleFrame(StompHeaders headers, Object payload) {
         try {
-            System.out.println("Dupsko " + System.currentTimeMillis() + " " + payload);
             ComparisonData comparisonData = (ComparisonData) payload;
             comparisonData.setMetric("Dice"); //USUN TO!
-
             comparisonWebSocketController.sendComparison(new BasicComparison()/*algorithmClient.getComparisonWithChosenMetric(comparisonData)*/);
 
         } catch (Exception ex){
@@ -53,7 +51,7 @@ public class StompSessionHandler extends StompSessionHandlerAdapter {
                                 StompHeaders headers,
                                 byte[] payload,
                                 Throwable exception) {
-        System.out.println("siusiak " + exception + payload);
+
 
     }
 
