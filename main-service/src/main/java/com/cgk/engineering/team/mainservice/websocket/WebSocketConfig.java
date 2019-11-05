@@ -12,7 +12,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        //System.out.println("configure message broker");
         config.enableSimpleBroker("/article");
         config.setApplicationDestinationPrefixes("/app");
     }
@@ -20,7 +19,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        //System.out.println("register endpointsr");
         registry.addEndpoint("/text-comparator")
                 .setAllowedOrigins("*")
                 .withSockJS()
