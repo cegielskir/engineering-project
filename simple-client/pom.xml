@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.cgk.engineering.team</groupId>
-	<artifactId>simpleclient</artifactId>
+	<artifactId>simple-client</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>simpleclient</name>
+	<name>simple-client</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>

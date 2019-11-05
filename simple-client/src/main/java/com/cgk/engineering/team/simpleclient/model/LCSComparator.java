@@ -4,6 +4,7 @@ import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLongestCommonSu
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.StringMetrics;
 
+import java.util.List;
 import java.util.Random;
 
 public class LCSComparator implements IComparator {
@@ -15,19 +16,22 @@ public class LCSComparator implements IComparator {
     }
 
     public DetailsComparison compareArticles() {
-        System.out.println("details comparison");
         Random random = new Random();
-        StringMetric stringMetric = StringMetrics.cosineSimilarity();
-        float result = stringMetric.compare(article1.getContent(), article2.getContent());
-        double percentage = 100*result;
+        NormalizedLongestCommonSubstring nlcs = new NormalizedLongestCommonSubstring();
+
+        List<SuspiciousFragments> suspiciousFragmentsList = nlcs.similarity(article1.getContent(), article2.getContent());
+        double plagiarismPercentage = 100*(nlcs.getPlagiarismChars()/
+                article1.getContent().length());
+        double similarityPercentage = 100*(nlcs.getSimilarChars()/
+                article1.getContent().length());
+
         DetailsComparison detailsComparison =
                 new DetailsComparison(random.nextInt(100000),
-                        (int)percentage,
+                        (int)plagiarismPercentage,
+                        (int)similarityPercentage,
                         article1.getContent(),
                         article2.getContent());
-        NormalizedLongestCommonSubstring nlcs = new NormalizedLongestCommonSubstring();
-        detailsComparison.setSuspiciousWords(nlcs.similarity(
-                article1.getContent(), article2.getContent()));
+        detailsComparison.setSuspiciousWords(suspiciousFragmentsList);
 
         return detailsComparison;
     }

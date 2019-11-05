@@ -12,7 +12,7 @@ public class LongestCommonSubstring {
         return endIndex2;
     }
 
-    public int lcs(char X[], char Y[], int m, int n) {
+    public int lcs(char[] X, char[] Y, int m, int n) {
         int[][] LCStuff = new int[m + 1][n + 1];
         int result = 0;
 
@@ -29,8 +29,8 @@ public class LongestCommonSubstring {
                     LCStuff[i][j] = LCStuff[i - 1][j - 1] + 1;
                     if(result < LCStuff[i][j]) {
                         endIndex1 = i; endIndex2 = j;
+                        result = Integer.max(result, LCStuff[i][j]);
                     }
-                    result = Integer.max(result, LCStuff[i][j]);
                 }
                 else
                     LCStuff[i][j] = 0;

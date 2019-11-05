@@ -6,11 +6,13 @@ public class DetailsComparison extends Comparison {
     private String firstArticleContent;
     private String secondArticleContent;
     private List<SuspiciousFragments> suspiciousWords;
+    private int similarityPercentage;
 
-    public DetailsComparison(int id, int percentage, String firstArticleContent, String secondArticleContent) {
+    public DetailsComparison(int id, int percentage, int similarityPercentage, String firstArticleContent, String secondArticleContent) {
         super(id, percentage);
         this.firstArticleContent = firstArticleContent;
         this.secondArticleContent = secondArticleContent;
+        this.similarityPercentage = similarityPercentage;
     }
 
     public String getFirstArticleContent() {

@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NormalizedLongestCommonSubstring {
+    private double similarChars = 0;
+    private double plagiarismChars = 0;
 
     public List<SuspiciousFragments> similarity(String s1, String s2) {
         LongestCommonSubstring lcs = new LongestCommonSubstring();
@@ -17,9 +19,12 @@ public class NormalizedLongestCommonSubstring {
                              s1.length(), s2.length());
             int start1 = lcs.getEndIndex1() - length, end1 = lcs.getEndIndex1();
             int start2 = lcs.getEndIndex2() - length, end2 = lcs.getEndIndex2();
-            System.out.println(start1 + " " + start2 + " " + end1 + " " + end2);
-            System.out.println(length);
-            if(length > 10) {
+            if(length > 8) {
+                if(length > 20) {
+                    plagiarismChars += length;
+                } else {
+                    similarChars += length;
+                }
                 SuspiciousFragments suspiciousFragments =
                         new SuspiciousFragments(start1, end1, start2, end2);
                 similarityList.add(suspiciousFragments);
@@ -33,4 +38,11 @@ public class NormalizedLongestCommonSubstring {
         return similarityList;
     }
 
+    public double getSimilarChars() {
+        return similarChars;
+    }
+
+    public double getPlagiarismChars() {
+        return plagiarismChars;
+    }
 }
