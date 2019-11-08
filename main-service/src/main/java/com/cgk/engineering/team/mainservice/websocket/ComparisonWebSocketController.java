@@ -3,6 +3,7 @@ package com.cgk.engineering.team.mainservice.websocket;
 import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.*;
+import com.cgk.engineering.team.mainservice.utills.ConfigProvider;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -26,7 +27,8 @@ public class ComparisonWebSocketController {
 
     private Disposable currentSubscription;
 
-
+    @Autowired
+    ConfigProvider configProvider;
 
     @Autowired
     public ComparisonWebSocketController(SimpMessagingTemplate template) {
@@ -38,7 +40,7 @@ public class ComparisonWebSocketController {
                                @DestinationVariable("threshold") int threshold,
                                @DestinationVariable("metric") String metric){
 
-        WebClient client = WebClient.create("http://localhost:9092");
+        WebClient client = WebClient.create(configProvider.getPropValues());
 
         Flux<ComparisonData> comparisonDataFlux = client.get()
                 .uri("/article/stream/" + articleID)

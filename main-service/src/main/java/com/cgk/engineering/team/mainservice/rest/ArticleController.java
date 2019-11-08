@@ -3,6 +3,7 @@ package com.cgk.engineering.team.mainservice.rest;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
+import com.cgk.engineering.team.mainservice.utills.ConfigProvider;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,9 @@ public class ArticleController {
 
     @Autowired
     DatabaseServiceClient dbClient;
+
+    @Autowired
+    ConfigProvider configProvider;
 
     @GetMapping(value = "/{articleId}")
     public Article getArticle(@PathVariable("articleId") ObjectId articleId){
@@ -36,7 +40,7 @@ public class ArticleController {
 
     @GetMapping(value = "/flux-test/{articleId}")
     public Article getFluxTest(@PathVariable("articleId") ObjectId articleID){
-        WebClient client = WebClient.create("http://localhost:9092");
+        WebClient client = WebClient.create(configProvider.getPropValues());
 
         Flux<ComparisonData> comparisonDataFlux = client.get()
                 .uri("/article/stream/" + articleID)
