@@ -74,11 +74,6 @@
             <artifactId>reactor-core</artifactId>
             <version>3.2.8.RELEASE</version>
         </dependency>
-        <dependency>
-            <groupId>com.cgk.engineering.team</groupId>
-            <artifactId>main-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
 
     <dependencyManagement>

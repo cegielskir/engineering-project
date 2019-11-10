@@ -1,6 +1,6 @@
 package com.cgk.engineering.team.simpleclient.algorithm;
 
-import com.cgk.engineering.team.mainservice.model.SuspiciousFragments;
+import com.cgk.engineering.team.simpleclient.model.SuspiciousFragments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,10 @@ public class NormalizedLongestCommonSubstring {
                         new SuspiciousFragments(start1, end1, start2, end2);
                 similarityList.add(suspiciousFragments);
 
-                s1 = s1.replace(s1.substring(start1, end1), "$".repeat(end1-start1));
-                s2 = s2.replace(s2.substring(start2, end2), "$".repeat(end1-start1));
+                s1 = s1.replace(s1.substring(start1, end1),
+                        new String(new char[end1 - start1]).replace("\0", "$"));
+                s2 = s2.replace(s2.substring(start2, end2),
+                        new String(new char[end1 - start1]).replace("\0", "$"));
             } else {
                 return similarityList;
             }

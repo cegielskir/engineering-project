@@ -40,7 +40,8 @@ public class ComparisonWebSocketController {
                                @DestinationVariable("threshold") int threshold,
                                @DestinationVariable("metric") String metric){
 
-        WebClient client = WebClient.create(configProvider.getPropValues());
+        String dbUrl = System.getenv("DB_URL") == null ? "http://localhost}:9092": System.getenv("DB_URL");
+        WebClient client = WebClient.create(dbUrl);
 
         Flux<ComparisonData> comparisonDataFlux = client.get()
                 .uri("/article/stream/" + articleID)
