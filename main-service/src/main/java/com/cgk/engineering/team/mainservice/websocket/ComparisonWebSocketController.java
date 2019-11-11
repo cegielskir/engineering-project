@@ -1,6 +1,7 @@
 package com.cgk.engineering.team.mainservice.websocket;
 
-import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
+import com.cgk.engineering.team.mainservice.client.comparison.ComparisonServiceController;
+import com.cgk.engineering.team.mainservice.client.comparison.services.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.*;
 import com.cgk.engineering.team.mainservice.utills.ConfigProvider;
@@ -10,7 +11,6 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
@@ -23,7 +23,7 @@ public class ComparisonWebSocketController {
     DatabaseServiceClient dbClient;
 
     @Autowired
-    AlgorithmClient algorithmClient;
+    ComparisonServiceController comparisonServiceController;
 
     private Disposable currentSubscription;
 
@@ -53,7 +53,7 @@ public class ComparisonWebSocketController {
                 sendComparison(comparisonData.getBasicComparison(), threshold);
             } else {
                 comparisonData.setMetric(metric);
-                BasicComparison basicComparison = algorithmClient.getComparisonWithChosenMetric(comparisonData);
+                BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
                 dbClient.addComparison(basicComparison);
                 sendComparison(basicComparison, threshold);
             }

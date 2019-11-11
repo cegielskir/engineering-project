@@ -48,5 +48,6 @@ public class BasicComparison extends Comparison {
     public void setSecondArticleShortContent(String secondArticleShortContent) {
         this.secondArticleShortContent = secondArticleShortContent;
     }
+
 }
 

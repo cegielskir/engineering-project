@@ -1,6 +1,7 @@
 package com.cgk.engineering.team.mainservice.rest;
 
-import com.cgk.engineering.team.mainservice.client.AlgorithmClient;
+import com.cgk.engineering.team.mainservice.client.comparison.ComparisonServiceController;
+import com.cgk.engineering.team.mainservice.client.comparison.services.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.Comparison;
@@ -25,7 +26,7 @@ public class AlgorithmServiceController {
     private DatabaseServiceClient dbClient;
 
     @Autowired
-    private AlgorithmClient algorithmClient;
+    private ComparisonServiceController comparisonServiceController;
 
     @GetMapping(value = "/{articleId}")
     public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId,
@@ -38,7 +39,7 @@ public class AlgorithmServiceController {
             for (Article theArticle : articles) {
                 ComparisonData comparisonData = new ComparisonData(article, theArticle);
                 comparisonData.setMetric(metric);
-                Comparison comparison = algorithmClient.getComparisonWithChosenMetric(comparisonData);
+                Comparison comparison = comparisonServiceController.getBasicComparison(comparisonData);
                 if(comparison.getPercentage() > threshold) {
                     comparisons.add(comparison);
                 }
@@ -56,7 +57,7 @@ public class AlgorithmServiceController {
         Article article1 = dbClient.getArticle(articleId1);
         Article article2 = dbClient.getArticle(articleId2);
         if(article1 != null && article2 != null) {
-            return algorithmClient.getComparison(new ComparisonData(article1, article2));
+            return comparisonServiceController.getDetailedComparison(new ComparisonData(article1, article2));
         }
 
         return null;
