@@ -4,6 +4,7 @@ import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.DetailsComparison;
 import com.cgk.engineering.team.mainservice.model.SuspiciousFragments;
 import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLongestCommonSubstring;
+import org.bson.types.ObjectId;
 
 import java.util.List;
 import java.util.Random;
@@ -17,7 +18,7 @@ public class LCSComparator implements IComparator {
     }
 
     public DetailsComparison compareArticles() {
-        Random random = new Random();
+
         NormalizedLongestCommonSubstring nlcs = new NormalizedLongestCommonSubstring();
 
         List<SuspiciousFragments> suspiciousFragmentsList = nlcs.similarity(article1.getContent(), article2.getContent());
@@ -27,7 +28,7 @@ public class LCSComparator implements IComparator {
                 article1.getContent().length());
 
         DetailsComparison detailsComparison =
-                new DetailsComparison(random.nextInt(100000),
+                new DetailsComparison(new ObjectId(),
                         (int)plagiarismPercentage,
                         (int)similarityPercentage,
                         article1.getContent(),

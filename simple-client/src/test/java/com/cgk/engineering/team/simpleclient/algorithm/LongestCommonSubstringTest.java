@@ -1,16 +1,15 @@
 package com.cgk.engineering.team.simpleclient.algorithm;
 
+import org.assertj.core.data.Offset;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class LongestCommonSubstringTest {
+    private LongestCommonSubstring longestCommonSubstring = new LongestCommonSubstring();
     private final static String TEXT_1 = "This is very short text special to comparison";
     private final static String LONG_TEXT_1 = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec molestie vehicula ultrices. " +
             "Phasellus convallis sapien vel libero ullamcorper consectetur vel ut mi. Morbi auctor tortor laoreet risus rhoncus blandit." +
@@ -29,28 +28,40 @@ public class LongestCommonSubstringTest {
             "Sed quis consequat diam, vitae convallis ipsum. Pellentesque molestie euismod accumsan. " +
             "Integer quis libero et ligula gravida mattis gravida ac lectus.";
 
-    @Mock
-    LongestCommonSubstring longestCommonSubstringMock = Mockito.mock(LongestCommonSubstring.class);
 
     @Test
-    public void shouldCheckTwoIdenticalTexts() {
+    public void testTwoEmptyTexts() {
         // given and when
-        int percentage = longestCommonSubstringMock
-                .lcs(TEXT_1.toCharArray(), TEXT_1.toCharArray(),
-                        TEXT_1.length(), TEXT_1.length());
+        int result = longestCommonSubstring.lcs("".toCharArray(), "".toCharArray(), 0, 0);
+
+        double percentage = (double)result*100;
 
         // then
-        assertEquals(0, percentage);
+        assertThat(percentage).isEqualTo(0);
     }
 
     @Test
     public void testTwoSimilarTexts() {
         // given and when
-        int percentage = longestCommonSubstringMock
-                            .lcs(LONG_TEXT_1.toCharArray(), LONG_TEXT_2.toCharArray(),
-                                    LONG_TEXT_1.length(), LONG_TEXT_2.length());
+        int result = longestCommonSubstring
+                .lcs(LONG_TEXT_1.toCharArray(), LONG_TEXT_2.toCharArray(),
+                        LONG_TEXT_1.length(), LONG_TEXT_2.length());
+        double percentage = ((double)result/LONG_TEXT_1.length())*100;
 
         // then
-        assertEquals(0, percentage);
+        assertThat(percentage).isCloseTo(33.1, Offset.offset(0.03));
+    }
+
+    @Test
+    public void shouldCheckTwoIdenticalTexts() {
+        // given and when
+        int result = longestCommonSubstring
+                .lcs(TEXT_1.toCharArray(), TEXT_1.toCharArray(),
+                        TEXT_1.length(), TEXT_1.length());
+
+        double percentage = ((double)result/TEXT_1.length())*100;
+
+        // then
+        assertThat(percentage).isEqualTo(100.0);
     }
 }

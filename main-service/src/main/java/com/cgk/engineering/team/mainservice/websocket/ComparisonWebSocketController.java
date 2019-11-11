@@ -15,6 +15,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 
+import java.util.List;
+
 @Controller
 public class ComparisonWebSocketController {
     private SimpMessagingTemplate template;
@@ -59,17 +61,25 @@ public class ComparisonWebSocketController {
         });
     }
 
+    private void sendComparison(BasicComparison comparison, int threshold) {
+        if(comparison.getPercentage() > threshold) {
+            this.template.convertAndSend("/article/comparison", comparison);
+        }
+    }
+
     @MessageMapping("/compare/dispose")
     public void compareArticle(){
         this.currentSubscription.dispose();
     }
 
+    @MessageMapping("/find/{searchedKey}")
+    public void findArticle(@DestinationVariable("searchedKey") String searchedKey){
+        System.out.println("zaczynam szukac");
+        sendSearchedResult(dbClient.findArticles(searchedKey));
+    }
 
-
-    public void sendComparison(BasicComparison comparison, int threshold) {
-        if(comparison.getPercentage() > threshold) {
-            this.template.convertAndSend("/article/comparison", comparison);
-        }
+    private void sendSearchedResult(List<Article> articles) {
+        this.template.convertAndSend("/article/searchEngine", articles);
     }
 
 }

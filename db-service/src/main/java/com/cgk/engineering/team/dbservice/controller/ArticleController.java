@@ -38,6 +38,11 @@ public class ArticleController {
         return article;
     }
 
+    @GetMapping(value = "/find/{phrase}")
+    public List<Article> getArticles(@PathVariable("phrase") String phrase){
+        return articleRepository.findArticlesByContentContains(phrase);
+    }
+
     @GetMapping(value= "/stream/{articleId}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ComparisonData> streamEvents(@PathVariable("articleId") ObjectId articleId) {
 

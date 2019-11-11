@@ -11,7 +11,7 @@ COPY pom.xml .
 
 WORKDIR "/wip"
 
-RUN ./mvnw package -DskipTests
+RUN mvn package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 
 FROM openjdk:8-jdk-alpine

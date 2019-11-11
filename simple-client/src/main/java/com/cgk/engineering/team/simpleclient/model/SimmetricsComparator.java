@@ -2,6 +2,7 @@ package com.cgk.engineering.team.simpleclient.model;
 
 import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.BasicComparison;
+import org.bson.types.ObjectId;
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.StringMetrics;
 
@@ -19,26 +20,35 @@ public class SimmetricsComparator implements IComparator {
 
     @Override
     public BasicComparison compareArticles() {
-        Random random = new Random();
-        BasicComparison c = new BasicComparison(random.nextInt(100000));
+        BasicComparison c = new BasicComparison(new ObjectId());
         StringMetric stringMetric;
         c.setArticleIDs( article1.get_id(),  article2.get_id());
         switch (metric){
-            case "CosineSimilarity":
-                stringMetric = StringMetrics.cosineSimilarity();
-                break;
-            case "BlockDistance":
-                stringMetric = StringMetrics.blockDistance();
-                break;
-            case "DamerauLevenshtein":
-                stringMetric = StringMetrics.damerauLevenshtein();
-                break;
             case "Dice":
                 stringMetric = StringMetrics.dice();
+                break;
+            case "Jaccard":
+                stringMetric = StringMetrics.jaccard();
+                break;
+            case "MongeElkan":
+                stringMetric = StringMetrics.mongeElkan();
+                break;
+            case "JaroWinkler":
+                stringMetric = StringMetrics.jaroWinkler();
+                break;
+            case "Levenshtein":
+                stringMetric = StringMetrics.levenshtein();
+                break;
+            case "NeedlemanWunsch":
+                stringMetric = StringMetrics.needlemanWunch();
+                break;
+            case "SmithWaterman":
+                stringMetric = StringMetrics.smithWatermanGotoh();
                 break;
             default:
                 stringMetric = StringMetrics.cosineSimilarity();
         }
+
         float result = stringMetric.compare(article1.getContent(), article2.getContent());
         double percentage = 100*result;
         c.setPercentage((int)percentage);

@@ -23,8 +23,7 @@ public class LongestCommonSubstring {
                 if (i == 0 || j == 0)
                     LCStuff[i][j] = 0;
                 else if (X[i - 1] == Y[j - 1] &&
-                         X[i - 1] != '$' &&
-                         Y[i - 1] != '$')
+                        (X[i - 1] != '$' && Y[j - 1] != '$'))
                 {
                     LCStuff[i][j] = LCStuff[i - 1][j - 1] + 1;
                     if(result < LCStuff[i][j]) {

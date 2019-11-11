@@ -22,4 +22,7 @@ public interface DatabaseServiceClient {
 
     @PostMapping("/basic-comparison")
     BasicComparison addComparison(@RequestBody BasicComparison basicComparison);
+
+    @GetMapping("/article/find/{phrase}")
+    List<Article> findArticles(@PathVariable("phrase") String phrase);
 }

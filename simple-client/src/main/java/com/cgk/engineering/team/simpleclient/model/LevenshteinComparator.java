@@ -3,6 +3,7 @@ package com.cgk.engineering.team.simpleclient.model;
 import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.BasicComparison;
 import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLevenshtein;
+import org.bson.types.ObjectId;
 
 public class LevenshteinComparator implements IComparator {
 
@@ -17,7 +18,7 @@ public class LevenshteinComparator implements IComparator {
 
     @Override
     public BasicComparison compareArticles() {
-        BasicComparison comparison = new BasicComparison(17);
+        BasicComparison comparison = new BasicComparison(new ObjectId());
 
         NormalizedLevenshtein normalizedLevenshtein = new NormalizedLevenshtein();
 

@@ -1,12 +1,14 @@
 package com.cgk.engineering.team.mainservice.model;
 
+import org.bson.types.ObjectId;
+
 public class BasicComparison extends Comparison {
     private String firstArticleID;
     private String secondArticleID;
     private String firstArticleShortContent;
     private String secondArticleShortContent;
 
-    public BasicComparison(int id) {
+    public BasicComparison(ObjectId id) {
         super(id, 0);
     }
 

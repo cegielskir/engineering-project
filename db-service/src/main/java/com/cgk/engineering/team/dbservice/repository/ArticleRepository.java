@@ -7,11 +7,13 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.stream.Stream;
+import java.util.List;
 
 @Repository
 public interface ArticleRepository extends MongoRepository<Article, String> {
     Article findBy_id(ObjectId _id);
     Article findByTitle(String title);
+    List<Article> findArticlesByContentContains(String phrase);
 
     @Query("{}")
     Stream<Article> getAllStream();

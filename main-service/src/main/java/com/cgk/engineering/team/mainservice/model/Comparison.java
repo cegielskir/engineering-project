@@ -1,22 +1,27 @@
 package com.cgk.engineering.team.mainservice.model;
 
+import org.bson.types.ObjectId;
+import org.springframework.data.annotation.Id;
+
 public abstract class Comparison {
-    private int id;
+
+    @Id
+    private ObjectId id;
     private int percentage;
 
     public Comparison() {
     }
 
-    public Comparison(int id, int percentage) {
+    public Comparison(ObjectId id, int percentage) {
         this.id = id;
         this.percentage = percentage;
     }
 
-    public int getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 
