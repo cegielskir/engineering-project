@@ -25,6 +25,4 @@ public class MethodController {
         return comparisonServiceController.getAvailableDetailedMethods();
     }
 
-
-
 }

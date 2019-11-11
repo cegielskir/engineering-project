@@ -19,6 +19,6 @@ public interface IComparisonService {
     @PostMapping("/algorithm/basic")
     BasicComparison getBasicComparison(@RequestBody ComparisonData comparisonData);
 
-    @GetMapping("/algorithm/method")
-    List<ComparisonMethod> geAvailableMethods();
+    @GetMapping("/method")
+    List<ComparisonMethod> getAvailableMethods();
 }

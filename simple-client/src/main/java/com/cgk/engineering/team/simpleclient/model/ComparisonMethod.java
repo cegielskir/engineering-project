@@ -1,6 +1,4 @@
-package com.cgk.engineering.team.mainservice.model;
-
-import com.cgk.engineering.team.mainservice.client.comparison.services.api.IComparisonService;
+package com.cgk.engineering.team.simpleclient.model;
 
 public class ComparisonMethod {
 
@@ -30,3 +28,4 @@ public class ComparisonMethod {
         isDetailedMethodAvailable = detailedMethodAvailable;
     }
 }
+

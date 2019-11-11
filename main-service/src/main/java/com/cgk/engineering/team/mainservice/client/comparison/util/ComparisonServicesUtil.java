@@ -2,6 +2,7 @@ package com.cgk.engineering.team.mainservice.client.comparison.util;
 
 import com.cgk.engineering.team.mainservice.client.comparison.services.api.IComparisonService;
 import com.cgk.engineering.team.mainservice.model.ComparisonMethod;
+import com.cgk.engineering.team.mainservice.model.ComparisonMethodInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ public class ComparisonServicesUtil {
     @Autowired
     private List<IComparisonService> comparisonServices;
 
-    Map<String, ComparisonMethod> methodServiceMap;
+    private Map<String, ComparisonMethodInfo> methodServiceMap;
 
     public List<ComparisonMethod> getAndUpdateAvailableBasicMethods(){
 
@@ -27,11 +28,10 @@ public class ComparisonServicesUtil {
         List<ComparisonMethod> allAvailableMethods = new ArrayList<>();
 
         for(IComparisonService service : comparisonServices){
-            List<ComparisonMethod> methods = service.geAvailableMethods();
+            List<ComparisonMethod> methods = service.getAvailableMethods();
 
             for(ComparisonMethod method : methods){
-                method.setComparisonService(service);
-                methodServiceMap.put(method.getName(), method);
+                methodServiceMap.put(method.getName(), new ComparisonMethodInfo(service, method));
             }
 
             allAvailableMethods.addAll(methods);
@@ -45,6 +45,7 @@ public class ComparisonServicesUtil {
         getAndUpdateAvailableBasicMethods();
 
         return methodServiceMap.values().stream()
+                .map(ComparisonMethodInfo::getComparisonMethod)
                 .filter(ComparisonMethod::isDetailedMethodAvailable)
                 .map(ComparisonMethod::getName)
                 .collect(Collectors.toList());
