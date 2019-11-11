@@ -2,7 +2,6 @@ package com.cgk.engineering.team.simpleclient.model;
 
 import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.BasicComparison;
-import org.bson.types.ObjectId;
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.StringMetrics;
 

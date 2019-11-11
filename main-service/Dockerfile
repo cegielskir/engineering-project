@@ -1,9 +1,8 @@
-FROM openjdk:8-jdk-alpine as build
+#syntax=docker/dockerfile:experimental
+FROM maven:3.6.0-jdk-8-slim as build
 
 VOLUME /tmp
 
-COPY main-service/mvnw wip/
-COPY main-service/.mvn wip/.mvn
 COPY main-service/pom.xml wip/
 COPY main-service/src wip/src
 COPY main-service/Dockerfile wip/Dockerfile
@@ -11,6 +10,8 @@ COPY pom.xml .
 
 WORKDIR "/wip"
 
+#RUN --mount=type=cache,target=/root/.m2 mvn clean install
+# RUN --mount=type=cache,target=/root/.m2 mvn package -DskipTests
 RUN mvn package -DskipTests
 RUN mkdir -p target/dependency && (cd target/dependency; jar -xf ../*.jar)
 

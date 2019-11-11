@@ -1,8 +1,5 @@
 package com.cgk.engineering.team.simpleclient.model;
 
-import com.cgk.engineering.team.mainservice.model.Article;
-import com.cgk.engineering.team.mainservice.model.DetailsComparison;
-import com.cgk.engineering.team.mainservice.model.SuspiciousFragments;
 import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLongestCommonSubstring;
 import org.bson.types.ObjectId;
 

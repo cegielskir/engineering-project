@@ -1,9 +1,9 @@
 package com.cgk.engineering.team.dbservice.controller;
 
+import com.cgk.engineering.team.dbservice.model.Article;
+import com.cgk.engineering.team.dbservice.model.ComparisonData;
 import com.cgk.engineering.team.dbservice.repository.ArticleRepository;
 import com.cgk.engineering.team.dbservice.repository.BasicComparisonRepository;
-import com.cgk.engineering.team.mainservice.model.Article;
-import com.cgk.engineering.team.mainservice.model.ComparisonData;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

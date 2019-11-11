@@ -1,7 +1,7 @@
 package com.cgk.engineering.team.dbservice.controller;
 
+import com.cgk.engineering.team.dbservice.model.BasicComparison;
 import com.cgk.engineering.team.dbservice.repository.BasicComparisonRepository;
-import com.cgk.engineering.team.mainservice.model.BasicComparison;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
