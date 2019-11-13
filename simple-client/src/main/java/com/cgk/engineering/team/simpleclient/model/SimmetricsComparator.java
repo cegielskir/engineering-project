@@ -1,7 +1,6 @@
 package com.cgk.engineering.team.simpleclient.model;
 
-import com.cgk.engineering.team.mainservice.model.Article;
-import com.cgk.engineering.team.mainservice.model.BasicComparison;
+import org.bson.types.ObjectId;
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.StringMetrics;
 
@@ -21,6 +20,8 @@ public class SimmetricsComparator implements IComparator {
     public BasicComparison compareArticles() {
         BasicComparison c = new BasicComparison(new ObjectId());
         StringMetric stringMetric;
+        System.out.println(article1);
+        System.out.println(article2);
         c.setArticleIDs( article1.get_id(),  article2.get_id());
         switch (metric){
             case "Dice":

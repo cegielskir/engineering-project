@@ -4,7 +4,6 @@ import com.cgk.engineering.team.mainservice.client.comparison.ComparisonServiceC
 import com.cgk.engineering.team.mainservice.client.comparison.services.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.*;
-import com.cgk.engineering.team.mainservice.utills.ConfigProvider;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -30,9 +29,6 @@ public class ComparisonWebSocketController {
     private Disposable currentSubscription;
 
     @Autowired
-    ConfigProvider configProvider;
-
-    @Autowired
     public ComparisonWebSocketController(SimpMessagingTemplate template) {
         this.template = template;
     }
@@ -42,7 +38,7 @@ public class ComparisonWebSocketController {
                                @DestinationVariable("threshold") int threshold,
                                @DestinationVariable("metric") String metric){
 
-        String dbUrl = System.getenv("DB_URL") == null ? "http://localhost}:9092": System.getenv("DB_URL");
+        String dbUrl = System.getenv("DB_URL") == null ? "http://localhost:9092": System.getenv("DB_URL");
         WebClient client = WebClient.create(dbUrl);
 
         Flux<ComparisonData> comparisonDataFlux = client.get()
@@ -51,12 +47,13 @@ public class ComparisonWebSocketController {
                 .bodyToFlux(ComparisonData.class);
 
         currentSubscription = comparisonDataFlux.subscribe(comparisonData -> {
+            System.out.println("Here eeee");
             if(comparisonData.getBasicComparison() != null){
                 sendComparison(comparisonData.getBasicComparison(), threshold);
             } else {
                 comparisonData.setMetric(metric);
                 BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
-                dbClient.addComparison(basicComparison);
+                //dbClient.addComparison(basicComparison);
                 sendComparison(basicComparison, threshold);
             }
         });
@@ -75,7 +72,7 @@ public class ComparisonWebSocketController {
 
     @MessageMapping("/find/{searchedKey}")
     public void findArticle(@DestinationVariable("searchedKey") String searchedKey){
-        System.out.println("zaczynam szukac");
+        // System.out.println("zaczynam szukac");
         sendSearchedResult(dbClient.findArticles(searchedKey));
     }
 

@@ -52,12 +52,15 @@ public class AlgorithmServiceController {
 
     @GetMapping(value="/two")
     public DetailsComparison getComparison(@RequestParam("articleId1") ObjectId articleId1,
-                                           @RequestParam("articleId2") ObjectId articleId2){
+                                           @RequestParam("articleId2") ObjectId articleId2,
+                                           @RequestParam("metric") String metric){
 
         Article article1 = dbClient.getArticle(articleId1);
         Article article2 = dbClient.getArticle(articleId2);
+        ComparisonData cd = new ComparisonData(article1, article2);
+        cd.setMetric(metric);
         if(article1 != null && article2 != null) {
-            return comparisonServiceController.getDetailedComparison(new ComparisonData(article1, article2));
+            return comparisonServiceController.getDetailedComparison(cd);
         }
 
         return null;

@@ -1,22 +1,24 @@
 package com.cgk.engineering.team.simpleclient.model;
 
+import org.bson.types.ObjectId;
+
 public abstract class Comparison {
-    private int id;
+    private ObjectId id;
     private int percentage;
 
     public Comparison() {
     }
 
-    public Comparison(int id, int percentage) {
+    public Comparison(ObjectId id, int percentage) {
         this.id = id;
         this.percentage = percentage;
     }
 
-    public int getId() {
+    public ObjectId getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(ObjectId id) {
         this.id = id;
     }
 

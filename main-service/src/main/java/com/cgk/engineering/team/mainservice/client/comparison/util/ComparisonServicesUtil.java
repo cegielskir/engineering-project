@@ -1,5 +1,6 @@
 package com.cgk.engineering.team.mainservice.client.comparison.util;
 
+import com.cgk.engineering.team.mainservice.client.comparison.services.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.comparison.services.api.IComparisonService;
 import com.cgk.engineering.team.mainservice.model.ComparisonMethod;
 import com.cgk.engineering.team.mainservice.model.ComparisonMethodInfo;
@@ -16,16 +17,20 @@ import java.util.stream.Collectors;
 public class ComparisonServicesUtil {
 
     @Autowired
-    private List<IComparisonService> comparisonServices;
+    private AlgorithmClient comparisonService;
 
     private Map<String, ComparisonMethodInfo> methodServiceMap;
 
-    public List<ComparisonMethod> getAndUpdateAvailableBasicMethods(){
 
+
+    public List<ComparisonMethod> getAndUpdateAvailableBasicMethods(){
 
         methodServiceMap = new HashMap<>();
 
         List<ComparisonMethod> allAvailableMethods = new ArrayList<>();
+
+        List<IComparisonService> comparisonServices = new ArrayList<>();
+        comparisonServices.add(comparisonService);
 
         for(IComparisonService service : comparisonServices){
             List<ComparisonMethod> methods = service.getAvailableMethods();
@@ -52,6 +57,13 @@ public class ComparisonServicesUtil {
     }
 
     public IComparisonService getServiceWithMethod(String method){
+        // System.out.println("HERE");
+        System.out.println("METHODS: " + methodServiceMap.keySet().iterator().next().toString());
+        for(String str:methodServiceMap.keySet()){
+            System.out.println("Method in set: " + str);
+        }
+        System.out.println(method);
+        System.out.println(methodServiceMap.get(method));
         return methodServiceMap.get(method).getComparisonService();
     }
 }
