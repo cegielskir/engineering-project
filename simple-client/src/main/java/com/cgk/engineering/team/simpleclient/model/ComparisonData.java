@@ -1,15 +1,16 @@
 package com.cgk.engineering.team.simpleclient.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ComparisonData {
 
 
     private Article article1;
-
     private Article article2;
 
-    private String metric = "";
-
-    private BasicComparison basicComparison;
+    private String metric;
+    private List<String> allMetrics = new ArrayList<>();
 
     public ComparisonData() {
     }
@@ -17,12 +18,6 @@ public class ComparisonData {
     public ComparisonData(Article article1, Article article2) {
         this.article1 = article1;
         this.article2 = article2;
-    }
-
-    public ComparisonData(Article article1, Article article2, BasicComparison basicComparison) {
-        this.article1 = article1;
-        this.article2 = article2;
-        this.basicComparison = basicComparison;
     }
 
     public Article getArticle1() {
@@ -41,15 +36,19 @@ public class ComparisonData {
         this.article2 = article2;
     }
 
-    public String getMetric() { return metric;}
-
-    public void setMetric(String metric) {this.metric = metric;}
-
-    public BasicComparison getBasicComparison() {
-        return basicComparison;
+    public List<String> getAllMetrics() {
+        return allMetrics;
     }
 
-    public void setBasicComparison(BasicComparison basicComparison) {
-        this.basicComparison = basicComparison;
+    public void setAllMetrics(List<String> allMetrics) {
+        this.allMetrics = allMetrics;
+    }
+
+    public String getMetric() {
+        return metric;
+    }
+
+    public void setMetric(String metric) {
+        this.metric = metric;
     }
 }

@@ -12,6 +12,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/article")
@@ -30,29 +31,35 @@ public class ArticleController {
 
     @PostMapping
     public Mono<Article> addArticle(@RequestBody Article article){
-        return articleRepository.save(article);
-    }
-
-    @GetMapping(value = "/find/{phrase}")
-    public List<Article> getArticles(@PathVariable("phrase") String phrase){
-        return articleRepository.findArticlesByContentContains(phrase);
+        Mono<Article> articleAlreadyInDb = articleRepository.findByHash(article.getHash());
+        if(articleAlreadyInDb.block() != null) {
+            System.out.println("The same");
+            return articleAlreadyInDb;
+        }
+        else{
+            System.out.println("Not The same");
+            return articleRepository.save(article);
+        }
     }
 
     @GetMapping(value= "/stream/{articleId}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ComparisonData> streamEvents(@PathVariable("articleId") ObjectId articleId) {
 
         Article article = articleRepository.findById(articleId.toString()).block();
-        System.out.println("Article " + article.toString());
-        System.out.println("Got article"
-        );
-        return articleRepository.findAll()
-                .map(a ->
-                     new ComparisonData(
-                                    article,
-                                    a,
-                                    null)
 
-                );
+        return articleRepository.findAll()
+            .map(a ->
+                 new ComparisonData(article, a)
+            );
     }
-    //basicComparisonRepository.findByFirstArticleIDAndSecondArticleID(articleId.toString(), new ObjectId(a.get_id()).toString()).block()
+
+    @GetMapping(value = "/find/content/{partOfContent}")
+    public Flux<Article>  getArticleWithContent(@PathVariable("partOfContent") String partOfContent){
+        return articleRepository.findByContentContains(partOfContent);
+    }
+
+    @GetMapping(value = "/find/title/{partOfContent}")
+    public Flux<Article>  getArticleWithTitle(@PathVariable("partOfContent") String partOfTitle){
+        return articleRepository.findByTitleContains(partOfTitle);
+    }
 }

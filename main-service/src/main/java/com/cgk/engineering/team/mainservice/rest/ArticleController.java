@@ -3,7 +3,6 @@ package com.cgk.engineering.team.mainservice.rest;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
-import com.cgk.engineering.team.mainservice.utills.ConfigProvider;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +18,6 @@ public class ArticleController {
     @Autowired
     DatabaseServiceClient dbClient;
 
-    @Autowired
-    ConfigProvider configProvider;
-
     @GetMapping(value = "/{articleId}")
     public Article getArticle(@PathVariable("articleId") ObjectId articleId){
         return dbClient.getArticle(articleId);
@@ -34,22 +30,11 @@ public class ArticleController {
 
     @PostMapping
     public Article addArticle(@RequestBody Article article){
-        dbClient.addArticle(article);
-        return article;
+        return dbClient.addArticle(article);
     }
 
-    @GetMapping(value = "/flux-test/{articleId}")
-    public Article getFluxTest(@PathVariable("articleId") ObjectId articleID){
-        WebClient client = WebClient.create(configProvider.getPropValues());
-
-        Flux<ComparisonData> comparisonDataFlux = client.get()
-                .uri("/article/stream/" + articleID)
-                .retrieve()
-                .bodyToFlux(ComparisonData.class);
-
-        comparisonDataFlux.subscribe(System.out::println);
-        return null;
+    @GetMapping(value = "/find/content/{partOfContent}")
+    public Article getArticlesWithConent(@PathVariable("partOfContent") String partOfConent){
+        return dbClient.getArticlesWithContent(partOfConent);
     }
-
-
 }

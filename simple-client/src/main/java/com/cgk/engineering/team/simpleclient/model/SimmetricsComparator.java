@@ -20,8 +20,6 @@ public class SimmetricsComparator implements IComparator {
     public BasicComparison compareArticles() {
         BasicComparison c = new BasicComparison(new ObjectId());
         StringMetric stringMetric;
-        System.out.println(article1);
-        System.out.println(article2);
         c.setArticleIDs( article1.get_id(),  article2.get_id());
         switch (metric){
             case "Dice":

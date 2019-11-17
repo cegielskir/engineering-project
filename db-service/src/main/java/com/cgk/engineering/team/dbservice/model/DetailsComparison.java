@@ -1,5 +1,7 @@
 package com.cgk.engineering.team.dbservice.model;
 
+import org.bson.types.ObjectId;
+
 import java.util.List;
 
 public class DetailsComparison extends Comparison {
@@ -8,7 +10,7 @@ public class DetailsComparison extends Comparison {
     private List<SuspiciousFragments> suspiciousWords;
     private int similarityPercentage;
 
-    public DetailsComparison(int id, int percentage, int similarityPercentage, String firstArticleContent, String secondArticleContent) {
+    public DetailsComparison(ObjectId id, int percentage, int similarityPercentage, String firstArticleContent, String secondArticleContent) {
         super(id, percentage);
         this.firstArticleContent = firstArticleContent;
         this.secondArticleContent = secondArticleContent;

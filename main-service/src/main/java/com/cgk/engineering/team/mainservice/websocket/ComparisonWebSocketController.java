@@ -4,6 +4,8 @@ import com.cgk.engineering.team.mainservice.client.comparison.ComparisonServiceC
 import com.cgk.engineering.team.mainservice.client.comparison.services.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -36,27 +38,27 @@ public class ComparisonWebSocketController {
     @MessageMapping("/compare/{articleID}/{threshold}/{metric}")
     public void compareArticle(@DestinationVariable("articleID") ObjectId articleID,
                                @DestinationVariable("threshold") int threshold,
-                               @DestinationVariable("metric") String metric){
+                               @DestinationVariable("metrics") List<String> metrics){
 
         String dbUrl = System.getenv("DB_URL") == null ? "http://localhost:9092": System.getenv("DB_URL");
         WebClient client = WebClient.create(dbUrl);
 
         Flux<ComparisonData> comparisonDataFlux = client.get()
-                .uri("/article/stream/" + articleID)
-                .retrieve()
-                .bodyToFlux(ComparisonData.class);
+            .uri("/article/stream/" + articleID)
+            .retrieve()
+            .bodyToFlux(ComparisonData.class);
 
-        currentSubscription = comparisonDataFlux.subscribe(comparisonData -> {
-            System.out.println("Here eeee");
-            if(comparisonData.getBasicComparison() != null){
-                sendComparison(comparisonData.getBasicComparison(), threshold);
-            } else {
-                comparisonData.setMetric(metric);
-                BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
-                //dbClient.addComparison(basicComparison);
-                sendComparison(basicComparison, threshold);
-            }
-        });
+        currentSubscription = comparisonDataFlux.subscribe(
+            comparisonData -> {
+                for(String metric : metrics) {
+                    comparisonData.setMetric(metric);
+                    BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
+                    dbClient.addComparison(basicComparison);
+                    sendComparison(basicComparison, threshold);
+                }
+            },
+            this::sendComparisonError,
+            this::sendComparisonComplete);
     }
 
     private void sendComparison(BasicComparison comparison, int threshold) {
@@ -70,14 +72,14 @@ public class ComparisonWebSocketController {
         this.currentSubscription.dispose();
     }
 
-    @MessageMapping("/find/{searchedKey}")
-    public void findArticle(@DestinationVariable("searchedKey") String searchedKey){
-        // System.out.println("zaczynam szukac");
-        sendSearchedResult(dbClient.findArticles(searchedKey));
+    private void sendComparisonError(Throwable error){
+        this.template.convertAndSend("/article/comparison",
+                "Error occurred while comparing articles: " + error);
     }
 
-    private void sendSearchedResult(List<Article> articles) {
-        this.template.convertAndSend("/article/searchEngine", articles);
+    private void sendComparisonComplete(){
+        this.template.convertAndSend("/article/comparison",
+                "Comparing articles has been finished");
     }
 
 }

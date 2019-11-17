@@ -20,9 +20,15 @@ public interface DatabaseServiceClient {
     @PostMapping("/article")
     Article addArticle(@RequestBody Article article);
 
+    @GetMapping("/article/find/content/{partOfContent}")
+    Article getArticlesWithContent(@PathVariable("partOfContent") String partOfContent);
+
+    @GetMapping("/article/find/title/{partOfTitle}")
+    Article getArticlesWithTitle(@PathVariable("partOfTitle") String partOfTitle);
+
     @PostMapping("/basic-comparison")
     BasicComparison addComparison(@RequestBody BasicComparison basicComparison);
 
-    @GetMapping("/article/find/{phrase}")
-    List<Article> findArticles(@PathVariable("phrase") String phrase);
+    @GetMapping("/basic-comparison")
+    BasicComparison getComparison(@RequestParam ObjectId id1, @RequestParam ObjectId id2, @RequestParam String metric);
 }
