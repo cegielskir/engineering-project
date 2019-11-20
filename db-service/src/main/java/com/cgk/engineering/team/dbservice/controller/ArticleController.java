@@ -42,17 +42,12 @@ public class ArticleController {
     public Flux<ComparisonData> streamEvents(@PathVariable("articleId") ObjectId articleId) {
 
         Article article = articleRepository.findById(articleId.toString()).block();
-        System.out.println("Article " + article.toString());
-        System.out.println("Got article"
-        );
         return articleRepository.findAll()
                 .map(a ->
                      new ComparisonData(
                                     article,
                                     a,
                                     null)
-
                 );
     }
-    //basicComparisonRepository.findByFirstArticleIDAndSecondArticleID(articleId.toString(), new ObjectId(a.get_id()).toString()).block()
 }

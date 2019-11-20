@@ -47,7 +47,6 @@ public class ComparisonWebSocketController {
                 .bodyToFlux(ComparisonData.class);
 
         currentSubscription = comparisonDataFlux.subscribe(comparisonData -> {
-            System.out.println("Here eeee");
             if(comparisonData.getBasicComparison() != null){
                 sendComparison(comparisonData.getBasicComparison(), threshold);
             } else {
@@ -72,7 +71,6 @@ public class ComparisonWebSocketController {
 
     @MessageMapping("/find/{searchedKey}")
     public void findArticle(@DestinationVariable("searchedKey") String searchedKey){
-        // System.out.println("zaczynam szukac");
         sendSearchedResult(dbClient.findArticles(searchedKey));
     }
 

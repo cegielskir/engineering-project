@@ -15,7 +15,6 @@ public class LCSComparator implements IComparator {
     }
 
     public DetailsComparison compareArticles() {
-
         NormalizedLongestCommonSubstring nlcs = new NormalizedLongestCommonSubstring();
 
         List<SuspiciousFragments> suspiciousFragmentsList = nlcs.similarity(article1.getContent(), article2.getContent());

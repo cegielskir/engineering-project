@@ -57,13 +57,6 @@ public class ComparisonServicesUtil {
     }
 
     public IComparisonService getServiceWithMethod(String method){
-        // System.out.println("HERE");
-        System.out.println("METHODS: " + methodServiceMap.keySet().iterator().next().toString());
-        for(String str:methodServiceMap.keySet()){
-            System.out.println("Method in set: " + str);
-        }
-        System.out.println(method);
-        System.out.println(methodServiceMap.get(method));
         return methodServiceMap.get(method).getComparisonService();
     }
 }
