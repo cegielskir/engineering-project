@@ -30,22 +30,11 @@ public class ArticleController {
 
     @PostMapping
     public Article addArticle(@RequestBody Article article){
-        dbClient.addArticle(article);
-        return article;
+        return dbClient.addArticle(article);
     }
 
-    @GetMapping(value = "/flux-test/{articleId}")
-    public Article getFluxTest(@PathVariable("articleId") ObjectId articleID){
-        WebClient client = WebClient.create("http://localhost:9092");
-
-        Flux<ComparisonData> comparisonDataFlux = client.get()
-                .uri("/article/stream/" + articleID)
-                .retrieve()
-                .bodyToFlux(ComparisonData.class);
-
-        comparisonDataFlux.subscribe(System.out::println);
-        return null;
+    @GetMapping(value = "/find/content/{partOfContent}")
+    public Article getArticlesWithConent(@PathVariable("partOfContent") String partOfConent){
+        return dbClient.getArticlesWithContent(partOfConent);
     }
-
-
 }

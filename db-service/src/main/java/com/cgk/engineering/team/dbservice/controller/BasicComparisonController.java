@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/basic-comparison")
@@ -16,8 +17,7 @@ public class BasicComparisonController {
     BasicComparisonRepository basicComparisonRepository;
 
     @PostMapping
-    public BasicComparison addComparison(@RequestBody BasicComparison basicComparison){
-        basicComparisonRepository.save(basicComparison);
-        return basicComparison;
+    public Mono<BasicComparison> addComparison(@RequestBody BasicComparison basicComparison){
+        return basicComparisonRepository.save(basicComparison);
     }
 }

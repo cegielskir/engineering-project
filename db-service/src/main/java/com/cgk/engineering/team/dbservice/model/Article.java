@@ -4,12 +4,10 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document
 public class Article {
 
     @Id
-    private ObjectId _id;
-
+    private String id;
     private String title;
     private String author;
     private String description;
@@ -17,26 +15,27 @@ public class Article {
     private String date;
     private String url;
     private String numberOfViews;
+    private int hash;
     private String downloadTime;
 
+    public String getDownloadTime() {
+        return downloadTime;
+    }
+
+    public void setDownloadTime(String downloadTime) {
+        this.downloadTime = downloadTime;
+    }
+
     public Article() {
-        set_id(ObjectId.get());
+
     }
 
-    public Article(ObjectId _id, String title, String author, String description, String content) {
-        this._id = _id;
-        this.title = title;
-        this.author = author;
-        this.description = description;
-        this.content = content;
+    public String getId() {
+        return id;
     }
 
-    public String get_id() {
-        return _id.toHexString();
-    }
-
-    public void set_id(ObjectId _id) {
-        this._id = _id;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -68,6 +67,7 @@ public class Article {
     }
 
     public void setContent(String content) {
+        this.hash = content.hashCode();
         this.content = content;
     }
 
@@ -95,18 +95,18 @@ public class Article {
         this.numberOfViews = numberOfViews;
     }
 
-    public String getDownloadTime() {
-        return downloadTime;
+    public int getHash() {
+        return hash;
     }
 
-    public void setDownloadTime(String downloadTime) {
-        this.downloadTime = downloadTime;
+    public void setHash(int hash) {
+        this.hash = hash;
     }
 
     @Override
     public String toString() {
         return "Article{" +
-                "_id=" + _id +
+                "id=" + id +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +

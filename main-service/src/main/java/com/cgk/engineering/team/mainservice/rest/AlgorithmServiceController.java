@@ -28,28 +28,6 @@ public class AlgorithmServiceController {
     @Autowired
     private ComparisonServiceController comparisonServiceController;
 
-    @GetMapping(value = "/{articleId}")
-    public List<Comparison> getComparison(@PathVariable("articleId") ObjectId articleId,
-                                          @RequestParam(value = "threshold", required = false) int threshold,
-                                          @RequestParam("metric") String metric){
-        List<Article> articles = dbClient.getArticles().stream().filter(a -> !new ObjectId(a.get_id()).equals(articleId)).collect(Collectors.toList());
-        Article article = dbClient.getArticle(articleId);
-        if(article != null) {
-            List<Comparison> comparisons = new ArrayList<>();
-            for (Article theArticle : articles) {
-                ComparisonData comparisonData = new ComparisonData(article, theArticle);
-                comparisonData.setMetric(metric);
-                Comparison comparison = comparisonServiceController.getBasicComparison(comparisonData);
-                if(comparison.getPercentage() > threshold) {
-                    comparisons.add(comparison);
-                }
-            }
-
-            return comparisons;
-        }
-        return null;
-    }
-
     @GetMapping(value="/two")
     public DetailsComparison getComparison(@RequestParam("articleId1") ObjectId articleId1,
                                            @RequestParam("articleId2") ObjectId articleId2,
