@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,32 +26,36 @@ public class ArticleController {
     BasicComparisonRepository basicComparisonRepository;
 
     @GetMapping(value = "/{articleId}")
-    public Mono<Article> getArticle(@PathVariable("articleId") ObjectId articleId){
-        return articleRepository.findById(articleId.toString());
+    public Mono<Article> getArticle(@PathVariable("articleId") String articleId){
+        return articleRepository.findById(articleId);
     }
 
     @PostMapping
     public Mono<Article> addArticle(@RequestBody Article article){
         Mono<Article> articleAlreadyInDb = articleRepository.findByHash(article.getHash());
         if(articleAlreadyInDb.block() != null) {
-            System.out.println("The same");
             return articleAlreadyInDb;
-        }
-        else{
-            System.out.println("Not The same");
+        } else {
             return articleRepository.save(article);
         }
     }
 
-    @GetMapping(value= "/stream/{articleId}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ComparisonData> streamEvents(@PathVariable("articleId") ObjectId articleId) {
+    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<ComparisonData> streamEvents(@PathVariable("articleId") String articleId,
+                                             @PathVariable("articleIDSToCompare") List<String> articleIDS) {
 
-        Article article = articleRepository.findById(articleId.toString()).block();
-
-        return articleRepository.findAll()
-            .map(a ->
-                 new ComparisonData(article, a)
+        Article article = articleRepository.findById(articleId).block();
+        if(articleIDS != null && articleIDS.size() > 0) {
+            return articleRepository.findAllById(articleIDS)
+                .map(a ->
+                    new ComparisonData(article, a)
             );
+        } else {
+            return articleRepository.findAll()
+                .map(a ->
+                        new ComparisonData(article, a)
+                );
+        }
     }
 
     @GetMapping(value = "/find/content/{partOfContent}")

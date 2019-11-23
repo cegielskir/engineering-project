@@ -25,11 +25,11 @@ public class LCSComparator implements IComparator {
                 article1.getContent().length());
 
         DetailsComparison detailsComparison =
-                new DetailsComparison(new ObjectId(),
-                        (int)plagiarismPercentage,
+                new DetailsComparison(
                         (int)similarityPercentage,
                         article1.getContent(),
                         article2.getContent());
+        detailsComparison.setPercentage((int)plagiarismPercentage);
         detailsComparison.setSuspiciousWords(suspiciousFragmentsList);
 
         return detailsComparison;

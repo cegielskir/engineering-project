@@ -5,7 +5,6 @@ import java.util.List;
 
 public class ComparisonData {
 
-
     private Article article1;
 
     private Article article2;

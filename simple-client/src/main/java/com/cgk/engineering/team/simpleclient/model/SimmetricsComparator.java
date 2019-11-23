@@ -18,9 +18,9 @@ public class SimmetricsComparator implements IComparator {
 
     @Override
     public BasicComparison compareArticles() {
-        BasicComparison c = new BasicComparison(new ObjectId());
+        BasicComparison c = new BasicComparison();
         StringMetric stringMetric;
-        c.setArticleIDs( article1.get_id(),  article2.get_id());
+        c.setArticleIDs( article1.getId(),  article2.getId());
         switch (metric){
             case "Dice":
                 stringMetric = StringMetrics.dice();

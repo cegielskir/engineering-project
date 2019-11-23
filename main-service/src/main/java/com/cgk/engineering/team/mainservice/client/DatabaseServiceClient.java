@@ -12,7 +12,7 @@ import java.util.List;
 public interface DatabaseServiceClient {
 
     @GetMapping("/article/{articleId}")
-    Article getArticle(@PathVariable("articleId") ObjectId id);
+    Article getArticle(@PathVariable("articleId") String id);
 
     @GetMapping("/article")
     List<Article> getArticles();
@@ -30,5 +30,5 @@ public interface DatabaseServiceClient {
     BasicComparison addComparison(@RequestBody BasicComparison basicComparison);
 
     @GetMapping("/basic-comparison")
-    BasicComparison getComparison(@RequestParam ObjectId id1, @RequestParam ObjectId id2, @RequestParam String metric);
+    BasicComparison getComparison(@RequestParam String id1, @RequestParam String id2, @RequestParam String metric);
 }

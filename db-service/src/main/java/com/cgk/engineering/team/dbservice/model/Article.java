@@ -26,9 +26,7 @@ public class Article {
         this.downloadTime = downloadTime;
     }
 
-    public Article() {
-
-    }
+    public Article() {}
 
     public String getId() {
         return id;

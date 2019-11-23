@@ -17,7 +17,7 @@ public class LevenshteinComparator implements IComparator {
 
     @Override
     public BasicComparison compareArticles() {
-        BasicComparison comparison = new BasicComparison(new ObjectId());
+        BasicComparison comparison = new BasicComparison();
 
         NormalizedLevenshtein normalizedLevenshtein = new NormalizedLevenshtein();
 

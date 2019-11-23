@@ -19,7 +19,7 @@ public class ArticleController {
     DatabaseServiceClient dbClient;
 
     @GetMapping(value = "/{articleId}")
-    public Article getArticle(@PathVariable("articleId") ObjectId articleId){
+    public Article getArticle(@PathVariable("articleId") String articleId){
         return dbClient.getArticle(articleId);
     }
 

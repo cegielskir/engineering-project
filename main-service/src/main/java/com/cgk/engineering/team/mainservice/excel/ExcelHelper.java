@@ -28,37 +28,10 @@ public class ExcelHelper {
 
         List<Article> articles;
 
-//        if (fileLocation.endsWith(".xls")) {
-//            data = readHSSFWorkbook(fileInputStream);
 //        } else if (fileLocation.endsWith(".xlsx")) {
-            articles = readXSSFWorkbook(inputStream);
-        //}
+        articles = readXSSFWorkbook(inputStream);
 
-        return articles;
-    }
 
-    private List<Article> readHSSFWorkbook(FileInputStream fis) throws IOException {
-        List<Article> articles = new ArrayList<>();
-        HSSFWorkbook workbook = null;
-        try {
-            workbook = new HSSFWorkbook(fis);
-
-            HSSFSheet sheet = workbook.getSheetAt(0);
-            for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
-                HSSFRow row = sheet.getRow(i);
-                if (row != null) {
-                    try {
-                        articles.add(createArticleFromExcelRow(row));
-                    } catch (Exception ex){
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        } finally {
-            if (workbook != null) {
-                workbook.close();
-            }
-        }
         return articles;
     }
 

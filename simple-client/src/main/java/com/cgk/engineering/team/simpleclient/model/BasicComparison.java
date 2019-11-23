@@ -8,10 +8,6 @@ public class BasicComparison extends Comparison {
     private String firstArticleShortContent;
     private String secondArticleShortContent;
 
-    public BasicComparison(ObjectId id) {
-        super(id, 0);
-    }
-
     public BasicComparison() {}
 
     public void setArticleIDs(String firstArticleID, String secondArticleID) {

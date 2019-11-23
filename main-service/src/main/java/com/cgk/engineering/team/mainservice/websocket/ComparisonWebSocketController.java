@@ -35,16 +35,17 @@ public class ComparisonWebSocketController {
         this.template = template;
     }
 
-    @MessageMapping("/compare/{articleID}/{threshold}/{metric}")
+    @MessageMapping("/compare/{articleID}/{threshold}/{articleIDSToCompare}/{metric}")
     public void compareArticle(@DestinationVariable("articleID") ObjectId articleID,
                                @DestinationVariable("threshold") int threshold,
-                               @DestinationVariable("metrics") List<String> metrics){
+                               @DestinationVariable("metrics") List<String> metrics,
+                               @DestinationVariable("articleIDSToCompare") List<String> articleIDS){
 
         String dbUrl = System.getenv("DB_URL") == null ? "http://localhost:9092": System.getenv("DB_URL");
         WebClient client = WebClient.create(dbUrl);
 
         Flux<ComparisonData> comparisonDataFlux = client.get()
-            .uri("/article/stream/" + articleID)
+            .uri("/article/stream/" + articleID + "/" + articleIDS)
             .retrieve()
             .bodyToFlux(ComparisonData.class);
 
