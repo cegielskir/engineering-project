@@ -5,8 +5,8 @@ import org.bson.types.ObjectId;
 public class BasicComparison extends Comparison {
     private String firstArticleID;
     private String secondArticleID;
-    private String firstArticleShortContent;
     private String secondArticleShortContent;
+    private String metric;
 
     public BasicComparison(ObjectId id) {
         super(id, 0);
@@ -35,20 +35,20 @@ public class BasicComparison extends Comparison {
         this.secondArticleID = secondArticleID;
     }
 
-    public String getFirstArticleShortContent() {
-        return firstArticleShortContent;
-    }
-
-    public void setFirstArticleShortContent(String firstArticleShortContent) {
-        this.firstArticleShortContent = firstArticleShortContent;
-    }
-
     public String getSecondArticleShortContent() {
         return secondArticleShortContent;
     }
 
     public void setSecondArticleShortContent(String secondArticleShortContent) {
         this.secondArticleShortContent = secondArticleShortContent;
+    }
+
+    public String getMetric() {
+        return metric;
+    }
+
+    public void setMetric(String metric) {
+        this.metric = metric;
     }
 }
 

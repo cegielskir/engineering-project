@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
+import springfox.documentation.spring.web.json.Json;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class ComparisonWebSocketController {
         this.template = template;
     }
 
-    @MessageMapping("/compare/{articleID}/{threshold}/{metric}")
+    @MessageMapping("/compare/{articleID}/{threshold}/{metrics}")
     public void compareArticle(@DestinationVariable("articleID") ObjectId articleID,
                                @DestinationVariable("threshold") int threshold,
                                @DestinationVariable("metrics") List<String> metrics){
@@ -62,6 +63,7 @@ public class ComparisonWebSocketController {
     }
 
     private void sendComparison(BasicComparison comparison, int threshold) {
+        System.out.println("wysylam websocket");
         if(comparison.getPercentage() > threshold) {
             this.template.convertAndSend("/article/comparison", comparison);
         }
@@ -73,13 +75,15 @@ public class ComparisonWebSocketController {
     }
 
     private void sendComparisonError(Throwable error){
+        error.printStackTrace();
         this.template.convertAndSend("/article/comparison",
-                "Error occurred while comparing articles: " + error);
+                new BasicResponse("ERROR", "Error occurred while comparing articles."));
     }
 
     private void sendComparisonComplete(){
+        System.out.println("wysylam complete websocket");
         this.template.convertAndSend("/article/comparison",
-                "Comparing articles has been finished");
+                new BasicResponse("SUCCESS", "Comparing articles has been finished"));
     }
 
 }

@@ -57,13 +57,6 @@ public class ComparisonServicesUtil {
     }
 
     public IComparisonService getServiceWithMethod(String method){
-        //
-
-        for(String str:methodServiceMap.keySet()){
-
-        }
-
-
         return methodServiceMap.get(method).getComparisonService();
     }
 }

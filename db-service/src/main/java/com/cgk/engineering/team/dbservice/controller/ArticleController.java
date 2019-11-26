@@ -33,11 +33,9 @@ public class ArticleController {
     public Mono<Article> addArticle(@RequestBody Article article){
         Mono<Article> articleAlreadyInDb = articleRepository.findByHash(article.getHash());
         if(articleAlreadyInDb.block() != null) {
-            System.out.println("The same");
             return articleAlreadyInDb;
         }
         else{
-            System.out.println("Not The same");
             return articleRepository.save(article);
         }
     }
@@ -54,12 +52,13 @@ public class ArticleController {
     }
 
     @GetMapping(value = "/find/content/{partOfContent}")
-    public Flux<Article>  getArticleWithContent(@PathVariable("partOfContent") String partOfContent){
+    public Flux<Article> getArticleWithContent(@PathVariable("partOfContent") String partOfContent){
+        System.out.println("DB FIND");
         return articleRepository.findByContentContains(partOfContent);
     }
 
     @GetMapping(value = "/find/title/{partOfContent}")
-    public Flux<Article>  getArticleWithTitle(@PathVariable("partOfContent") String partOfTitle){
+    public Flux<Article> getArticleWithTitle(@PathVariable("partOfContent") String partOfTitle){
         return articleRepository.findByTitleContains(partOfTitle);
     }
 }
