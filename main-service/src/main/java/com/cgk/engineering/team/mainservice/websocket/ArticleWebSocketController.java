@@ -4,14 +4,17 @@ import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.client.comparison.ComparisonServiceController;
 import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.BasicComparison;
+import com.cgk.engineering.team.mainservice.model.BasicResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 
+@Controller
 public class ArticleWebSocketController {
     private SimpMessagingTemplate template;
 
@@ -27,13 +30,11 @@ public class ArticleWebSocketController {
 
     @MessageMapping("/article/find/content/{partOfContent}")
     public void findAdrticleByContent(@DestinationVariable("partOfContent") String partOfContent){
-
         findArticle(partOfContent, "content");
     }
 
     @MessageMapping("/article/find/title/{partOfTitle}")
     public void findArticleByTitle(@DestinationVariable("partOfTitle") String partOfTitle){
-
         findArticle(partOfTitle, "title");
     }
 
@@ -59,12 +60,12 @@ public class ArticleWebSocketController {
 
     private void sendFindArticleError(Throwable error){
         this.template.convertAndSend("/article/find",
-                "Error occurred while finding articles: " + error);
+                new BasicResponse("ERROR", "Error occurred while finding articles: "));
     }
 
-    private void sendFindArticleComplete(){
+    private void sendFindArticleComplete() {
         this.template.convertAndSend("/article/find",
-                "Finding articles has been finished");
+                new BasicResponse("SUCCESS", "Finding articles has been finished"));
     }
 
     @MessageMapping("/article/dispose")

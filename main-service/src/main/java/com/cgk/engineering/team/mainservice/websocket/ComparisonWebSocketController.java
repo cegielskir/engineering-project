@@ -74,13 +74,15 @@ public class ComparisonWebSocketController {
     }
 
     private void sendComparisonError(Throwable error){
+        error.printStackTrace();
         this.template.convertAndSend("/article/comparison",
-                "Error occurred while comparing articles: " + error);
+                new BasicResponse("ERROR", "Error occurred while comparing articles."));
     }
 
     private void sendComparisonComplete(){
+        System.out.println("wysylam complete websocket");
         this.template.convertAndSend("/article/comparison",
-                "Comparing articles has been finished");
+                new BasicResponse("SUCCESS", "Comparing articles has been finished"));
     }
 
 }

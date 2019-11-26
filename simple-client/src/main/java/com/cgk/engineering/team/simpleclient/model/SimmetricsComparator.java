@@ -4,8 +4,6 @@ import org.bson.types.ObjectId;
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.StringMetrics;
 
-import java.util.Random;
-
 public class SimmetricsComparator implements IComparator {
     private Article article1, article2;
     private String metric;
@@ -22,37 +20,35 @@ public class SimmetricsComparator implements IComparator {
         StringMetric stringMetric;
         c.setArticleIDs( article1.getId(),  article2.getId());
         switch (metric){
+            case "CosineSimilarity":
+                stringMetric = StringMetrics.cosineSimilarity();
+                break;
             case "Dice":
                 stringMetric = StringMetrics.dice();
                 break;
             case "Jaccard":
                 stringMetric = StringMetrics.jaccard();
                 break;
-            case "MongeElkan":
-                stringMetric = StringMetrics.mongeElkan();
+            case "GeneralizedJaccard":
+                stringMetric = StringMetrics.generalizedJaccard();
                 break;
-            case "JaroWinkler":
-                stringMetric = StringMetrics.jaroWinkler();
+            case "BlockDistance":
+                stringMetric = StringMetrics.blockDistance();
+                break;
+            case "OverlapCoefficient":
+                stringMetric = StringMetrics.overlapCoefficient();
                 break;
             case "Levenshtein":
                 stringMetric = StringMetrics.levenshtein();
                 break;
-            case "NeedlemanWunsch":
-                stringMetric = StringMetrics.needlemanWunch();
-                break;
-            case "SmithWaterman":
-                stringMetric = StringMetrics.smithWatermanGotoh();
-                break;
             default:
-                stringMetric = StringMetrics.cosineSimilarity();
+                stringMetric = StringMetrics.damerauLevenshtein();
         }
 
         float result = stringMetric.compare(article1.getContent(), article2.getContent());
         double percentage = 100*result;
         c.setPercentage((int)percentage);
-        c.setFirstArticleShortContent(article1.getContent().length() > 300
-                ? article1.getContent().substring(0, 300) + "..."
-                : article1.getContent());
+        c.setMetric(metric);
         c.setSecondArticleShortContent(article2.getContent().length() > 300
                 ? article2.getContent().substring(0, 300) + "..."
                 : article2.getContent());
