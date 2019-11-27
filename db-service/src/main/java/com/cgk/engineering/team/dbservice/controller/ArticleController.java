@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/article")
@@ -40,21 +38,26 @@ public class ArticleController {
         }
     }
 
-    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}/{metrics}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ComparisonData> streamEvents(@PathVariable("articleId") String articleId,
-                                             @PathVariable("articleIDSToCompare") List<String> articleIDS) {
+                                             @PathVariable("articleIDSToCompare") List<String> articleIDS,
+                                             @PathVariable("metrics") List<String> metrics) {
+
         Article article = articleRepository.findById(articleId).block();
-        articleIDS.remove(articleId);
         if(articleIDS != null && articleIDS.size() > 0) {
+            System.out.println("wchodze 1");
             return articleRepository.findAllById(articleIDS)
-                .map(a ->
-                    new ComparisonData(article, a)
-            );
+                .map(a -> {
+                    System.out.println("message1");
+                    return createComparisonData(article, a, articleId, a.getId(), metrics);
+                });
         } else {
-            return articleRepository.findAll()
-                .map(a ->
-                        new ComparisonData(article, a)
-                );
+            System.out.println("wchodze 2");
+            return articleRepository.findAllByIdIsNot(articleId)
+                .map(a -> {
+                    System.out.println("message2");
+                    return createComparisonData(article, a, articleId, a.getId(), metrics);
+                });
         }
     }
 
@@ -66,5 +69,22 @@ public class ArticleController {
     @GetMapping(value = "/find/title/{partOfContent}")
     public Flux<Article>  getArticleWithTitle(@PathVariable("partOfContent") String partOfTitle){
         return articleRepository.findByTitleContains(partOfTitle);
+    }
+
+    private ComparisonData createComparisonData(Article article1, Article article2, String id1, String id2, List<String> metrics){
+        return new ComparisonData(article1, article2, getAlreadyInDbMap(id1, id2, metrics));
+    }
+
+    private Map<String, Boolean> getAlreadyInDbMap(String id1, String id2, List<String> metrics){
+        System.out.println("get all");
+        Map<String, Boolean> isAlreadyInDbMap = new HashMap<>();
+        for(String metric : metrics){
+            boolean isInDb = ((basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id1, id2, metric).block() != null) ||
+                    (basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id2, id1, metric).block() != null));
+            System.out.println(metric + ": " + isInDb);
+            isAlreadyInDbMap.put(metric, isInDb);
+        }
+
+        return isAlreadyInDbMap;
     }
 }

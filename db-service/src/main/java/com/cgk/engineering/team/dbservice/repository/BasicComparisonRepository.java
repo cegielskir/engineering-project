@@ -11,7 +11,9 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface BasicComparisonRepository extends ReactiveMongoRepository<BasicComparison, String> {
 
-    Mono<BasicComparison> findByFirstArticleIDAndSecondArticleID(String firstArticleId, String secondArticleId);
+    Mono<BasicComparison> findByFirstArticleIDAndSecondArticleIDAndMetric(String firstArticleId,
+                                                                          String secondArticleId,
+                                                                          String metric);
 
 
 }

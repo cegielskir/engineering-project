@@ -45,7 +45,7 @@ public class ComparisonWebSocketController {
         WebClient client = WebClient.create(dbUrl);
 
         Flux<ComparisonData> comparisonDataFlux = client.get()
-            .uri("/article/stream/" + articleID + "/" + String.join(",", articleIDS))
+            .uri("/article/stream/" + articleID + "/" + String.join(",", articleIDS + "/" + metrics))
             .retrieve()
             .bodyToFlux(ComparisonData.class);
 
