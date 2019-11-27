@@ -35,7 +35,7 @@ public class ComparisonWebSocketController {
         this.template = template;
     }
 
-    @MessageMapping("/compare/{articleID}/{threshold}/{articleIDSToCompare}/{metric}")
+    @MessageMapping("/compare/{articleID}/{threshold}/{articleIDSToCompare}/{metrics}")
     public void compareArticle(@DestinationVariable("articleID") ObjectId articleID,
                                @DestinationVariable("threshold") int threshold,
                                @DestinationVariable("metrics") List<String> metrics,
@@ -45,7 +45,7 @@ public class ComparisonWebSocketController {
         WebClient client = WebClient.create(dbUrl);
 
         Flux<ComparisonData> comparisonDataFlux = client.get()
-            .uri("/article/stream/" + articleID + "/" + articleIDS)
+            .uri("/article/stream/" + articleID + "/" + String.join(",", articleIDS))
             .retrieve()
             .bodyToFlux(ComparisonData.class);
 
@@ -54,6 +54,8 @@ public class ComparisonWebSocketController {
                 for(String metric : metrics) {
                     comparisonData.setMetric(metric);
                     BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
+                    basicComparison.setSecondArticleTitle(comparisonData.getArticle2().getTitle());
+                    basicComparison.setSecondArticleDescription(comparisonData.getArticle2().getDescription());
                     dbClient.addComparison(basicComparison);
                     sendComparison(basicComparison, threshold);
                 }
@@ -80,7 +82,6 @@ public class ComparisonWebSocketController {
     }
 
     private void sendComparisonComplete(){
-        System.out.println("wysylam complete websocket");
         this.template.convertAndSend("/article/comparison",
                 new BasicResponse("SUCCESS", "Comparing articles has been finished"));
     }

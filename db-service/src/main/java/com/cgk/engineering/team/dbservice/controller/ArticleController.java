@@ -43,8 +43,8 @@ public class ArticleController {
     @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ComparisonData> streamEvents(@PathVariable("articleId") String articleId,
                                              @PathVariable("articleIDSToCompare") List<String> articleIDS) {
-
         Article article = articleRepository.findById(articleId).block();
+        articleIDS.remove(articleId);
         if(articleIDS != null && articleIDS.size() > 0) {
             return articleRepository.findAllById(articleIDS)
                 .map(a ->

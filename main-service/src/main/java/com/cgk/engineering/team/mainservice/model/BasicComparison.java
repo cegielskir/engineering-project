@@ -1,10 +1,10 @@
 package com.cgk.engineering.team.mainservice.model;
 
-import org.bson.types.ObjectId;
-
 public class BasicComparison extends Comparison {
     private String firstArticleID;
     private String secondArticleID;
+    private String secondArticleTitle;
+    private String secondArticleDescription;
     private String secondArticleShortContent;
     private String metric;
 
@@ -45,6 +45,22 @@ public class BasicComparison extends Comparison {
 
     public void setMetric(String metric) {
         this.metric = metric;
+    }
+
+    public String getSecondArticleTitle() {
+        return secondArticleTitle;
+    }
+
+    public void setSecondArticleTitle(String secondArticleTitle) {
+        this.secondArticleTitle = secondArticleTitle;
+    }
+
+    public String getSecondArticleDescription() {
+        return secondArticleDescription;
+    }
+
+    public void setSecondArticleDescription(String secondArticleDescription) {
+        this.secondArticleDescription = secondArticleDescription;
     }
 }
 
