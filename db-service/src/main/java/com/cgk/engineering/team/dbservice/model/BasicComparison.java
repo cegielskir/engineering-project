@@ -1,10 +1,13 @@
 package com.cgk.engineering.team.dbservice.model;
 
 import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 public class BasicComparison extends Comparison {
 
+    @Indexed
     private String firstArticleID;
+    @Indexed
     private String secondArticleID;
     private String firstArticleShortContent;
     private String secondArticleShortContent;

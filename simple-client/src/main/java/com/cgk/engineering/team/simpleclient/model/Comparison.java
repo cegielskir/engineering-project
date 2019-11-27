@@ -7,6 +7,7 @@ public abstract class Comparison {
     @Id
     private String id;
     private int percentage;
+    private String metric;
 
     public Comparison() {
     }
@@ -32,6 +33,14 @@ public abstract class Comparison {
         if(percentage<=100 && percentage>=0)
             this.percentage = percentage;
         else throw new IllegalArgumentException();
+    }
+
+    public String getMetric() {
+        return metric;
+    }
+
+    public void setMetric(String metric) {
+        this.metric = metric;
     }
 }
 

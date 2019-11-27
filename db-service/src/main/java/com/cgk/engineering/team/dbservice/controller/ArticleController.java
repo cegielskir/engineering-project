@@ -40,21 +40,18 @@ public class ArticleController {
         }
     }
 
-    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}/{metric}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ComparisonData> streamEvents(@PathVariable("articleId") String articleId,
-                                             @PathVariable("articleIDSToCompare") List<String> articleIDS) {
+                                             @PathVariable("articleIDSToCompare") List<String> articleIDS,
+                                             @PathVariable("metric") String metric) {
 
         Article article = articleRepository.findById(articleId).block();
         if(articleIDS != null && articleIDS.size() > 0) {
             return articleRepository.findAllById(articleIDS)
-                .map(a ->
-                    new ComparisonData(article, a)
-            );
+                .map(a -> createComparisonData(article, a, articleId, a.getId(), metric));
         } else {
             return articleRepository.findAll()
-                .map(a ->
-                        new ComparisonData(article, a)
-                );
+                .map(a -> createComparisonData(article, a, articleId, a.getId(), metric));
         }
     }
 
@@ -66,5 +63,11 @@ public class ArticleController {
     @GetMapping(value = "/find/title/{partOfContent}")
     public Flux<Article>  getArticleWithTitle(@PathVariable("partOfContent") String partOfTitle){
         return articleRepository.findByTitleContains(partOfTitle);
+    }
+
+    private ComparisonData createComparisonData(Article article1, Article article2, String id1, String id2, String metric){
+        return new ComparisonData(article1, article2,
+            ((basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id1, id2,metric).block() != null) ||
+             (basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id2,id1,metric).block() != null)));
     }
 }

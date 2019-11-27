@@ -52,6 +52,10 @@ public class ComparisonWebSocketController {
         currentSubscription = comparisonDataFlux.subscribe(
             comparisonData -> {
                 for(String metric : metrics) {
+                    if(comparisonData.isAlreadyInDb()){
+                        sendComparison(dbClient.getComparison(comparisonData.getArticle1().getId(),
+                                comparisonData.getArticle2().getId(), comparisonData.getMetric()), threshold);
+                    }
                     comparisonData.setMetric(metric);
                     BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
                     dbClient.addComparison(basicComparison);
