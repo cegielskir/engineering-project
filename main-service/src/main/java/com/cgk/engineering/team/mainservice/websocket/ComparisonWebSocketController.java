@@ -52,14 +52,15 @@ public class ComparisonWebSocketController {
         currentSubscription = comparisonDataFlux.subscribe(
             comparisonData -> {
                 for(String metric : metrics) {
-                    if(comparisonData.isAlreadyInDb()){
+                    if(comparisonData.getAlreadyInDbByMetricMap().get(metric)){
                         sendComparison(dbClient.getComparison(comparisonData.getArticle1().getId(),
-                                comparisonData.getArticle2().getId(), comparisonData.getMetric()), threshold);
+                                comparisonData.getArticle2().getId(), metric), threshold);
+                    } else {
+                        comparisonData.setMetric(metric);
+                        BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
+                        dbClient.addComparison(basicComparison);
+                        sendComparison(basicComparison, threshold);
                     }
-                    comparisonData.setMetric(metric);
-                    BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
-                    dbClient.addComparison(basicComparison);
-                    sendComparison(basicComparison, threshold);
                 }
             },
             this::sendComparisonError,

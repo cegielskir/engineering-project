@@ -2,25 +2,25 @@ package com.cgk.engineering.team.simpleclient.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ComparisonData {
-
 
     private Article article1;
     private Article article2;
 
     private String metric;
-    private boolean alreadyInDb;
+    private Map<String, Boolean> alreadyInDbByMetricMap;
 
     private List<String> allMetrics = new ArrayList<>();
 
     public ComparisonData() {
     }
 
-    public ComparisonData(Article article1, Article article2, boolean alreadyInDb) {
+    public ComparisonData(Article article1, Article article2, Map<String, Boolean> alreadyInDbByMetricMap) {
         this.article1 = article1;
         this.article2 = article2;
-        this.alreadyInDb = alreadyInDb;
+        this.alreadyInDbByMetricMap = alreadyInDbByMetricMap;
     }
 
     public Article getArticle1() {
@@ -55,11 +55,11 @@ public class ComparisonData {
         this.metric = metric;
     }
 
-    public boolean isAlreadyInDb() {
-        return alreadyInDb;
+    public Map<String, Boolean> getAlreadyInDbByMetricMap() {
+        return alreadyInDbByMetricMap;
     }
 
-    public void setAlreadyInDb(boolean alreadyInDb) {
-        this.alreadyInDb = alreadyInDb;
+    public void setAlreadyInDbByMetricMap(Map<String, Boolean> alreadyInDbByMetricMap) {
+        this.alreadyInDbByMetricMap = alreadyInDbByMetricMap;
     }
 }

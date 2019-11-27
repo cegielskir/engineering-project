@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/article")
@@ -40,18 +38,18 @@ public class ArticleController {
         }
     }
 
-    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}/{metric}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}/{metrics}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ComparisonData> streamEvents(@PathVariable("articleId") String articleId,
                                              @PathVariable("articleIDSToCompare") List<String> articleIDS,
-                                             @PathVariable("metric") String metric) {
+                                             @PathVariable("metrics") List<String> metrics) {
 
         Article article = articleRepository.findById(articleId).block();
         if(articleIDS != null && articleIDS.size() > 0) {
             return articleRepository.findAllById(articleIDS)
-                .map(a -> createComparisonData(article, a, articleId, a.getId(), metric));
+                .map(a -> createComparisonData(article, a, articleId, a.getId(), metrics));
         } else {
-            return articleRepository.findAll()
-                .map(a -> createComparisonData(article, a, articleId, a.getId(), metric));
+            return articleRepository.findAllByIdIsNot(articleId)
+                .map(a -> createComparisonData(article, a, articleId, a.getId(), metrics));
         }
     }
 
@@ -65,9 +63,16 @@ public class ArticleController {
         return articleRepository.findByTitleContains(partOfTitle);
     }
 
-    private ComparisonData createComparisonData(Article article1, Article article2, String id1, String id2, String metric){
-        return new ComparisonData(article1, article2,
-            ((basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id1, id2,metric).block() != null) ||
-             (basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id2,id1,metric).block() != null)));
+    private ComparisonData createComparisonData(Article article1, Article article2, String id1, String id2, List<String> metrics){
+        return new ComparisonData(article1, article2, getAlreadyInDbMap(id1, id2, metrics));
+    }
+
+    private Map<String, Boolean> getAlreadyInDbMap(String id1, String id2, List<String> metrics){
+        Map<String, Boolean> isAlreadyInDbMap = new HashMap<>();
+        for(String metric : metrics){
+            isAlreadyInDbMap.put(metric, ((basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id1, id2, metric).block() != null) ||
+                    (basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id2, id1, metric).block() != null)));
+        }
+        return isAlreadyInDbMap;
     }
 }

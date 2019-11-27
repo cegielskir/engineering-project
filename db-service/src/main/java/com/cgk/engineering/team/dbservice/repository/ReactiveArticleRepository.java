@@ -16,6 +16,7 @@ import java.util.List;
 @Repository
 public interface ReactiveArticleRepository extends ReactiveMongoRepository<Article, String> {
 
+    Flux<Article> findAllByIdIsNot(String id);
     Mono<Article> findByHash(int hash);
     Flux<Article> findByContentContains(String partOfArticle);
     Flux<Article> findByTitleContains(String partOfTitle);
