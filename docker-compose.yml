@@ -112,6 +112,7 @@ services:
     environment:
     - EUREKA_URL=discovery-service
     - CONFIG_URL=config-service
+    - DB_URL=http://db-service:9092
 
   simple-client:
     build:
@@ -146,7 +147,7 @@ services:
     networks:
       - frontend
     environment:
-      - "API_BASE_URL=http://main-service:8060"
+      - API_BASE_URL=http://localhost:8060
     
 networks:
   backend:

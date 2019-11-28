@@ -1,6 +1,8 @@
 package com.cgk.engineering.team.simpleclient.model;
 
+
 import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLevenshtein;
+import org.bson.types.ObjectId;
 
 public class LevenshteinComparator implements IComparator {
 
@@ -14,8 +16,8 @@ public class LevenshteinComparator implements IComparator {
     }
 
     @Override
-    public Comparison compareArticles() {
-        Comparison comparison = new Comparison(17);
+    public BasicComparison compareArticles() {
+        BasicComparison comparison = new BasicComparison();
 
         NormalizedLevenshtein normalizedLevenshtein = new NormalizedLevenshtein();
 

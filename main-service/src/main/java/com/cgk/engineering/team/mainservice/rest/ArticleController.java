@@ -1,15 +1,17 @@
-package com.cgk.engineering.team.mainservice.controller;
+package com.cgk.engineering.team.mainservice.rest;
 
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Article;
+import com.cgk.engineering.team.mainservice.model.ComparisonData;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/article")
 public class ArticleController {
 
@@ -17,7 +19,7 @@ public class ArticleController {
     DatabaseServiceClient dbClient;
 
     @GetMapping(value = "/{articleId}")
-    public Article getArticle(@PathVariable("articleId") ObjectId articleId){
+    public Article getArticle(@PathVariable("articleId") String articleId){
         return dbClient.getArticle(articleId);
     }
 
@@ -28,10 +30,11 @@ public class ArticleController {
 
     @PostMapping
     public Article addArticle(@RequestBody Article article){
-        article.set_id(ObjectId.get());
-        dbClient.addArticle(article);
-        return article;
+        return dbClient.addArticle(article);
     }
 
-
+    @GetMapping(value = "/find/content/{partOfContent}")
+    public Article getArticlesWithConent(@PathVariable("partOfContent") String partOfConent){
+        return dbClient.getArticlesWithContent(partOfConent);
+    }
 }

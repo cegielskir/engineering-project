@@ -6,29 +6,35 @@ import org.springframework.data.annotation.Id;
 public class Article {
 
     @Id
-    private ObjectId _id;
-
+    private String id;
     private String title;
     private String author;
     private String description;
     private String content;
+    private String date;
+    private String url;
+    private String numberOfViews;
+    private int hash;
+    private String downloadTime;
 
-    public Article() {}
-
-    public Article(ObjectId _id, String title, String author, String description, String content) {
-        this._id = _id;
-        this.title = title;
-        this.author = author;
-        this.description = description;
-        this.content = content;
+    public String getDownloadTime() {
+        return downloadTime;
     }
 
-    public String get_id() {
-        return _id.toHexString();
+    public void setDownloadTime(String downloadTime) {
+        this.downloadTime = downloadTime;
     }
 
-    public void set_id(ObjectId _id) {
-        this._id = _id;
+    public Article() {
+
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -60,17 +66,53 @@ public class Article {
     }
 
     public void setContent(String content) {
+        this.hash = content.hashCode();
         this.content = content;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getNumberOfViews() {
+        return numberOfViews;
+    }
+
+    public void setNumberOfViews(String numberOfViews) {
+        this.numberOfViews = numberOfViews;
+    }
+
+    public int getHash() {
+        return hash;
+    }
+
+    public void setHash(int hash) {
+        this.hash = hash;
     }
 
     @Override
     public String toString() {
         return "Article{" +
-                "_id=" + _id +
+                "id=" + id +
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", description='" + description + '\'' +
                 ", content='" + content + '\'' +
+                ", date='" + date + '\'' +
+                ", url='" + url + '\'' +
+                ", numberOfViews=" + numberOfViews +
                 '}';
     }
 }
