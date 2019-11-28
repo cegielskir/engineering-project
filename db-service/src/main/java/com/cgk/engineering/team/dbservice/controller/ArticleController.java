@@ -44,20 +44,13 @@ public class ArticleController {
                                              @PathVariable("metrics") List<String> metrics) {
 
         Article article = articleRepository.findById(articleId).block();
+        articleIDS.remove(articleId);
         if(articleIDS != null && articleIDS.size() > 0) {
-            System.out.println("wchodze 1");
             return articleRepository.findAllById(articleIDS)
-                .map(a -> {
-                    System.out.println("message1");
-                    return createComparisonData(article, a, articleId, a.getId(), metrics);
-                });
+                .map(a -> createComparisonData(article, a, articleId, a.getId(), metrics));
         } else {
-            System.out.println("wchodze 2");
-            return articleRepository.findAllByIdIsNot(articleId)
-                .map(a -> {
-                    System.out.println("message2");
-                    return createComparisonData(article, a, articleId, a.getId(), metrics);
-                });
+            return articleRepository.findAllByIdNot(articleId)
+                .map(a -> createComparisonData(article, a, articleId, a.getId(), metrics));
         }
     }
 
@@ -76,12 +69,10 @@ public class ArticleController {
     }
 
     private Map<String, Boolean> getAlreadyInDbMap(String id1, String id2, List<String> metrics){
-        System.out.println("get all");
         Map<String, Boolean> isAlreadyInDbMap = new HashMap<>();
         for(String metric : metrics){
             boolean isInDb = ((basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id1, id2, metric).block() != null) ||
                     (basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id2, id1, metric).block() != null));
-            System.out.println(metric + ": " + isInDb);
             isAlreadyInDbMap.put(metric, isInDb);
         }
 
