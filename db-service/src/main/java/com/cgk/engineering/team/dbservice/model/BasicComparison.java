@@ -1,22 +1,26 @@
 package com.cgk.engineering.team.dbservice.model;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class BasicComparison extends Comparison {
+    private String firstArticleID;
 
     @Indexed
-    private String firstArticleID;
-    @Indexed
-    private String secondArticleID;
-    private String firstArticleShortContent;
+    private Set<String> articleIDs;
+    private String secondArticleTitle;
+    private String secondArticleDescription;
     private String secondArticleShortContent;
+    private String metric;
 
     public BasicComparison() {}
 
     public void setArticleIDs(String firstArticleID, String secondArticleID) {
         this.firstArticleID = firstArticleID;
-        this.secondArticleID = secondArticleID;
+        this.articleIDs = new HashSet<>(Arrays.asList(firstArticleID, secondArticleID));
     }
 
     public String getFirstArticleID() {
@@ -27,22 +31,6 @@ public class BasicComparison extends Comparison {
         this.firstArticleID = firstArticleID;
     }
 
-    public String getSecondArticleID() {
-        return secondArticleID;
-    }
-
-    public void setSecondArticleID(String secondArticleID) {
-        this.secondArticleID = secondArticleID;
-    }
-
-    public String getFirstArticleShortContent() {
-        return firstArticleShortContent;
-    }
-
-    public void setFirstArticleShortContent(String firstArticleShortContent) {
-        this.firstArticleShortContent = firstArticleShortContent;
-    }
-
     public String getSecondArticleShortContent() {
         return secondArticleShortContent;
     }
@@ -50,5 +38,36 @@ public class BasicComparison extends Comparison {
     public void setSecondArticleShortContent(String secondArticleShortContent) {
         this.secondArticleShortContent = secondArticleShortContent;
     }
-}
 
+    public String getMetric() {
+        return metric;
+    }
+
+    public void setMetric(String metric) {
+        this.metric = metric;
+    }
+
+    public String getSecondArticleTitle() {
+        return secondArticleTitle;
+    }
+
+    public void setSecondArticleTitle(String secondArticleTitle) {
+        this.secondArticleTitle = secondArticleTitle;
+    }
+
+    public String getSecondArticleDescription() {
+        return secondArticleDescription;
+    }
+
+    public void setSecondArticleDescription(String secondArticleDescription) {
+        this.secondArticleDescription = secondArticleDescription;
+    }
+
+    public Set<String> getArticleIDs() {
+        return articleIDs;
+    }
+
+    public void setArticleIDs(Set<String> articleIDs) {
+        this.articleIDs = articleIDs;
+    }
+}

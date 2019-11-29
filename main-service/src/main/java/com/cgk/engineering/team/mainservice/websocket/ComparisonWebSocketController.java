@@ -28,7 +28,8 @@ public class ComparisonWebSocketController {
     @Autowired
     ComparisonServiceController comparisonServiceController;
 
-    private Disposable currentSubscription;
+    private Disposable currentComparisonSubscription;
+    private Disposable currentDbSubscription;
 
     @Autowired
     public ComparisonWebSocketController(SimpMessagingTemplate template) {
@@ -49,7 +50,12 @@ public class ComparisonWebSocketController {
             .retrieve()
             .bodyToFlux(ComparisonData.class);
 
-        currentSubscription = comparisonDataFlux.subscribe(
+        Flux<BasicComparison> basicComparisonFlux = client.get()
+                .uri("/basic-comparison/stream/" + articleID + "/" + String.join(",", articleIDS) + "/" + String.join(",", metrics))
+                .retrieve()
+                .bodyToFlux(BasicComparison.class);
+
+        currentComparisonSubscription = comparisonDataFlux.subscribe(
             comparisonData -> {
                 for(String metric : metrics) {
                     comparisonData.setMetric(metric);
@@ -57,22 +63,30 @@ public class ComparisonWebSocketController {
                     basicComparison.setSecondArticleTitle(comparisonData.getArticle2().getTitle());
                     basicComparison.setSecondArticleDescription(comparisonData.getArticle2().getDescription());
                     dbClient.addComparison(basicComparison);
-                    sendComparison(basicComparison, threshold);
+                    if(basicComparison.getPercentage() > threshold) {
+                        sendComparison(basicComparison);
+                    }
                 }
             },
             this::sendComparisonError,
-            this::sendComparisonComplete);
+            this::sendComparisonComplete
+        );
+
+        currentDbSubscription = basicComparisonFlux.subscribe(
+            this::sendComparison,
+            this::sendDbError,
+            this::sendDbComplete
+        );
     }
 
-    private void sendComparison(BasicComparison comparison, int threshold) {
-        if(comparison.getPercentage() > threshold) {
-            this.template.convertAndSend("/article/comparison", comparison);
-        }
+    private void sendComparison(BasicComparison comparison) {
+        this.template.convertAndSend("/article/comparison", comparison);
     }
 
     @MessageMapping("/compare/dispose")
     public void compareArticle(){
-        this.currentSubscription.dispose();
+        this.currentComparisonSubscription.dispose();
+        this.currentDbSubscription.dispose();
     }
 
     private void sendComparisonError(Throwable error){
@@ -81,9 +95,20 @@ public class ComparisonWebSocketController {
                 new BasicResponse("ERROR", "Error occurred while comparing articles."));
     }
 
+    private void sendDbError(Throwable error){
+        error.printStackTrace();
+        this.template.convertAndSend("/article/comparison",
+                new BasicResponse("ERROR", "Error occurred while getting comparisons from db."));
+    }
+
     private void sendComparisonComplete(){
         this.template.convertAndSend("/article/comparison",
                 new BasicResponse("SUCCESS", "Comparing articles has been finished"));
+    }
+
+    private void sendDbComplete(){
+        this.template.convertAndSend("/article/comparison",
+                new BasicResponse("SUCCESS", "Getting comparisons from DB completed"));
     }
 
 }

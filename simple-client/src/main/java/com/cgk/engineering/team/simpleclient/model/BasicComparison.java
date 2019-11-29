@@ -1,10 +1,14 @@
 package com.cgk.engineering.team.simpleclient.model;
 
-import org.bson.types.ObjectId;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BasicComparison extends Comparison {
     private String firstArticleID;
-    private String secondArticleID;
+    private Set<String> articleIDs;
+    private String secondArticleTitle;
+    private String secondArticleDescription;
     private String secondArticleShortContent;
     private String metric;
 
@@ -12,7 +16,7 @@ public class BasicComparison extends Comparison {
 
     public void setArticleIDs(String firstArticleID, String secondArticleID) {
         this.firstArticleID = firstArticleID;
-        this.secondArticleID = secondArticleID;
+        this.articleIDs = new HashSet<>(Arrays.asList(firstArticleID, secondArticleID));
     }
 
     public String getFirstArticleID() {
@@ -21,14 +25,6 @@ public class BasicComparison extends Comparison {
 
     public void setFirstArticleID(String firstArticleID) {
         this.firstArticleID = firstArticleID;
-    }
-
-    public String getSecondArticleID() {
-        return secondArticleID;
-    }
-
-    public void setSecondArticleID(String secondArticleID) {
-        this.secondArticleID = secondArticleID;
     }
 
     public String getSecondArticleShortContent() {
@@ -46,5 +42,28 @@ public class BasicComparison extends Comparison {
     public void setMetric(String metric) {
         this.metric = metric;
     }
-}
 
+    public String getSecondArticleTitle() {
+        return secondArticleTitle;
+    }
+
+    public void setSecondArticleTitle(String secondArticleTitle) {
+        this.secondArticleTitle = secondArticleTitle;
+    }
+
+    public String getSecondArticleDescription() {
+        return secondArticleDescription;
+    }
+
+    public void setSecondArticleDescription(String secondArticleDescription) {
+        this.secondArticleDescription = secondArticleDescription;
+    }
+
+    public Set<String> getArticleIDs() {
+        return articleIDs;
+    }
+
+    public void setArticleIDs(Set<String> articleIDs) {
+        this.articleIDs = articleIDs;
+    }
+}

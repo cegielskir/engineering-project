@@ -47,10 +47,12 @@ public class ArticleController {
         articleIDS.remove(articleId);
         if(articleIDS != null && articleIDS.size() > 0) {
             return articleRepository.findAllById(articleIDS)
-                .map(a -> createComparisonData(article, a, articleId, a.getId(), metrics));
+                .map(a -> createComparisonsData(article, a, metrics))
+                .flatMap(Flux::fromIterable);
         } else {
             return articleRepository.findAllByIdNot(articleId)
-                .map(a -> createComparisonData(article, a, articleId, a.getId(), metrics));
+                .map(a -> createComparisonsData(article, a, metrics))
+                .flatMap(Flux::fromIterable);
         }
     }
 
@@ -64,18 +66,15 @@ public class ArticleController {
         return articleRepository.findByTitleContains(partOfTitle);
     }
 
-    private ComparisonData createComparisonData(Article article1, Article article2, String id1, String id2, List<String> metrics){
-        return new ComparisonData(article1, article2, getAlreadyInDbMap(id1, id2, metrics));
-    }
-
-    private Map<String, Boolean> getAlreadyInDbMap(String id1, String id2, List<String> metrics){
-        Map<String, Boolean> isAlreadyInDbMap = new HashMap<>();
-        for(String metric : metrics){
-            boolean isInDb = ((basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id1, id2, metric).block() != null) ||
-                    (basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id2, id1, metric).block() != null));
-            isAlreadyInDbMap.put(metric, isInDb);
+    private List<ComparisonData> createComparisonsData(Article article1, Article article2, List<String> metrics){
+        List<ComparisonData> comparisonDataList = new ArrayList<>();
+        for(String metric : metrics) {
+            boolean isNotInDb = basicComparisonRepository
+                    .findByArticleIDsContainsAndMetricIs(new ArrayList<>(Arrays.asList(article1.getId(), article2.getId())), metric).block() != null;
+            if(isNotInDb) {
+                comparisonDataList.add(new ComparisonData(article1, article2, metric));
+            }
         }
-
-        return isAlreadyInDbMap;
+        return comparisonDataList;
     }
 }
