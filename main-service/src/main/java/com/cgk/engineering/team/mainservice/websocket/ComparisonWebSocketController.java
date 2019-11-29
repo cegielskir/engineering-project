@@ -57,15 +57,12 @@ public class ComparisonWebSocketController {
 
         currentComparisonSubscription = comparisonDataFlux.subscribe(
             comparisonData -> {
-                for(String metric : metrics) {
-                    comparisonData.setMetric(metric);
-                    BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
-                    basicComparison.setSecondArticleTitle(comparisonData.getArticle2().getTitle());
-                    basicComparison.setSecondArticleDescription(comparisonData.getArticle2().getDescription());
-                    dbClient.addComparison(basicComparison);
-                    if(basicComparison.getPercentage() > threshold) {
-                        sendComparison(basicComparison);
-                    }
+                BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
+                basicComparison.setSecondArticleTitle(comparisonData.getArticle2().getTitle());
+                basicComparison.setSecondArticleDescription(comparisonData.getArticle2().getDescription());
+                dbClient.addComparison(basicComparison);
+                if(basicComparison.getPercentage() > threshold) {
+                    sendComparison(basicComparison);
                 }
             },
             this::sendComparisonError,
@@ -73,7 +70,11 @@ public class ComparisonWebSocketController {
         );
 
         currentDbSubscription = basicComparisonFlux.subscribe(
-            this::sendComparison,
+            basicComparison -> {
+                if(basicComparison.getPercentage() > threshold) {
+                    sendComparison(basicComparison);
+                }
+            },
             this::sendDbError,
             this::sendDbComplete
         );

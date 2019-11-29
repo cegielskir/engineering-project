@@ -15,7 +15,7 @@ import java.util.Set;
 @Repository
 public interface BasicComparisonRepository extends ReactiveMongoRepository<BasicComparison, String> {
 
-    Flux<BasicComparison> findAllByArticleIDsContainsAndArticleIDsIsContainingAndMetricIsContaining(String articleId, List<String> articleIDs, List<String> metrics);
-    Flux<BasicComparison> findAllByArticleIDsContainsAndMetricIsContaining(String articleId, List<String> metrics);
-    Mono<BasicComparison> findByArticleIDsContainsAndMetricIs(List<String> articleIDs, String metric);
+    Flux<BasicComparison> findAllByArticleIDsInAndMetricIn(List<String> articleIDs, List<String> metrics);
+    Flux<BasicComparison> findAllByArticleIDsContainsAndMetricIn(String articleId, Set<String> metrics);
+    Mono<BasicComparison> findFirstByArticleIDsIsAndMetricIs(Set<String> articleIDs, String metric);
 }

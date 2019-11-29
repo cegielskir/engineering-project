@@ -18,6 +18,6 @@ public interface ReactiveArticleRepository extends ReactiveMongoRepository<Artic
 
     Flux<Article> findAllByIdNot(String id);
     Mono<Article> findByHash(int hash);
-    Flux<Article> findByContentContains(String partOfArticle);
-    Flux<Article> findByTitleContains(String partOfTitle);
+    Flux<Article> findByContentRegex(String partOfArticle);
+    Flux<Article> findByTitleRegex(String partOfTitle);
 }

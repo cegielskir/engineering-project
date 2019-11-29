@@ -1,6 +1,7 @@
 package com.cgk.engineering.team.dbservice.controller;
 
 import com.cgk.engineering.team.dbservice.model.Article;
+import com.cgk.engineering.team.dbservice.model.BasicComparison;
 import com.cgk.engineering.team.dbservice.model.ComparisonData;
 import com.cgk.engineering.team.dbservice.repository.ReactiveArticleRepository;
 import com.cgk.engineering.team.dbservice.repository.BasicComparisonRepository;
@@ -58,19 +59,20 @@ public class ArticleController {
 
     @GetMapping(value = "/find/content/{partOfContent}")
     public Flux<Article>  getArticleWithContent(@PathVariable("partOfContent") String partOfContent){
-        return articleRepository.findByContentContains(partOfContent);
+        return articleRepository.findByContentRegex(".*" + partOfContent + ".*");
     }
 
     @GetMapping(value = "/find/title/{partOfContent}")
     public Flux<Article>  getArticleWithTitle(@PathVariable("partOfContent") String partOfTitle){
-        return articleRepository.findByTitleContains(partOfTitle);
+        return articleRepository.findByTitleRegex(".*" + partOfTitle + ".*");
     }
 
     private List<ComparisonData> createComparisonsData(Article article1, Article article2, List<String> metrics){
         List<ComparisonData> comparisonDataList = new ArrayList<>();
         for(String metric : metrics) {
-            boolean isNotInDb = basicComparisonRepository
-                    .findByArticleIDsContainsAndMetricIs(new ArrayList<>(Arrays.asList(article1.getId(), article2.getId())), metric).block() != null;
+            BasicComparison basicComparison = basicComparisonRepository
+                    .findFirstByArticleIDsIsAndMetricIs(new HashSet<>(Arrays.asList(article1.getId(), article2.getId())), metric).block();
+            boolean isNotInDb = basicComparison == null;
             if(isNotInDb) {
                 comparisonDataList.add(new ComparisonData(article1, article2, metric));
             }

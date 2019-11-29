@@ -35,7 +35,7 @@ public class AlgorithmServiceController {
 
         Article article1 = dbClient.getArticle(articleId1);
         Article article2 = dbClient.getArticle(articleId2);
-        ComparisonData comparisonData = new ComparisonData(article1, article2);
+        ComparisonData comparisonData = new ComparisonData(article1, article2, metric);
         comparisonData.setMetric(metric);
         if(article1 != null && article2 != null) {
             return comparisonServiceController.getDetailedComparison(comparisonData);

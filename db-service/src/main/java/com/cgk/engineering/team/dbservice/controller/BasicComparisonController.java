@@ -33,10 +33,10 @@ public class BasicComparisonController {
                                              @PathVariable("metrics") List<String> metrics) {
         if(articleIDS.size() > 1) {
             return basicComparisonRepository
-                    .findAllByArticleIDsContainsAndArticleIDsIsContainingAndMetricIsContaining(articleId, articleIDS, metrics);
+                    .findAllByArticleIDsInAndMetricIn(articleIDS, metrics);
         } else {
             return basicComparisonRepository
-                    .findAllByArticleIDsContainsAndMetricIsContaining(articleId, metrics);
+                    .findAllByArticleIDsContainsAndMetricIn(articleId, new HashSet<>(metrics));
         }
     }
 }
