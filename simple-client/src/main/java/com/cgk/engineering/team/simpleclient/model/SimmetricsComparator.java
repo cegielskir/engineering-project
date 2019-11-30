@@ -49,9 +49,6 @@ public class SimmetricsComparator implements IComparator {
         double percentage = 100*result;
         c.setPercentage((int)percentage);
         c.setMetric(metric);
-        c.setSecondArticleShortContent(article2.getContent().length() > 300
-                ? article2.getContent().substring(0, 300) + "..."
-                : article2.getContent());
 
         return c;
     }

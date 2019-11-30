@@ -1,10 +1,8 @@
 package com.cgk.engineering.team.simpleclient.model;
 
 import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLongestCommonSubstring;
-import org.bson.types.ObjectId;
 
 import java.util.List;
-import java.util.Random;
 
 public class LCSComparator implements IComparator {
     private Article article1, article2;
@@ -14,7 +12,7 @@ public class LCSComparator implements IComparator {
         this.article2=article2;
     }
 
-    public DetailsComparison compareArticles() {
+    public DetailedComparison compareArticles() {
         NormalizedLongestCommonSubstring nlcs = new NormalizedLongestCommonSubstring();
 
         List<SuspiciousFragments> suspiciousFragmentsList = nlcs.similarity(article1.getContent(), article2.getContent());
@@ -23,14 +21,14 @@ public class LCSComparator implements IComparator {
         double similarityPercentage = 100*(nlcs.getSimilarChars()/
                 article1.getContent().length());
 
-        DetailsComparison detailsComparison =
-                new DetailsComparison(
+        DetailedComparison detailedComparison =
+                new DetailedComparison(
                         (int)similarityPercentage,
-                        article1.getContent(),
-                        article2.getContent());
-        detailsComparison.setPercentage((int)plagiarismPercentage);
-        detailsComparison.setSuspiciousWords(suspiciousFragmentsList);
+                        article1,
+                        article2);
+        detailedComparison.setPercentage((int)plagiarismPercentage);
+        detailedComparison.setSuspiciousWords(suspiciousFragmentsList);
 
-        return detailsComparison;
+        return detailedComparison;
     }
 }

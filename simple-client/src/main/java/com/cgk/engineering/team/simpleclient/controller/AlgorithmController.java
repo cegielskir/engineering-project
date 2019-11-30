@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 public class AlgorithmController {
 
     @PostMapping("/detailed")
-    public DetailsComparison getComparison(@RequestBody ComparisonData comparisonData) {
+    public DetailedComparison getComparison(@RequestBody ComparisonData comparisonData) {
         LCSComparator lcsc = new LCSComparator(comparisonData.getArticle1(), comparisonData.getArticle2());
         return lcsc.compareArticles();
     }

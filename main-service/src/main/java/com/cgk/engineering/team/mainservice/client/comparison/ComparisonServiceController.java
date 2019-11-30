@@ -4,7 +4,7 @@ import com.cgk.engineering.team.mainservice.client.comparison.util.ComparisonSer
 import com.cgk.engineering.team.mainservice.model.BasicComparison;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
 import com.cgk.engineering.team.mainservice.model.ComparisonMethod;
-import com.cgk.engineering.team.mainservice.model.DetailsComparison;
+import com.cgk.engineering.team.mainservice.model.DetailedComparison;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ public class ComparisonServiceController {
                 .getBasicComparison(comparisonData);
     }
 
-    public DetailsComparison getDetailedComparison(ComparisonData comparisonData){
+    public DetailedComparison getDetailedComparison(ComparisonData comparisonData){
         return comparisonServicesUtil
                 .getServiceWithMethod(comparisonData.getMetric())
                 .getDetailedComparison(comparisonData);

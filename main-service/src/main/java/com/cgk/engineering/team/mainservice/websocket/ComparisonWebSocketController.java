@@ -17,6 +17,7 @@ import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class ComparisonWebSocketController {
@@ -58,30 +59,24 @@ public class ComparisonWebSocketController {
         currentComparisonSubscription = comparisonDataFlux.subscribe(
             comparisonData -> {
                 BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
-                basicComparison.setSecondArticleTitle(comparisonData.getArticle2().getTitle());
-                basicComparison.setSecondArticleDescription(comparisonData.getArticle2().getDescription());
                 dbClient.addComparison(basicComparison);
-                if(basicComparison.getPercentage() > threshold) {
-                    sendComparison(basicComparison);
-                }
+                sendComparison(createBasicComparisonResponse(basicComparison), threshold);
             },
             this::sendComparisonError,
             this::sendComparisonComplete
         );
 
         currentDbSubscription = basicComparisonFlux.subscribe(
-            basicComparison -> {
-                if(basicComparison.getPercentage() > threshold) {
-                    sendComparison(basicComparison);
-                }
-            },
+            basicComparison -> sendComparison(createBasicComparisonResponse(basicComparison), threshold),
             this::sendDbError,
             this::sendDbComplete
         );
     }
 
-    private void sendComparison(BasicComparison comparison) {
-        this.template.convertAndSend("/article/comparison", comparison);
+    private void sendComparison(BasicComparisonResponse comparison, int threshold) {
+        if(comparison.getPercentage() > threshold) {
+            this.template.convertAndSend("/article/comparison", comparison);
+        }
     }
 
     @MessageMapping("/compare/dispose")
@@ -112,4 +107,15 @@ public class ComparisonWebSocketController {
                 new BasicResponse("SUCCESS", "Getting comparisons from DB completed"));
     }
 
+    private BasicComparisonResponse createBasicComparisonResponse(BasicComparison basicComparison){
+        BasicComparisonResponse basicComparisonResponse = new BasicComparisonResponse();
+        Article secondArticle = basicComparison.getSecondArticle();
+        basicComparisonResponse.setMetric(basicComparison.getMetric());
+        basicComparisonResponse.setPercentage(basicComparison.getPercentage());
+        basicComparisonResponse.setSecondArticleDescription(secondArticle.getDescription());
+        basicComparisonResponse.setSecondArticleShortContent(secondArticle.getContent().length() > 300
+                ? secondArticle.getContent().substring(0, 300) + "..."
+                : secondArticle.getContent());
+        return basicComparisonResponse;
+    }
 }

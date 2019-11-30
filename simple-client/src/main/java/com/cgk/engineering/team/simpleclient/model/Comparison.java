@@ -1,6 +1,5 @@
 package com.cgk.engineering.team.simpleclient.model;
 
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
 public abstract class Comparison {
