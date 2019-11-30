@@ -2,7 +2,6 @@ package com.cgk.engineering.team.simpleclient.model;
 
 
 import com.cgk.engineering.team.simpleclient.algorithm.NormalizedLevenshtein;
-import org.bson.types.ObjectId;
 
 public class LevenshteinComparator implements IComparator {
 

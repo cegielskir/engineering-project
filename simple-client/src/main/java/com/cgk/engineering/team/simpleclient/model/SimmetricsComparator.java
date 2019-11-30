@@ -1,6 +1,5 @@
 package com.cgk.engineering.team.simpleclient.model;
 
-import org.bson.types.ObjectId;
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.StringMetrics;
 

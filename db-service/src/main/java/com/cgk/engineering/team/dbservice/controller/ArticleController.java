@@ -5,7 +5,6 @@ import com.cgk.engineering.team.dbservice.model.BasicComparison;
 import com.cgk.engineering.team.dbservice.model.ComparisonData;
 import com.cgk.engineering.team.dbservice.repository.ReactiveArticleRepository;
 import com.cgk.engineering.team.dbservice.repository.BasicComparisonRepository;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;

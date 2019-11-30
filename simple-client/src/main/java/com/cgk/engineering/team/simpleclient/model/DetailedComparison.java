@@ -2,7 +2,7 @@ package com.cgk.engineering.team.simpleclient.model;
 
 import java.util.List;
 
-public class DetailedComparison extends Comparison {
+public class DetailedComparison extends AbstractComparison {
     private Article article1;
     private Article article2;
     private List<SuspiciousFragments> suspiciousWords;

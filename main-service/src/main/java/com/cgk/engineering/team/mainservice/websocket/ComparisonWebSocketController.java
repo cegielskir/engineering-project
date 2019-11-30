@@ -1,11 +1,8 @@
 package com.cgk.engineering.team.mainservice.websocket;
 
 import com.cgk.engineering.team.mainservice.client.comparison.ComparisonServiceController;
-import com.cgk.engineering.team.mainservice.client.comparison.services.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -17,7 +14,6 @@ import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
-import java.util.Set;
 
 @Controller
 public class ComparisonWebSocketController {

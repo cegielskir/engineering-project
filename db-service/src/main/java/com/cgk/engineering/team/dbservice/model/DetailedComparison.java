@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.List;
 
-public class DetailedComparison extends Comparison {
+public class DetailedComparison extends AbstractComparison {
     @DBRef
     private Article article1;
     @DBRef

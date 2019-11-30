@@ -1,20 +1,16 @@
-package com.cgk.engineering.team.simpleclient.model;
+package com.cgk.engineering.team.mainservice.model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
-public abstract class Comparison {
+public abstract class AbstractComparison {
+
     @Id
     private String id;
     private int percentage;
     private String metric;
 
-    public Comparison() {
-    }
-
-    public Comparison(String id, int percentage) {
-        this.id = id;
-        this.percentage = percentage;
-    }
+    public AbstractComparison() {}
 
     public String getId() {
         return id;

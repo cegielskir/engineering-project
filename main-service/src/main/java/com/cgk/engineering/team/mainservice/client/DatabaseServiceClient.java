@@ -2,7 +2,6 @@ package com.cgk.engineering.team.mainservice.client;
 
 import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.BasicComparison;
-import org.bson.types.ObjectId;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

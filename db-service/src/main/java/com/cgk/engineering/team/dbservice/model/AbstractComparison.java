@@ -4,7 +4,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
-public abstract class Comparison {
+public abstract class AbstractComparison {
 
     @Id
     private String id;
@@ -12,7 +12,7 @@ public abstract class Comparison {
     @Indexed
     private String metric;
 
-    public Comparison() {}
+    public AbstractComparison() {}
 
     public String getId() {
         return id;

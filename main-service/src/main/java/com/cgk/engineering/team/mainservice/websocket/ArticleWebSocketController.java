@@ -1,9 +1,7 @@
 package com.cgk.engineering.team.mainservice.websocket;
 
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
-import com.cgk.engineering.team.mainservice.client.comparison.ComparisonServiceController;
 import com.cgk.engineering.team.mainservice.model.Article;
-import com.cgk.engineering.team.mainservice.model.BasicComparison;
 import com.cgk.engineering.team.mainservice.model.BasicResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
