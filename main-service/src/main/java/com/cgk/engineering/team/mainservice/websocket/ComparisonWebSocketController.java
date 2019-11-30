@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class ComparisonWebSocketController {
                 .retrieve()
                 .bodyToFlux(BasicComparison.class);
 
-        currentComparisonSubscription = comparisonDataFlux.subscribe(
+        currentComparisonSubscription = comparisonDataFlux.parallel().runOn(Schedulers.parallel()).subscribe(
             comparisonData -> {
                 comparisonData.getComparisonMap().keySet().stream()
                         .filter(metric -> comparisonData.getComparison(metric) == -1)
