@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.ParallelFlux;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.*;
 
@@ -39,18 +41,22 @@ public class ArticleController {
     }
 
     @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}/{metrics}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ComparisonData> streamEvents(@PathVariable("articleId") String articleId,
-                                             @PathVariable("articleIDSToCompare") List<String> articleIDS,
-                                             @PathVariable("metrics") List<String> metrics) {
+    public ParallelFlux<ComparisonData> streamEvents(@PathVariable("articleId") String articleId,
+                                                     @PathVariable("articleIDSToCompare") List<String> articleIDS,
+                                                     @PathVariable("metrics") List<String> metrics) {
 
         Article article = articleRepository.findById(articleId).block();
         articleIDS.remove(articleId);
         if(articleIDS != null && articleIDS.size() > 0) {
             return articleRepository.findAllById(articleIDS)
-                .map(a -> createComparisonData(article, a, metrics));
+                .map(a -> createComparisonData(article, a, metrics))
+                .parallel(8)
+                .runOn(Schedulers.parallel());
         } else {
             return articleRepository.findAllByIdNot(articleId)
-                .map(a -> createComparisonData(article, a, metrics));
+                .map(a -> createComparisonData(article, a, metrics))
+                .parallel(8)
+                .runOn(Schedulers.parallel());
         }
     }
 
