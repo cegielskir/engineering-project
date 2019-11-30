@@ -1,19 +1,22 @@
 package com.cgk.engineering.team.mainservice.model;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ComparisonData {
 
     private Article article1;
     private Article article2;
 
-    private String metric;
+    private Map<String, Integer> comparisonMap;
 
     public ComparisonData() {
     }
 
-    public ComparisonData(Article article1, Article article2, String metric) {
+    public ComparisonData(Article article1, Article article2) {
         this.article1 = article1;
         this.article2 = article2;
-        this.metric = metric;
     }
 
     public Article getArticle1() {
@@ -32,11 +35,26 @@ public class ComparisonData {
         this.article2 = article2;
     }
 
-    public String getMetric() {
-        return metric;
+    public void initComparisonMap(List<String> metrics){
+        comparisonMap = new HashMap<>();
+        for(String metric : metrics){
+            comparisonMap.put(metric, -1);
+        }
     }
 
-    public void setMetric(String metric) {
-        this.metric = metric;
+    public void addComparison(String metric, int percentage){
+        this.comparisonMap.put(metric, percentage);
+    }
+
+    public int getComparison(String metric){
+        return this.comparisonMap.get(metric);
+    }
+
+    public Map<String, Integer> getComparisonMap() {
+        return comparisonMap;
+    }
+
+    public void setComparisonMap(Map<String, Integer> comparisonMap) {
+        this.comparisonMap = comparisonMap;
     }
 }

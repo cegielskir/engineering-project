@@ -26,7 +26,6 @@ public class ComparisonWebSocketController {
     ComparisonServiceController comparisonServiceController;
 
     private Disposable currentComparisonSubscription;
-    private Disposable currentDbSubscription;
 
     @Autowired
     public ComparisonWebSocketController(SimpMessagingTemplate template) {
@@ -54,31 +53,29 @@ public class ComparisonWebSocketController {
 
         currentComparisonSubscription = comparisonDataFlux.subscribe(
             comparisonData -> {
-                BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
-                dbClient.addComparison(basicComparison);
-                sendComparison(createBasicComparisonResponse(basicComparison), threshold);
+                comparisonData.getComparisonMap().keySet().stream()
+                        .filter(metric -> comparisonData.getComparison(metric) == -1)
+                        .forEach(metric -> {
+                            ComparisonRequest comparisonRequest = new ComparisonRequest(comparisonData.getArticle1(), comparisonData.getArticle2(), metric);
+                            BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonRequest);
+                            dbClient.addComparison(basicComparison);
+                            comparisonData.addComparison(metric, basicComparison.getPercentage());
+                        });
+
+                sendComparison(createBasicComparisonResponse(comparisonData), threshold);
             },
             this::sendComparisonError,
             this::sendComparisonComplete
         );
-
-        currentDbSubscription = basicComparisonFlux.subscribe(
-            basicComparison -> sendComparison(createBasicComparisonResponse(basicComparison), threshold),
-            this::sendDbError,
-            this::sendDbComplete
-        );
     }
 
     private void sendComparison(BasicComparisonResponse comparison, int threshold) {
-        if(comparison.getPercentage() > threshold) {
-            this.template.convertAndSend("/article/comparison", comparison);
-        }
+        this.template.convertAndSend("/article/comparison", comparison);
     }
 
     @MessageMapping("/compare/dispose")
     public void compareArticle(){
         this.currentComparisonSubscription.dispose();
-        this.currentDbSubscription.dispose();
     }
 
     private void sendComparisonError(Throwable error){
@@ -87,27 +84,15 @@ public class ComparisonWebSocketController {
                 new BasicResponse("ERROR", "Error occurred while comparing articles."));
     }
 
-    private void sendDbError(Throwable error){
-        error.printStackTrace();
-        this.template.convertAndSend("/article/comparison",
-                new BasicResponse("ERROR", "Error occurred while getting comparisons from db."));
-    }
-
     private void sendComparisonComplete(){
         this.template.convertAndSend("/article/comparison",
                 new BasicResponse("SUCCESS", "Comparing articles has been finished"));
     }
 
-    private void sendDbComplete(){
-        this.template.convertAndSend("/article/comparison",
-                new BasicResponse("SUCCESS", "Getting comparisons from DB completed"));
-    }
-
-    private BasicComparisonResponse createBasicComparisonResponse(BasicComparison basicComparison){
+    private BasicComparisonResponse createBasicComparisonResponse(ComparisonData comparisonData){
         BasicComparisonResponse basicComparisonResponse = new BasicComparisonResponse();
-        Article secondArticle = basicComparison.getSecondArticle();
-        basicComparisonResponse.setMetric(basicComparison.getMetric());
-        basicComparisonResponse.setPercentage(basicComparison.getPercentage());
+        Article secondArticle = comparisonData.getArticle2();
+        basicComparisonResponse.setComparisonMap(comparisonData.getComparisonMap());
         basicComparisonResponse.setSecondArticleDescription(secondArticle.getDescription());
         basicComparisonResponse.setSecondArticleShortContent(secondArticle.getContent().length() > 300
                 ? secondArticle.getContent().substring(0, 300) + "..."

@@ -4,6 +4,7 @@ import com.cgk.engineering.team.mainservice.client.comparison.ComparisonServiceC
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.ComparisonData;
+import com.cgk.engineering.team.mainservice.model.ComparisonRequest;
 import com.cgk.engineering.team.mainservice.model.DetailedComparison;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -28,10 +29,10 @@ public class AlgorithmServiceController {
 
         Article article1 = dbClient.getArticle(articleId1);
         Article article2 = dbClient.getArticle(articleId2);
-        ComparisonData comparisonData = new ComparisonData(article1, article2, metric);
-        comparisonData.setMetric(metric);
+        ComparisonRequest comparisonRequest = new ComparisonRequest(article1, article2, metric);
+        comparisonRequest.setMetric(metric);
         if(article1 != null && article2 != null) {
-            return comparisonServiceController.getDetailedComparison(comparisonData);
+            return comparisonServiceController.getDetailedComparison(comparisonRequest);
         }
 
         return null;

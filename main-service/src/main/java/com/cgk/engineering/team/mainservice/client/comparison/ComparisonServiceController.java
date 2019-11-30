@@ -1,10 +1,7 @@
 package com.cgk.engineering.team.mainservice.client.comparison;
 
 import com.cgk.engineering.team.mainservice.client.comparison.util.ComparisonServicesUtil;
-import com.cgk.engineering.team.mainservice.model.BasicComparison;
-import com.cgk.engineering.team.mainservice.model.ComparisonData;
-import com.cgk.engineering.team.mainservice.model.ComparisonMethod;
-import com.cgk.engineering.team.mainservice.model.DetailedComparison;
+import com.cgk.engineering.team.mainservice.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,16 +13,16 @@ public class ComparisonServiceController {
     @Autowired
     ComparisonServicesUtil comparisonServicesUtil;
 
-    public BasicComparison getBasicComparison(ComparisonData comparisonData){
+    public BasicComparison getBasicComparison(ComparisonRequest comparisonRequest){
         return comparisonServicesUtil
-                .getServiceWithMethod(comparisonData.getMetric())
-                .getBasicComparison(comparisonData);
+                .getServiceWithMethod(comparisonRequest.getMetric())
+                .getBasicComparison(comparisonRequest);
     }
 
-    public DetailedComparison getDetailedComparison(ComparisonData comparisonData){
+    public DetailedComparison getDetailedComparison(ComparisonRequest comparisonRequest){
         return comparisonServicesUtil
-                .getServiceWithMethod(comparisonData.getMetric())
-                .getDetailedComparison(comparisonData);
+                .getServiceWithMethod(comparisonRequest.getMetric())
+                .getDetailedComparison(comparisonRequest);
     }
 
     public List<ComparisonMethod> getAvailableBasicMethods(){

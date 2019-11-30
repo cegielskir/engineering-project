@@ -8,17 +8,17 @@ import org.springframework.web.bind.annotation.*;
 public class AlgorithmController {
 
     @PostMapping("/detailed")
-    public DetailedComparison getComparison(@RequestBody ComparisonData comparisonData) {
-        LCSComparator lcsc = new LCSComparator(comparisonData.getArticle1(), comparisonData.getArticle2());
+    public DetailedComparison getComparison(@RequestBody ComparisonRequest comparisonRequest) {
+        LCSComparator lcsc = new LCSComparator(comparisonRequest.getArticle1(), comparisonRequest.getArticle2());
         return lcsc.compareArticles();
     }
 
     @PostMapping("/basic")
-    public BasicComparison getComparisonWithChosenMetric(@RequestBody ComparisonData comparisonData) {
+    public BasicComparison getComparisonWithChosenMetric(@RequestBody ComparisonRequest comparisonRequest) {
         SimmetricsComparator simmetricsComparator =
-                new SimmetricsComparator(comparisonData.getArticle1(),
-                        comparisonData.getArticle2(),
-                        comparisonData.getMetric());
+                new SimmetricsComparator(comparisonRequest.getArticle1(),
+                        comparisonRequest.getArticle2(),
+                        comparisonRequest.getMetric());
         return simmetricsComparator.compareArticles();
 
     }

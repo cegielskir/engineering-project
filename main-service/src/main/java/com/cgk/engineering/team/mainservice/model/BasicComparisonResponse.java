@@ -1,12 +1,13 @@
 package com.cgk.engineering.team.mainservice.model;
 
+import java.util.Map;
+
 public class BasicComparisonResponse {
 
     private String secondArticleShortContent;
     private String secondArticleTitle;
     private String secondArticleDescription;
-    private int percentage;
-    private String metric;
+    private Map<String, Integer> comparisonMap;
 
     public BasicComparisonResponse() {}
 
@@ -34,19 +35,11 @@ public class BasicComparisonResponse {
         this.secondArticleDescription = secondArticleDescription;
     }
 
-    public int getPercentage() {
-        return percentage;
+    public Map<String, Integer> getComparisonMap() {
+        return comparisonMap;
     }
 
-    public void setPercentage(int percentage) {
-        this.percentage = percentage;
-    }
-
-    public String getMetric() {
-        return metric;
-    }
-
-    public void setMetric(String metric) {
-        this.metric = metric;
+    public void setComparisonMap(Map<String, Integer> comparisonMap) {
+        this.comparisonMap = comparisonMap;
     }
 }

@@ -22,17 +22,4 @@ public class BasicComparisonController {
     public Mono<BasicComparison> addComparison(@RequestBody BasicComparison basicComparison){
         return basicComparisonRepository.save(basicComparison);
     }
-
-    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}/{metrics}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<BasicComparison> getComparisons(@PathVariable("articleId") String articleId,
-                                                @PathVariable("articleIDSToCompare") List<String> articleIDS,
-                                                @PathVariable("metrics") List<String> metrics) {
-        if(articleIDS.size() > 1) {
-            return basicComparisonRepository
-                    .findAllByArticleIDsInAndMetricIn(articleIDS, metrics);
-        } else {
-            return basicComparisonRepository
-                    .findAllByArticleIDsContainsAndMetricIn(articleId, new HashSet<>(metrics));
-        }
-    }
 }
