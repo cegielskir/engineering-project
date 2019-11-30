@@ -75,26 +75,30 @@ public class ExcelHelper {
 
     private String readCellContent(Cell cell) {
         String content;
-        switch (cell.getCellType()) {
-            case STRING:
-                content = cell.getStringCellValue();
-                break;
-            case NUMERIC:
-                if (DateUtil.isCellDateFormatted(cell)) {
-                    content = cell.getDateCellValue() + "";
-                } else {
-                    content = cell.getNumericCellValue() + "";
-                }
-                break;
-            case BOOLEAN:
-                content = cell.getBooleanCellValue() + "";
-                break;
-            case FORMULA:
-                content = cell.getCellFormula() + "";
-                break;
-            default:
-                content = "";
+        try {
+            switch (cell.getCellType()) {
+                case STRING:
+                    content = cell.getStringCellValue();
+                    break;
+                case NUMERIC:
+                    if (DateUtil.isCellDateFormatted(cell)) {
+                        content = cell.getDateCellValue() + "";
+                    } else {
+                        content = cell.getNumericCellValue() + "";
+                    }
+                    break;
+                case BOOLEAN:
+                    content = cell.getBooleanCellValue() + "";
+                    break;
+                case FORMULA:
+                    content = cell.getCellFormula() + "";
+                    break;
+                default:
+                    content = "";
+            }
+            return content;
+        } catch (NullPointerException ex){
+            return "";
         }
-        return content;
     }
 }
