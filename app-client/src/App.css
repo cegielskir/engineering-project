@@ -1,0 +1,67 @@
+body {
+  background: #f5f6f8;
+  font-family: 'Muli', sans-serif;
+}
+
+.main-content {
+  margin: 100px 0 0 0;
+  min-height: 550px;
+}
+.main-screen {
+  margin-bottom: 40px; 
+}
+.services {
+  padding: 40px 0;
+}
+.services__all{
+  padding-top: 40px; 
+}
+.services__image img {
+  max-width: 300px;
+}
+.services__description {
+  padding-top: 40px; 
+}
+.main-wrapper {
+  padding-top: 120px;
+  display: flex;
+  justify-content: center;
+}
+.main-wrapper form {
+  width: 60%;
+}
+.text-checker {
+  border-radius: 20px;
+}
+.btn-checker{
+  min-width: 140px;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.spinner {
+  width: 4rem;
+  height: 4rem;
+}
+
+.canvasjs-chart-credit {
+  display: none;
+}
+
+.article__item {
+  border: 1px solid #326581;
+  padding: 10px;
+}
+.article__item p {
+  background: #fff;
+  line-height: 1.2;
+}
+
+.chart-wrapper {
+  margin: 40px 0;
+}
+
+.notFound {
+  text-align: center;
+  margin: 40vh 0;
+}
