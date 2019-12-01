@@ -81,18 +81,4 @@ public class ArticleController {
     public Flux<Article>  getArticleWithTitle(@PathVariable("partOfContent") String partOfTitle){
         return articleRepository.findByTitleRegex(".*" + partOfTitle + ".*");
     }
-
-    private ComparisonData createComparisonData(Article article1, Article article2, List<String> metrics){
-        ComparisonData comparisonData = new ComparisonData(article1, article2);
-        comparisonData.initComparisonMap(metrics);
-        for(String metric : metrics) {
-            BasicComparison basicComparison = basicComparisonRepository
-                .findFirstByArticleIDsIsAndMetricIs(new HashSet<>(Arrays.asList(article1.getId(), article2.getId())), metric).block();
-            boolean isInDb = basicComparison != null;
-            if(isInDb) {
-                comparisonData.addComparison(metric, basicComparison.getPercentage());
-            }
-        }
-        return comparisonData;
-    }
 }

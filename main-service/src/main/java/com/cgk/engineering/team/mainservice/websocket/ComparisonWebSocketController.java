@@ -27,7 +27,7 @@ public class ComparisonWebSocketController {
     ComparisonServiceController comparisonServiceController;
 
     private Disposable currentComparisonSubscription;
-
+    private long time;
     @Autowired
     public ComparisonWebSocketController(SimpMessagingTemplate template) {
         this.template = template;
@@ -41,13 +41,13 @@ public class ComparisonWebSocketController {
 
         String dbUrl = System.getenv("DB_URL") == null ? "http://localhost:9092": System.getenv("DB_URL");
         WebClient client = WebClient.create(dbUrl);
-
+        time = System.currentTimeMillis();
         Flux<ComparisonData> comparisonDataFlux = client.get()
             .uri("/article/stream/" + articleID + "/" + String.join(",", articleIDS) + "/" + String.join(",", metrics))
             .retrieve()
             .bodyToFlux(ComparisonData.class);
 
-        currentComparisonSubscription = comparisonDataFlux.parallel().runOn(Schedulers.parallel()).subscribe(
+        currentComparisonSubscription = comparisonDataFlux.subscribe(
             comparisonData -> {
                 boolean isSomethingNew = false;
                 metrics.stream()
@@ -81,6 +81,7 @@ public class ComparisonWebSocketController {
     }
 
     private void sendComparisonComplete(){
+        System.out.println("TIME: " + (System.currentTimeMillis() - time));
         this.template.convertAndSend("/article/comparison",
                 new BasicResponse("SUCCESS", "Comparing articles has been finished"));
     }
@@ -88,6 +89,8 @@ public class ComparisonWebSocketController {
     private BasicComparisonResponse createBasicComparisonResponse(ComparisonData comparisonData){
         BasicComparisonResponse basicComparisonResponse = new BasicComparisonResponse();
         Article secondArticle = comparisonData.getArticle2();
+        basicComparisonResponse.setSecondArticleID(secondArticle.getId());
+        basicComparisonResponse.setSecondArticleTitle(secondArticle.getTitle());
         basicComparisonResponse.setComparisonMap(comparisonData.getComparisonMap());
         basicComparisonResponse.setSecondArticleDescription(secondArticle.getDescription());
         basicComparisonResponse.setSecondArticleShortContent(secondArticle.getContent().length() > 300
