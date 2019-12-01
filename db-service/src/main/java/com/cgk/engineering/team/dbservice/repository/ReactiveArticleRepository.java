@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Set;
 import java.util.stream.Stream;
 import java.util.List;
 
@@ -20,4 +21,5 @@ public interface ReactiveArticleRepository extends ReactiveMongoRepository<Artic
     Mono<Article> findByHash(int hash);
     Flux<Article> findByContentRegex(String partOfArticle);
     Flux<Article> findByTitleRegex(String partOfTitle);
+    Flux<Article> findAllByIdIn(Set<String> IDs);
 }

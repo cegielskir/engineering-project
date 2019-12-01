@@ -47,22 +47,17 @@ public class ComparisonWebSocketController {
             .retrieve()
             .bodyToFlux(ComparisonData.class);
 
-        Flux<BasicComparison> basicComparisonFlux = client.get()
-                .uri("/basic-comparison/stream/" + articleID + "/" + String.join(",", articleIDS) + "/" + String.join(",", metrics))
-                .retrieve()
-                .bodyToFlux(BasicComparison.class);
-
         currentComparisonSubscription = comparisonDataFlux.parallel().runOn(Schedulers.parallel()).subscribe(
             comparisonData -> {
-                comparisonData.getComparisonMap().keySet().stream()
-                        .filter(metric -> comparisonData.getComparison(metric) == -1)
-                        .forEach(metric -> {
-                            ComparisonRequest comparisonRequest = new ComparisonRequest(comparisonData.getArticle1(), comparisonData.getArticle2(), metric);
-                            BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonRequest);
-                            dbClient.addComparison(basicComparison);
-                            comparisonData.addComparison(metric, basicComparison.getPercentage());
-                        });
-
+                boolean isSomethingNew = false;
+                metrics.stream()
+                    .filter(metric -> comparisonData.getComparisonMap().get(metric) == null)
+                    .forEach(metric -> {
+                        ComparisonRequest comparisonRequest = new ComparisonRequest(comparisonData.getArticle1(), comparisonData.getArticle2(), metric);
+                        BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonRequest);
+                        comparisonData.addComparison(metric, basicComparison.getPercentage());
+                    });
+                dbClient.addComparisonData(comparisonData);
                 sendComparison(createBasicComparisonResponse(comparisonData), threshold);
             },
             this::sendComparisonError,
