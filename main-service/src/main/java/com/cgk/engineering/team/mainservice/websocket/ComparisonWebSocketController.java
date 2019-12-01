@@ -14,7 +14,9 @@ import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
 import reactor.core.scheduler.Schedulers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ComparisonWebSocketController {
@@ -34,7 +36,7 @@ public class ComparisonWebSocketController {
     }
 
     @MessageMapping("/compare/{articleID}/{threshold}/{articleIDSToCompare}/{metrics}")
-    public void compareArticle(@DestinationVariable("articleID") ObjectId articleID,
+    public void compareArticle(@DestinationVariable("articleID") String articleID,
                                @DestinationVariable("threshold") int threshold,
                                @DestinationVariable("metrics") List<String> metrics,
                                @DestinationVariable("articleIDSToCompare") List<String> articleIDS){
@@ -49,7 +51,6 @@ public class ComparisonWebSocketController {
 
         currentComparisonSubscription = comparisonDataFlux.subscribe(
             comparisonData -> {
-                boolean isSomethingNew = false;
                 metrics.stream()
                     .filter(metric -> comparisonData.getComparisonMap().get(metric) == null)
                     .forEach(metric -> {
@@ -58,14 +59,14 @@ public class ComparisonWebSocketController {
                         comparisonData.addComparison(metric, basicComparison.getPercentage());
                     });
                 dbClient.addComparisonData(comparisonData);
-                sendComparison(createBasicComparisonResponse(comparisonData), threshold);
+                sendComparison(createBasicComparisonResponse(comparisonData, articleID, metrics));
             },
             this::sendComparisonError,
             this::sendComparisonComplete
         );
     }
 
-    private void sendComparison(BasicComparisonResponse comparison, int threshold) {
+    private void sendComparison(BasicComparisonResponse comparison) {
         this.template.convertAndSend("/article/comparison", comparison);
     }
 
@@ -86,12 +87,15 @@ public class ComparisonWebSocketController {
                 new BasicResponse("SUCCESS", "Comparing articles has been finished"));
     }
 
-    private BasicComparisonResponse createBasicComparisonResponse(ComparisonData comparisonData){
+    private BasicComparisonResponse createBasicComparisonResponse(ComparisonData comparisonData, String theArticleId, List<String> metrics){
         BasicComparisonResponse basicComparisonResponse = new BasicComparisonResponse();
-        Article secondArticle = comparisonData.getArticle2();
+        Article secondArticle = theArticleId.equals(comparisonData.getArticle2().getId()) ?
+                comparisonData.getArticle1() : comparisonData.getArticle2();
         basicComparisonResponse.setSecondArticleID(secondArticle.getId());
         basicComparisonResponse.setSecondArticleTitle(secondArticle.getTitle());
-        basicComparisonResponse.setComparisonMap(comparisonData.getComparisonMap());
+        Map<String, Integer> responseComparisonMap = new HashMap<>();
+        metrics.forEach(metric ->responseComparisonMap.put(metric, comparisonData.getComparison(metric)));
+        basicComparisonResponse.setComparisonMap(responseComparisonMap);
         basicComparisonResponse.setSecondArticleDescription(secondArticle.getDescription());
         basicComparisonResponse.setSecondArticleShortContent(secondArticle.getContent().length() > 300
                 ? secondArticle.getContent().substring(0, 300) + "..."

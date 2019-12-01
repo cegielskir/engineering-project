@@ -47,28 +47,12 @@ public class ArticleController {
 
     @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}/{metrics}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
     public ParallelFlux<ComparisonData> streamEvents(@PathVariable("articleId") String articleId,
-                                                     @PathVariable("articleIDSToCompare") List<String> articleIDS,
-                                                     @PathVariable("metrics") List<String> metrics) {
-        Article theArticle = articleRepository.findById(articleId).block();
+                                                     @PathVariable("articleIDSToCompare") List<String> articleIDS) {
         articleIDS.remove(articleId);
         if(articleIDS != null && articleIDS.size() > 0) {
-            return articleRepository.findAllByIdIn(new HashSet<>(articleIDS))
-                    .map(article ->
-                            comparisonDataRepository
-                                    .findFirstByArticleIDsIn(new HashSet<>(Arrays.asList(articleId, article.getId())))
-                                    .defaultIfEmpty(new ComparisonData(theArticle, article)))
-                    .flatMap(Mono::flux)
-                    .parallel(8)
-                    .runOn(Schedulers.parallel());
+            return getComparisonDataFlux(articleRepository.findAllByIdIn(new HashSet<>(articleIDS)), articleId);
         } else {
-            return articleRepository.findAll()
-                    .map(article ->
-                            comparisonDataRepository
-                                    .findFirstByArticleIDsIn(new HashSet<>(Arrays.asList(articleId, article.getId())))
-                                    .defaultIfEmpty(new ComparisonData(theArticle, article)))
-                    .flatMap(Mono::flux)
-                    .parallel(8)
-                    .runOn(Schedulers.parallel());
+            return getComparisonDataFlux(articleRepository.findAll(), articleId);
         }
     }
 
@@ -80,5 +64,17 @@ public class ArticleController {
     @GetMapping(value = "/find/title/{partOfContent}")
     public Flux<Article>  getArticleWithTitle(@PathVariable("partOfContent") String partOfTitle){
         return articleRepository.findByTitleRegex(".*" + partOfTitle + ".*");
+    }
+
+    private ParallelFlux<ComparisonData> getComparisonDataFlux(Flux<Article> articleFlux, String articleId){
+        Article theArticle = articleRepository.findById(articleId).block();
+        return articleFlux
+                .map(article ->
+                    comparisonDataRepository
+                        .findFirstByArticleIDsIn(new HashSet<>(Arrays.asList(articleId, article.getId())))
+                        .defaultIfEmpty(new ComparisonData(theArticle, article)))
+                .flatMap(Mono::flux)
+                .parallel(8)
+                .runOn(Schedulers.parallel());
     }
 }

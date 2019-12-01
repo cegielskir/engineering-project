@@ -14,14 +14,14 @@ import java.util.HashSet;
 import java.util.List;
 
 @RestController
-@RequestMapping("/basic-comparison")
-public class BasicComparisonController {
+@RequestMapping("/comparison-data")
+public class ComparisonDataController {
 
     @Autowired
     ComparisonDataRepository comparisonDataRepository;
 
     @PostMapping
-    public Mono<ComparisonData> addComparison(@RequestBody ComparisonData comparisonData){
+    public Mono<ComparisonData> addComparisonData(@RequestBody ComparisonData comparisonData){
         return comparisonDataRepository.save(comparisonData);
     }
 }
