@@ -1,6 +1,7 @@
 package com.cgk.engineering.team.comparisonservice.controller;
 
 import com.cgk.engineering.team.comparisonservice.algorithm.metrics.EditBasedMetrics;
+import com.cgk.engineering.team.comparisonservice.algorithm.metrics.SequenceBasedMetrics;
 import com.cgk.engineering.team.comparisonservice.algorithm.metrics.TokenBasedMetrics;
 import com.cgk.engineering.team.comparisonservice.model.ComparisonMethod;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 public class MethodController {
     private static final String EDIT_BASED = "EditBased";
     private static final String TOKEN_BASED = "TokenBased";
+    private static final String SEQUENCE_BASED = "SequenceBased";
 
     @GetMapping()
     List<ComparisonMethod> getAvailableMethods() {
@@ -28,7 +30,12 @@ public class MethodController {
                         true))
                 .collect(Collectors.toList())
         );
-
+        comparisonMethods.addAll(Arrays.stream(SequenceBasedMetrics.values())
+                .map(metricType -> new ComparisonMethod(metricType.name(),
+                        SEQUENCE_BASED,
+                        true))
+                .collect(Collectors.toList())
+        );
         return comparisonMethods;
     }
 
