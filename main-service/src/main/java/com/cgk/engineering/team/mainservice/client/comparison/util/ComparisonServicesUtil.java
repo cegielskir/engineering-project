@@ -1,6 +1,6 @@
 package com.cgk.engineering.team.mainservice.client.comparison.util;
 
-import com.cgk.engineering.team.mainservice.client.comparison.services.AlgorithmClient;
+import com.cgk.engineering.team.mainservice.client.comparison.services.AlgorithmService;
 import com.cgk.engineering.team.mainservice.client.comparison.services.api.IComparisonService;
 import com.cgk.engineering.team.mainservice.model.ComparisonMethod;
 import com.cgk.engineering.team.mainservice.model.ComparisonMethodInfo;
@@ -17,11 +17,9 @@ import java.util.stream.Collectors;
 public class ComparisonServicesUtil {
 
     @Autowired
-    private AlgorithmClient comparisonService;
+    private AlgorithmService comparisonService;
 
     private Map<String, ComparisonMethodInfo> methodServiceMap;
-
-
 
     public List<ComparisonMethod> getAndUpdateAvailableBasicMethods(){
 
@@ -29,11 +27,15 @@ public class ComparisonServicesUtil {
 
         List<ComparisonMethod> allAvailableMethods = new ArrayList<>();
 
-        List<IComparisonService> comparisonServices = new ArrayList<>();
-        comparisonServices.add(comparisonService);
+        List<IComparisonService> comparisonServices = getAvailableComparisonServices();
 
         for(IComparisonService service : comparisonServices){
-            List<ComparisonMethod> methods = service.getAvailableMethods();
+            List<ComparisonMethod> methods = new ArrayList<>();
+            try {
+                methods = service.getAvailableMethods();
+            } catch (Exception ex){
+                ex.printStackTrace();
+            }
 
             for(ComparisonMethod method : methods){
                 methodServiceMap.put(method.getName(), new ComparisonMethodInfo(service, method));
@@ -58,5 +60,13 @@ public class ComparisonServicesUtil {
 
     public IComparisonService getServiceWithMethod(String method){
         return methodServiceMap.get(method).getComparisonService();
+    }
+
+    private List<IComparisonService> getAvailableComparisonServices(){
+        List<IComparisonService> comparisonServices = new ArrayList<>();
+        comparisonServices.add(comparisonService);
+        /* Here add new comparison services */
+
+        return comparisonServices;
     }
 }

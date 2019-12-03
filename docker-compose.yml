@@ -114,10 +114,10 @@ services:
     - CONFIG_URL=config-service
     - DB_URL=http://db-service:9092
 
-  simple-client:
+  comparison-service:
     build:
       context: .
-      dockerfile: simple-client/Dockerfile
+      dockerfile: comparison-service/Dockerfile
     depends_on:
       config-service:
         condition: service_healthy

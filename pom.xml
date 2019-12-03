@@ -21,7 +21,7 @@
 		<module>main-service</module>
 		<module>discovery-service</module>
 		<module>gateway-service</module>
-		<module>simple-client</module>
+		<module>comparison-service</module>
 		<module>db-service</module>
 	</modules>
 
