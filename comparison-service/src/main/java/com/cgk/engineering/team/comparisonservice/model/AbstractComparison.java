@@ -12,9 +12,7 @@ public abstract class AbstractComparison {
     }
 
     public void setPercentage(int percentage) {
-        if(percentage<=100 && percentage>=0)
-            this.percentage = percentage;
-        else throw new IllegalArgumentException();
+        this.percentage = percentage;
     }
 
     public String getMetric() {

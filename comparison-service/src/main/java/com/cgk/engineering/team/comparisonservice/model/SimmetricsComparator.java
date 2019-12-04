@@ -1,10 +1,9 @@
 package com.cgk.engineering.team.comparisonservice.model;
 
-import com.cgk.engineering.team.simpleclient.algorithm.Ratcliffe;
+import com.cgk.engineering.team.comparisonservice.Ratcliffe;
+import com.cgk.engineering.team.comparisonservice.algorithm.Hamming;
 import org.simmetrics.StringMetric;
 import org.simmetrics.metrics.StringMetrics;
-
-import com.cgk.engineering.team.simpleclient.algorithm.Hamming;
 
 public class SimmetricsComparator implements IComparator {
     private Article article1, article2;
@@ -19,7 +18,7 @@ public class SimmetricsComparator implements IComparator {
     @Override
     public BasicComparison compareArticles() {
         BasicComparison c = new BasicComparison();
-        StringMetric stringMetric;
+        StringMetric stringMetric = null;
         double result = 0.0;
         switch (metric){
             case "Hamming":
