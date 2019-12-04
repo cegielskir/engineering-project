@@ -4,6 +4,7 @@ import com.cgk.engineering.team.mainservice.client.comparison.services.api.IComp
 import org.springframework.cloud.openfeign.FeignClient;
 
 @FeignClient(name = "comparison-service")
-public interface AlgorithmService extends IComparisonService {
+public interface ComparisonService extends IComparisonService {
 
 }
+

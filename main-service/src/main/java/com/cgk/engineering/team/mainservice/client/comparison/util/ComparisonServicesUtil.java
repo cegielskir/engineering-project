@@ -1,6 +1,6 @@
 package com.cgk.engineering.team.mainservice.client.comparison.util;
 
-import com.cgk.engineering.team.mainservice.client.comparison.services.AlgorithmService;
+import com.cgk.engineering.team.mainservice.client.comparison.services.ComparisonService;
 import com.cgk.engineering.team.mainservice.client.comparison.services.api.IComparisonService;
 import com.cgk.engineering.team.mainservice.model.ComparisonMethod;
 import com.cgk.engineering.team.mainservice.model.ComparisonMethodInfo;
@@ -17,7 +17,17 @@ import java.util.stream.Collectors;
 public class ComparisonServicesUtil {
 
     @Autowired
-    private AlgorithmService comparisonService;
+    private ComparisonService comparisonService;
+
+
+
+    private List<IComparisonService> getAvailableComparisonServices(){
+        List<IComparisonService> comparisonServices = new ArrayList<>();
+        comparisonServices.add(comparisonService);
+        /* Here add new comparison services */
+
+        return comparisonServices;
+    }
 
     private Map<String, ComparisonMethodInfo> methodServiceMap;
 
@@ -60,13 +70,5 @@ public class ComparisonServicesUtil {
 
     public IComparisonService getServiceWithMethod(String method){
         return methodServiceMap.get(method).getComparisonService();
-    }
-
-    private List<IComparisonService> getAvailableComparisonServices(){
-        List<IComparisonService> comparisonServices = new ArrayList<>();
-        comparisonServices.add(comparisonService);
-        /* Here add new comparison services */
-
-        return comparisonServices;
     }
 }

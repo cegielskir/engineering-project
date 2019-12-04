@@ -1,21 +1,20 @@
 package com.cgk.engineering.team.dbservice.controller;
 
 import com.cgk.engineering.team.dbservice.model.Article;
-import com.cgk.engineering.team.dbservice.model.BasicComparison;
 import com.cgk.engineering.team.dbservice.model.ComparisonData;
 import com.cgk.engineering.team.dbservice.repository.ComparisonDataRepository;
 import com.cgk.engineering.team.dbservice.repository.ReactiveArticleRepository;
-import com.cgk.engineering.team.dbservice.repository.BasicComparisonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.CoreSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.ParallelFlux;
 import reactor.core.scheduler.Schedulers;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 @RestController
 @RequestMapping("/article")
@@ -25,7 +24,7 @@ public class ArticleController {
     ReactiveArticleRepository articleRepository;
 
     @Autowired
-    BasicComparisonRepository basicComparisonRepository;
+    ComparisonDataRepository basicComparisonRepository;
 
     @Autowired
     ComparisonDataRepository comparisonDataRepository;
@@ -45,7 +44,7 @@ public class ArticleController {
         }
     }
 
-    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}/{metrics}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
     public ParallelFlux<ComparisonData> streamEvents(@PathVariable("articleId") String articleId,
                                                      @PathVariable("articleIDSToCompare") List<String> articleIDS) {
         articleIDS.remove(articleId);
@@ -69,6 +68,7 @@ public class ArticleController {
     private ParallelFlux<ComparisonData> getComparisonDataFlux(Flux<Article> articleFlux, String articleId){
         Article theArticle = articleRepository.findById(articleId).block();
         return articleFlux
+                .filter(article -> !article.getId().equals(articleId))
                 .map(article ->
                     comparisonDataRepository
                         .findFirstByArticleIDsIn(new HashSet<>(Arrays.asList(articleId, article.getId())))

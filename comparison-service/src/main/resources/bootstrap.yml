@@ -4,5 +4,3 @@ spring:
   cloud:
     config:
       uri: http://${CONFIG_URL:localhost}:8888
-  main:
-    allow-bean-definition-overriding: true
