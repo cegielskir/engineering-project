@@ -36,7 +36,7 @@ public class SimmetricsComparator implements IComparator {
                 stringMetric = StringMetrics.needlemanWunch();
                 break;
             case "SmithWaterman":
-                stringMetric = StringMetrics.smithWaterman();
+                stringMetric = StringMetrics.smithWatermanGotoh();
                 break;
             case "BlockDistance":
                 stringMetric = StringMetrics.blockDistance();

@@ -69,6 +69,10 @@ public class ComparisonServicesUtil {
     }
 
     public IComparisonService getServiceWithMethod(String method){
+        System.out.println(method);
+        for (Map.Entry<String, ComparisonMethodInfo> entry : methodServiceMap.entrySet()) {
+            System.out.println(entry.getKey() + ":" + entry.getValue().getComparisonMethod());
+        }
         return methodServiceMap.get(method).getComparisonService();
     }
 }
