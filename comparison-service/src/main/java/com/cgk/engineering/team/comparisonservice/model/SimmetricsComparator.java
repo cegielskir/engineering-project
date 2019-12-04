@@ -18,12 +18,14 @@ public class SimmetricsComparator implements IComparator {
     @Override
     public BasicComparison compareArticles() {
         BasicComparison c = new BasicComparison();
-        StringMetric stringMetric = null;
+        StringMetric stringMetric;
         double result = 0.0;
+        boolean isOtherMetric = false;
         switch (metric){
             case "Hamming":
-                stringMetric = null;
                 result = new Hamming().compare(article1.getContent(), article2.getContent());
+                isOtherMetric = true;
+                stringMetric = StringMetrics.damerauLevenshtein();
                 break;
             case "Levenshtein":
                 stringMetric = StringMetrics.levenshtein();
@@ -62,14 +64,15 @@ public class SimmetricsComparator implements IComparator {
                 stringMetric = StringMetrics.longestCommonSubstring();
                 break;
             case "RatcliffObershelp":
-                stringMetric = null;
                 result = new Ratcliffe().compare(article1.getContent(), article2.getContent());
+                isOtherMetric = true;
+                stringMetric = StringMetrics.damerauLevenshtein();
                 break;
             default:
                 stringMetric = StringMetrics.damerauLevenshtein();
         }
 
-        if(stringMetric != null) {
+        if(!isOtherMetric) {
             result = stringMetric.compare(article1.getContent(), article2.getContent());
         }
 
