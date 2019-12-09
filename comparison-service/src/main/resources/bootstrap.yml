@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: comparison-service
+  cloud:
+    config:
+      uri: http://${CONFIG_URL:localhost}:8888

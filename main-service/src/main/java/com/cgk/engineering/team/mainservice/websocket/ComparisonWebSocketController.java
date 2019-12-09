@@ -1,11 +1,8 @@
 package com.cgk.engineering.team.mainservice.websocket;
 
 import com.cgk.engineering.team.mainservice.client.comparison.ComparisonServiceController;
-import com.cgk.engineering.team.mainservice.client.comparison.services.AlgorithmClient;
 import com.cgk.engineering.team.mainservice.client.DatabaseServiceClient;
 import com.cgk.engineering.team.mainservice.model.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -15,8 +12,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.Disposable;
 import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class ComparisonWebSocketController {
@@ -28,51 +28,51 @@ public class ComparisonWebSocketController {
     @Autowired
     ComparisonServiceController comparisonServiceController;
 
-    private Disposable currentSubscription;
-
+    private Disposable currentComparisonSubscription;
+    private long time;
     @Autowired
     public ComparisonWebSocketController(SimpMessagingTemplate template) {
         this.template = template;
     }
 
     @MessageMapping("/compare/{articleID}/{threshold}/{articleIDSToCompare}/{metrics}")
-    public void compareArticle(@DestinationVariable("articleID") ObjectId articleID,
+    public void compareArticle(@DestinationVariable("articleID") String articleID,
                                @DestinationVariable("threshold") int threshold,
                                @DestinationVariable("metrics") List<String> metrics,
                                @DestinationVariable("articleIDSToCompare") List<String> articleIDS){
 
         String dbUrl = System.getenv("DB_URL") == null ? "http://localhost:9092": System.getenv("DB_URL");
         WebClient client = WebClient.create(dbUrl);
-
+        time = System.currentTimeMillis();
         Flux<ComparisonData> comparisonDataFlux = client.get()
-            .uri("/article/stream/" + articleID + "/" + String.join(",", articleIDS) + "/" + String.join(",", metrics))
+            .uri("/article/stream/" + articleID + "/" + String.join(",", articleIDS))
             .retrieve()
             .bodyToFlux(ComparisonData.class);
 
-        currentSubscription = comparisonDataFlux.subscribe(
+        currentComparisonSubscription = comparisonDataFlux.subscribe(
             comparisonData -> {
-                for(String metric : metrics) {
-                    comparisonData.setMetric(metric);
-                    BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonData);
-                    basicComparison.setSecondArticleTitle(comparisonData.getArticle2().getTitle());
-                    basicComparison.setSecondArticleDescription(comparisonData.getArticle2().getDescription());
-                    dbClient.addComparison(basicComparison);
-                    sendComparison(basicComparison, threshold);
-                }
+                metrics.stream()
+                    .filter(metric -> comparisonData.getComparisonMap().get(metric) == null)
+                    .forEach(metric -> {
+                        ComparisonRequest comparisonRequest = new ComparisonRequest(comparisonData.getArticle1(), comparisonData.getArticle2(), metric);
+                        BasicComparison basicComparison = comparisonServiceController.getBasicComparison(comparisonRequest);
+                        comparisonData.addComparison(metric, basicComparison.getPercentage());
+                    });
+                dbClient.addComparisonData(comparisonData);
+                sendComparison(createBasicComparisonResponse(comparisonData, articleID, metrics));
             },
             this::sendComparisonError,
-            this::sendComparisonComplete);
+            this::sendComparisonComplete
+        );
     }
 
-    private void sendComparison(BasicComparison comparison, int threshold) {
-        if(comparison.getPercentage() > threshold) {
-            this.template.convertAndSend("/article/comparison", comparison);
-        }
+    private void sendComparison(BasicComparisonResponse comparison) {
+        this.template.convertAndSend("/article/comparison", comparison);
     }
 
     @MessageMapping("/compare/dispose")
     public void compareArticle(){
-        this.currentSubscription.dispose();
+        this.currentComparisonSubscription.dispose();
     }
 
     private void sendComparisonError(Throwable error){
@@ -82,8 +82,24 @@ public class ComparisonWebSocketController {
     }
 
     private void sendComparisonComplete(){
+        System.out.println("TIME: " + (System.currentTimeMillis() - time));
         this.template.convertAndSend("/article/comparison",
                 new BasicResponse("SUCCESS", "Comparing articles has been finished"));
     }
 
+    private BasicComparisonResponse createBasicComparisonResponse(ComparisonData comparisonData, String theArticleId, List<String> metrics){
+        BasicComparisonResponse basicComparisonResponse = new BasicComparisonResponse();
+        Article secondArticle = theArticleId.equals(comparisonData.getArticle2().getId()) ?
+                comparisonData.getArticle1() : comparisonData.getArticle2();
+        basicComparisonResponse.setSecondArticleID(secondArticle.getId());
+        basicComparisonResponse.setSecondArticleTitle(secondArticle.getTitle());
+        Map<String, Integer> responseComparisonMap = new HashMap<>();
+        metrics.forEach(metric ->responseComparisonMap.put(metric, comparisonData.getComparison(metric)));
+        basicComparisonResponse.setComparisonMap(responseComparisonMap);
+        basicComparisonResponse.setSecondArticleDescription(secondArticle.getDescription());
+        basicComparisonResponse.setSecondArticleShortContent(secondArticle.getContent().length() > 300
+                ? secondArticle.getContent().substring(0, 300) + "..."
+                : secondArticle.getContent());
+        return basicComparisonResponse;
+    }
 }

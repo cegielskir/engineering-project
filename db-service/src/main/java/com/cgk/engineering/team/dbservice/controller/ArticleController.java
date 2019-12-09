@@ -2,16 +2,19 @@ package com.cgk.engineering.team.dbservice.controller;
 
 import com.cgk.engineering.team.dbservice.model.Article;
 import com.cgk.engineering.team.dbservice.model.ComparisonData;
+import com.cgk.engineering.team.dbservice.repository.ComparisonDataRepository;
 import com.cgk.engineering.team.dbservice.repository.ReactiveArticleRepository;
-import com.cgk.engineering.team.dbservice.repository.BasicComparisonRepository;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.ParallelFlux;
+import reactor.core.scheduler.Schedulers;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 @RestController
 @RequestMapping("/article")
@@ -21,7 +24,10 @@ public class ArticleController {
     ReactiveArticleRepository articleRepository;
 
     @Autowired
-    BasicComparisonRepository basicComparisonRepository;
+    ComparisonDataRepository basicComparisonRepository;
+
+    @Autowired
+    ComparisonDataRepository comparisonDataRepository;
 
     @GetMapping(value = "/{articleId}")
     public Mono<Article> getArticle(@PathVariable("articleId") String articleId){
@@ -38,44 +44,37 @@ public class ArticleController {
         }
     }
 
-    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}/{metrics}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ComparisonData> streamEvents(@PathVariable("articleId") String articleId,
-                                             @PathVariable("articleIDSToCompare") List<String> articleIDS,
-                                             @PathVariable("metrics") List<String> metrics) {
-
-        Article article = articleRepository.findById(articleId).block();
+    @GetMapping(value= "/stream/{articleId}/{articleIDSToCompare}", produces= MediaType.TEXT_EVENT_STREAM_VALUE)
+    public ParallelFlux<ComparisonData> streamEvents(@PathVariable("articleId") String articleId,
+                                                     @PathVariable("articleIDSToCompare") List<String> articleIDS) {
         articleIDS.remove(articleId);
         if(articleIDS != null && articleIDS.size() > 0) {
-            return articleRepository.findAllById(articleIDS)
-                .map(a -> createComparisonData(article, a, articleId, a.getId(), metrics));
+            return getComparisonDataFlux(articleRepository.findAllByIdIn(new HashSet<>(articleIDS)), articleId);
         } else {
-            return articleRepository.findAllByIdNot(articleId)
-                .map(a -> createComparisonData(article, a, articleId, a.getId(), metrics));
+            return getComparisonDataFlux(articleRepository.findAll(), articleId);
         }
     }
 
     @GetMapping(value = "/find/content/{partOfContent}")
     public Flux<Article>  getArticleWithContent(@PathVariable("partOfContent") String partOfContent){
-        return articleRepository.findByContentContains(partOfContent);
+        return articleRepository.findByContentRegex(".*" + partOfContent + ".*");
     }
 
     @GetMapping(value = "/find/title/{partOfContent}")
     public Flux<Article>  getArticleWithTitle(@PathVariable("partOfContent") String partOfTitle){
-        return articleRepository.findByTitleContains(partOfTitle);
+        return articleRepository.findByTitleRegex(".*" + partOfTitle + ".*");
     }
 
-    private ComparisonData createComparisonData(Article article1, Article article2, String id1, String id2, List<String> metrics){
-        return new ComparisonData(article1, article2, getAlreadyInDbMap(id1, id2, metrics));
-    }
-
-    private Map<String, Boolean> getAlreadyInDbMap(String id1, String id2, List<String> metrics){
-        Map<String, Boolean> isAlreadyInDbMap = new HashMap<>();
-        for(String metric : metrics){
-            boolean isInDb = ((basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id1, id2, metric).block() != null) ||
-                    (basicComparisonRepository.findByFirstArticleIDAndSecondArticleIDAndMetric(id2, id1, metric).block() != null));
-            isAlreadyInDbMap.put(metric, isInDb);
-        }
-
-        return isAlreadyInDbMap;
+    private ParallelFlux<ComparisonData> getComparisonDataFlux(Flux<Article> articleFlux, String articleId){
+        Article theArticle = articleRepository.findById(articleId).block();
+        return articleFlux
+                .filter(article -> !article.getId().equals(articleId))
+                .map(article ->
+                    comparisonDataRepository
+                        .findFirstByArticleIDsIn(new HashSet<>(Arrays.asList(articleId, article.getId())))
+                        .defaultIfEmpty(new ComparisonData(theArticle, article)))
+                .flatMap(Mono::flux)
+                .parallel(8)
+                .runOn(Schedulers.parallel());
     }
 }

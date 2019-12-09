@@ -2,7 +2,8 @@ package com.cgk.engineering.team.mainservice.client;
 
 import com.cgk.engineering.team.mainservice.model.Article;
 import com.cgk.engineering.team.mainservice.model.BasicComparison;
-import org.bson.types.ObjectId;
+import com.cgk.engineering.team.mainservice.model.ComparisonData;
+import com.cgk.engineering.team.mainservice.model.ComparisonRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +27,6 @@ public interface DatabaseServiceClient {
     @GetMapping("/article/find/title/{partOfTitle}")
     Article getArticlesWithTitle(@PathVariable("partOfTitle") String partOfTitle);
 
-    @PostMapping("/basic-comparison")
-    BasicComparison addComparison(@RequestBody BasicComparison basicComparison);
-
-    @GetMapping("/basic-comparison")
-    BasicComparison getComparison(@RequestParam String id1, @RequestParam String id2, @RequestParam String metric);
+    @PostMapping("/comparison-data")
+    ComparisonData addComparisonData(@RequestBody ComparisonData comparisonData);
 }
