@@ -7,13 +7,12 @@ const initialState: TwoArticlesState = {
         article1: {
             id: '',
             content: '',
-            metrics: [],
         },
         article2: {
             id: '',
             content: '',
-            metrics: [],
-        }
+        },
+        metrics: [],
     }
 }
 
@@ -27,13 +26,12 @@ export function twoArticlesReducer(state = initialState, action: ArticlesAction)
                     article1: {
                         id: action.article1.id,
                         content: action.article1.content,
-                        metrics: [],
                     },
                     article2: {
                         id: action.article2.id,
                         content: action.article2.content,
-                        metrics: [],
-                    }
+                    },
+                    metrics: action.metrics,
                 }
             };
         default: 

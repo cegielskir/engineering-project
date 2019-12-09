@@ -1,5 +1,18 @@
 import * as C from './constants';
 
+export interface Article {
+    id: string;
+    title: string;
+    author: string;
+    description: string;
+    content: string;
+    date: Date;
+    url: string;
+    numberOfView: number;
+    hash: number;
+    downloadTime: string;
+}
+
 export interface SuspiciousFragments {
     firstArticleStart: number;
     firstArticleEnd: number;
@@ -8,12 +21,12 @@ export interface SuspiciousFragments {
 }
 
 export interface Comparison {
-    id: number;
     percentage: number;
     similarityPercentage: number;
-    firstArticleContent: string;
-    secondArticleContent: string;
+    article1: Article;
+    article2: Article;
     suspiciousWords: SuspiciousFragments[];
+    metric: string;
 }
 
 interface GetComparisonRequest {

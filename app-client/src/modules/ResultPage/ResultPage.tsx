@@ -14,6 +14,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { WebSocketState } from 'store/websockets/store';
 import { StoreState } from 'store/SingleArticle/store';
 import ProgresBar from 'components/StepProgress/StepProgress';
+import { TwoArticlesState } from 'store/TwoArticles/store';
 
 interface MatchParams {
     comparisonId1: string;
@@ -24,6 +25,7 @@ interface MatchProps extends RouteComponentProps<MatchParams> {}
 
 interface ResultProps extends RouteProps  {
     singleArticle: StoreState;
+    twoArticles: TwoArticlesState;
     comparison: ComparisonState;
     comparisonList: WebSocketState;
     getComparison: (url: string) => void;
@@ -59,9 +61,9 @@ class Result extends React.Component<ResultProps & MatchProps, ResultState> {
     componentDidMount() {
         const id1 = this.props.match.params.comparisonId1;
         const id2 = this.props.match.params.comparisonId2;
-        const metric  = !!this.props.singleArticle.singleArticle.metrics
-                        ? this.props.singleArticle.singleArticle.metrics[0]
-                        : 'CosineSimilarity';
+        const metric  = !!this.props.twoArticles.twoArticles.article1.id
+                        ? this.props.twoArticles.twoArticles.metrics[0] 
+                        : this.props.singleArticle.singleArticle.metrics[0];
 
         this.getResultList(id1, id2, metric);
      }
@@ -82,8 +84,8 @@ class Result extends React.Component<ResultProps & MatchProps, ResultState> {
         const similarity = this.props.comparison.comparison ? this.props.comparison.comparison.similarityPercentage : 0;
         const plagiarism = this.props.comparison.comparison ? this.props.comparison.comparison.percentage : 0;
 
-        const text1 = this.props.comparison.comparison ? this.props.comparison.comparison.firstArticleContent : '';
-        const text2 = this.props.comparison.comparison ? this.props.comparison.comparison.secondArticleContent : '';
+        const text1 = this.props.comparison.comparison ? this.props.comparison.comparison.article1.content : '';
+        const text2 = this.props.comparison.comparison ? this.props.comparison.comparison.article2.content : '';
 
         const list = this.props.comparison.comparison ? this.props.comparison.comparison.suspiciousWords : [];
         const { matchedElement } = this.state;
@@ -115,7 +117,7 @@ class Result extends React.Component<ResultProps & MatchProps, ResultState> {
                                         }
                                     </div>
                                     <div className="col-6 article__item">
-                                        <h3>Your text</h3>
+                                        <h3>Provided text:</h3>
                                         {
                                             similarity + plagiarism === 0
                                             ? <>{text1}</>
@@ -139,7 +141,8 @@ class Result extends React.Component<ResultProps & MatchProps, ResultState> {
                                         {!!list.length ? text1.substring(list[list.length-1].firstArticleEnd, text1.length) : null}
                                     </div>
                                     <div className="col-6 article__item">
-                                        <h3>Text to compare</h3>
+                                        <h3>{this.props.comparison.comparison ? this.props.comparison.comparison.article2.title : ''}</h3>
+                                        <h5>{this.props.comparison.comparison ? this.props.comparison.comparison.article2.description : ''}</h5>
                                         {
                                             similarity + plagiarism === 0
                                             ? <>{text2}</>
@@ -185,6 +188,7 @@ class Result extends React.Component<ResultProps & MatchProps, ResultState> {
 
 const mapStateToProps = (state: AppState) => ({
     singleArticle: state.singleArticle,
+    twoArticles: state.twoArticles,
     comparison: state.comparison,
 });
 

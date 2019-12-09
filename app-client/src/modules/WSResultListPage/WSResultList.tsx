@@ -7,6 +7,7 @@ import { AppState } from "store/index";
 import { Dispatch, bindActionCreators } from 'redux';
 import { ComparisonList } from 'store/websockets/actions';
 import { StoreState } from 'store/SingleArticle/store';
+import { TwoArticlesState } from 'store/TwoArticles/store';
 import * as PR from '../ResultListPage/parts';
 import { fetchComparisonList } from 'store/websockets/socket-client';
 import { Stomp } from "@stomp/stompjs";
@@ -29,6 +30,7 @@ interface SocketState {
 
 interface SocketProps {
   singleArticle: StoreState;
+  twoArticles: TwoArticlesState;
   comparison: WebSocketState;
   getComparison: (comparison: ComparisonList) => void;
 }
@@ -52,7 +54,7 @@ class SocketsPage extends React.Component<SocketProps, SocketState> {
             // console.log('subscribe');
               if (message.body) {
                   let response = JSON.parse(message.body);
-                  console.log(response);
+                  //console.log(response);
                   if('key' in response) console.log('[SUCCESS]', response);
                   else getComparison(response);
                   this.setState({
@@ -67,10 +69,15 @@ class SocketsPage extends React.Component<SocketProps, SocketState> {
     }
 
     send() {
-      const { id, metrics, threshold } = this.props.singleArticle.singleArticle;
-      const mockList = [id];
-
+      const { threshold } = this.props.singleArticle.singleArticle;
+      const id = !!this.props.singleArticle.singleArticle.id ? this.props.singleArticle.singleArticle.id : this.props.twoArticles.twoArticles.article1.id;
+      const mockList = !!this.props.twoArticles.twoArticles.article1.id ? [this.props.twoArticles.twoArticles.article1.id, this.props.twoArticles.twoArticles.article2.id] : [id];
+      const metrics = !!this.props.twoArticles.twoArticles.article1.id ? this.props.twoArticles.twoArticles.metrics : this.props.singleArticle.singleArticle.metrics;
       try {
+        console.log('/app/compare/' + id +
+        '/' + threshold +
+        '/' + mockList +
+        '/' + metrics);
         console.log('send', id);
         client.send('/app/compare/' + id +
                     '/' + threshold +
@@ -105,6 +112,7 @@ class SocketsPage extends React.Component<SocketProps, SocketState> {
 }
 
 const mapStateToProps = (state: AppState) => ({
+  twoArticles: state.twoArticles,
   singleArticle: state.singleArticle,
   ws: state.ws,
 });

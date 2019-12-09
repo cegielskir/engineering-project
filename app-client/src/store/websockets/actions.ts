@@ -1,13 +1,11 @@
 import * as C from './constants';
 
 export interface ComparisonList {
-  id: number;
-  percentage: number;
-  articleIDs: string[];
+  secondArticleID: string;
   secondArticleShortContent: string;
   secondArticleTitle: string;
   secondArticleDescription: string;
-  metric: string;
+  comparisonMap: Map<string, number>;
 }
 
 interface GetComparisonRequest {

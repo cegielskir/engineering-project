@@ -11,10 +11,25 @@ export const ResultItem = styled.div`
     & > p {
         margin-top: 12px; 
     }
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
 `;
 
 export const Percentage = styled.p`
-    font-size: 32px;
+    font-size: 12px;
     color: #326581;
     margin: 20px 0;
 `;

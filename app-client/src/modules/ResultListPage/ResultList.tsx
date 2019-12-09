@@ -17,6 +17,7 @@ import { Dispatch, bindActionCreators } from 'redux';
 import { Article } from 'store/ws_search_result/actions';
 import { SearchState } from 'store/ws_search_result/store';
 import { ComparisonList } from 'store/websockets/actions';
+import { TwoArticlesState } from 'store/TwoArticles/store';
 
 interface ResultListState {
     result: ComparisonList[],
@@ -37,6 +38,7 @@ interface MatchProps extends RouteComponentProps<MatchParams> {}
 
 interface ResultListProps extends RouteProps {
     singleArticle: StoreState;
+    twoArticles: TwoArticlesState;
     comparisonList: WebSocketState;
     searchList: SearchState;
     getResult: (article: Article) => void;
@@ -75,6 +77,7 @@ class ResultList extends React.Component<ResultListProps & MatchProps, ResultLis
                 (message) => {
                     if (message.body) {
                         let response = JSON.parse(message.body);
+                        //console.log(response);
                         if('key' in response) console.log('[SUCCESS]', response);
                         else getResult(response);
                         this.setState({
@@ -104,39 +107,54 @@ class ResultList extends React.Component<ResultListProps & MatchProps, ResultLis
       }
   
 
-      
+      sort = (item1: ComparisonList, item2: ComparisonList, type: string) => {
+            const { metric } = this.state
+
+            const v1 = Object.entries(item1.comparisonMap).filter(entry => entry[0] === metric)[0];
+            const v2 = Object.entries(item2.comparisonMap).filter(entry => entry[0] === metric)[0];
+
+            return type === 'ASC' 
+                        ? (v1 < v2 ? 1 : -1)
+                        : (v1 > v2 ? 1 : -1);
+      }
 
      returnArticlesList() { 
         const pageNr = Number(this.props.match.params.pageNumber);
-        const { id } = this.props.singleArticle.singleArticle;
+        const id = !!this.props.twoArticles.twoArticles.article1.id ? this.props.twoArticles.twoArticles.article1.id : this.props.singleArticle.singleArticle.id;
         const { comparisons } = this.props.comparisonList;
         const { sorted, metric } = this.state;
 
         if(comparisons !== undefined && !!comparisons.length) { 
-            let comparisonList = comparisons.filter(item => item.metric === metric);
-            sorted === 'Ascending' && comparisonList.sort((item1, item2) => (item1.percentage < item2.percentage) ? 1 : -1);
-            sorted === 'Descending' && comparisonList.sort((item1, item2) => (item1.percentage > item2.percentage) ? 1 : -1);
+            sorted === 'Ascending' && comparisons.sort((item1, item2) => (this.sort(item1, item2, 'ASC')));
+            sorted === 'Descending' && comparisons.sort((item1, item2) => (this.sort(item1, item2, 'DSC')));
 
-            
             return (
                 <div className="row">
                     <div className="col-3">
                         <h4>Result list:</h4>
-                        {comparisonList
+                        {comparisons
                             .slice((pageNr-1)*10, pageNr*10)
                             .map((item: ComparisonList, index) => {
-                            return <p key={index}><a href={`#${item.articleIDs.filter(articleId => articleId != id)}`}>{`${item.secondArticleTitle.substring(0, 20)}`}...</a>{`: ${item.percentage}%`}</p>;
+                            return <div key={index}>
+                                    <a href={`#${item.secondArticleID}`}>{`${item.secondArticleTitle.substring(0, 20)}`}...</a>
+                                    <ul>
+                                    {
+                                        Object.entries(item.comparisonMap).map((entry) => {
+                                            return <li key={item.secondArticleID + entry[0]}>{`${entry[0]}: ${entry[1]}%`}</li>;
+                                        })   
+                                    }</ul>
+                                    </div>;
                             })
                         }
                     </div>
                     <div className="col-9">
                     {
-                        comparisonList
+                        comparisons
                             .slice((pageNr-1)*10, pageNr*10)
                             .map((item: ComparisonList, index) => {                    
                             return (
                                 <P.ResultItem key={index}>
-                                    <div id={`${item.articleIDs.filter(articleId => articleId != id)}`} className="row">
+                                    <div id={`${item.secondArticleID}`} className="row">
                                         <div className="col-9">
                                             <h3>{item.secondArticleTitle}</h3>
                                             <h5>{item.secondArticleDescription}</h5>
@@ -145,18 +163,39 @@ class ResultList extends React.Component<ResultListProps & MatchProps, ResultLis
                             
                                         <div className="col-3">
                                             <P.CenterWrapper>
-                                                <P.Percentage>{item.percentage}%</P.Percentage>   
-                                                <Link to={`/result/${id}/${item.articleIDs.filter(articleId => articleId != id)}?percentage=${item.percentage}`} >
+                                                <Link to={`/result/${id}/${item.secondArticleID}?percentage=${Object.values(item.comparisonMap)[0]}`} >
                                                     <P.CheckResult>
                                                         <P.Button>
-                                                            Check
+                                                            Check details
                                                         </P.Button>
                                                     </P.CheckResult>
                                                 </Link>
                                             </P.CenterWrapper>
  
                                         </div>
+                                        <div className="col-12">
+                                            <table>
+                                                <tbody>
+                                                    <tr>
+                                                    {
+                                                        Object.entries(item.comparisonMap).map((entry) => {
+                                                            return <th key={item.secondArticleID + entry[0]}>{`${entry[0]}`}</th>;
+                                                        })                                         
+                                                    }
+                                                    </tr>
+                                                    <tr>
+                                                    {
+                                                        Object.entries(item.comparisonMap).map((entry) => {
+                                                            return <td key={item.secondArticleID + entry[0]}>{`${entry[1]}`}</td>;
+                                                        })                                         
+                                                    }
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
                                     </div>
+
                                 </P.ResultItem>      
                             )
                         })
@@ -332,7 +371,7 @@ class ResultList extends React.Component<ResultListProps & MatchProps, ResultLis
                                     <>
                                         {this.returnArticlesList()}
                                         <P.Pagination>
-                                            {this.generateLinks(comparisons.filter(c => c.metric === metric).length/10)}
+                                            {/* {this.generateLinks(comparisons.filter(c => c.metric === metric).length/10)} */}
                                         </P.Pagination>
                                     </> 
                                 }
@@ -348,6 +387,7 @@ class ResultList extends React.Component<ResultListProps & MatchProps, ResultLis
 
 const mapStateToProps = (state: AppState) => ({
     singleArticle: state.singleArticle,
+    twoArticles: state.twoArticles,
     comparisonList: state.ws,
     searchList: state.sa
 });

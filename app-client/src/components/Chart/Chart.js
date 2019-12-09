@@ -20,7 +20,7 @@ class PieChart extends Component {
 				indexLabel: "{label} - {y}%",
 				dataPoints: [
                     { y: this.props.similarity, label: "Paraphrased text" },
-                    { y: this.props.plagiarism, label: "Plagiarism" },
+                    { y: this.props.plagiarism, label: "Simmilarity" },
                     { y: 100.0 - (this.props.similarity+this.props.plagiarism), label: "Unique" }
 				]
 			}]

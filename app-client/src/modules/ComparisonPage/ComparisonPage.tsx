@@ -66,20 +66,28 @@ export class Comparison extends React.Component<ComparisonProps, ComparisonState
             });
     }
 
-    async postArticle(text: string, num: number) {
+    sendArticles = (text1: string, text2: string) => {
+        this.postArticle(text1, 1);
+        this.postArticle(text2, 2);
+    }
 
+    async postArticle(text: string, num: number) {
         if(!!text) {
             postData("/core/article", 
                 {
-                    title: 'Single text provided',
-                    author: 'guest',
-                    description: 'Single text to compare',
+                    title: 'Comparison of two articles',
+                    author: 'Paweł Gędłek',
+                    description: num === 1 ? 'First text' : 'Second text',
                     content: text,
                 }
             )
             .then(res => {
-                this.setState({
+                num === 1
+                ? this.setState({
                     articleId1: res.id,
+                })
+                : this.setState({
+                    articleId2: res.id,
                 });
             })
             .catch(err => {
@@ -189,12 +197,11 @@ export class Comparison extends React.Component<ComparisonProps, ComparisonState
             this.props.addTwoArticles({
                 id: articleId1, 
                 content: textareaContent1,
-                metrics: metrics,
             }, {
                 id: articleId2, 
                 content: textareaContent2,
-                metrics: metrics,
-            });
+            },
+            metrics);
             return <Redirect to='/socket-connection' />
         }
 
@@ -238,7 +245,7 @@ export class Comparison extends React.Component<ComparisonProps, ComparisonState
                 </Button>
                 <Button 
                     className="btn btn-outline-secondary btn-checker"
-                    onClick={() => this.postArticle(textareaContent1, 1)} 
+                    onClick={() => this.sendArticles(textareaContent1, textareaContent2)} 
                     disabled={false}
                 >
                     Check content
